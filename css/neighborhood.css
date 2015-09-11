@@ -1,0 +1,76 @@
+/*
+  Style sheet for Project 5: Neighborhood Map
+  Leon Tabak
+  07 September 2015
+*/
+
+body {
+  width: 768px;
+  margin-left: auto;
+  margin-right: auto;
+  background: #EEAA88;
+}
+
+#searchBox {
+  margin-top: 40px;
+  margin-bottom: 24px;
+}
+
+#searchPrompt {
+  font-family: "Arial, sans-serif";
+  font-weight: bold;
+  font-size: large;
+}
+
+#listAndMap {
+  width: 768px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 12px;
+  margin-bottom: 40px;
+  clear: both;
+}
+
+#listOfBirthplaces {
+  background: #EEDDFF;
+  margin-right: 12px;
+  width: 192px;
+  border: solid;
+  float: left;
+}
+
+#listOfBirthplaces h2 {
+  padding: 8px;
+}
+
+#origins {
+  padding: -8px;
+  font-family: "Arial, sans-serif";
+}
+
+#mapOfBirthplaces {
+  margin-left: 12px;
+  background: #EECCAA;
+  float: left;
+  border-top: solid;
+  border-bottom: solid;
+  border-left: solid;
+  border-right: solid;
+}
+
+#neighborhood {
+  width: 512px;
+  height: 512px;
+}
+
+#mapCaption {
+  margin-top: 18px;
+  margin-bottom: 36px;
+  margin-left: 40px;
+}
+
+#mapCaption h2 {
+  font-family: "Arial, sans-serif";
+  font-weight: bold;
+  font-size: x-large;
+}
