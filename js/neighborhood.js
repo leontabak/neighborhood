@@ -40,6 +40,14 @@ var model = function() {
 			"Marc", "", "Andreessen", "Cedar Falls", "Iowa", new Date( 1971, 6, 9 ) ));
     places.push( makePlace( 41.807, -91.494,
 			"Leo", "", "Beranek", "Solon", "Iowa", new Date( 1914, 8, 15 ) ));
+    places.push( makePlace( 42.187, -92.715,
+			    "Clifford", "", "Berry", "Gladbrook", "Iowa", new Date( 1918, 3, 19 ) ));
+    places.push( makePlace( 43.381, -92.114,
+		        "Norman", "", "Borlaug", "Cresco", "Iowa", new Date( 1914, 2, 25 ) ));
+    places.push( makePlace( 40.808, -91.115,
+			"Wallace", "", "Carothers", "Burlington", "Iowa", new Date( 1896, 3, 27 ) ));
+    places.push( makePlace( 41.844, -90.188,
+			 "Donald", "", "Campbell", "Clinton", "Iowa", new Date( 1904, 7, 5 ) ));
     places.push( makePlace( 41.671, -91.346,
 			"Herbert", "",  "Hoover", "West Branch", "Iowa", new Date( 1874, 7, 10 ) ));
     places.push( makePlace( 41.479, -91.581,
@@ -130,16 +138,16 @@ var viewModel = function( m ) {
         var result = {};
 
         // Find extrema and means of latitude and longitude.
-        var meanLatitude = 0;
-        var meanLongitude = 0;
+        var meanLatitude = m.places[0].latitude;
+        var meanLongitude = m.places[0].longitude;
         var minimumLatitude = m.places[0].latitude;
         var maximumLatitude = m.places[0].latitude;
         var minimumLongitude = m.places[0].longitude;
         var maximumLongitude = m.places[0].longitude;
 
         for( var i = 1; i < m.places.length; i++ ) {
-            meanLatitude = m.places[i].latitude;
-            meanLongitude = m.places[i].longitude;
+            meanLatitude += m.places[i].latitude;
+            meanLongitude += m.places[i].longitude;
 
             if( m.places[i].latitude < minimumLatitude ) {
     	        minimumLatitude = m.places[i].latitude;
@@ -156,9 +164,11 @@ var viewModel = function( m ) {
             } // if
         } // for
 
-        if( m.length > 0 ) {
+        if( m.places.length > 0 ) {
             meanLatitude = meanLatitude / m.places.length;
             meanLongitude = meanLongitude / m.places.length;
+            console.log( meanLatitude );
+	    console.log( meanLongitude );
         } // if
 
         result.meanLatitude = meanLatitude;
@@ -254,10 +264,13 @@ var view = function( vm ) {
 
     var makeListOfBirthplaces = function() {
         var listOfBirthplaces = $("#origins");
-        for( var i = 0; i < vm.getNumberOfPlaces; i++ ) {
-            var listItem = "<li>" + vm.getPlace(i).person.toString + "</li>";
+        for( var i = 0; i < vm.getNumberOfPlaces(); i++ ) {
+            var listItem = "<button type='button' class='nameButton'>" + vm.getPlace(i).person.toString + "</button><br>";
             $("#origins").append( listItem );
         } // for
+
+	$("#yearOfStatehood").attr("value", 1846);
+	$("#currentYear").attr("value", (new Date()).getFullYear() );
     };
 
     $(document).ready( makeListOfBirthplaces );

@@ -8,17 +8,29 @@ body {
   width: 768px;
   margin-left: auto;
   margin-right: auto;
-  background: #EEAA88;
+  background: #CCFFEE;
+}
+
+.labels {
+  color: #6622AA;
+  font-family: "Arial, sans-serif";
+  font-weight: bold;
+  font-size: x-large;
 }
 
 #searchBox {
+  background: #EEDDFF;
   margin-top: 40px;
   margin-bottom: 24px;
+  padding: 12px;
+  border: solid;
+  border-color: #AA44EE;
+  border-radius: 20px;
 }
 
-#searchPrompt {
+.year {
+  width: 60px;
   font-family: "Arial, sans-serif";
-  font-weight: bold;
   font-size: large;
 }
 
@@ -36,6 +48,8 @@ body {
   margin-right: 12px;
   width: 192px;
   border: solid;
+  border-color: #AA44EE;
+  border-radius: 20px;
   float: left;
 }
 
@@ -44,23 +58,37 @@ body {
 }
 
 #origins {
+  margin-bottom: 60px;
   padding: -8px;
   font-family: "Arial, sans-serif";
 }
 
+.nameButton {
+  background: #CCFFEE;
+  border-radius: 8px;
+  margin-top: 2px;
+  margin-bottom: 12px;
+  margin-left: 20px;
+  width: 12em;
+  color: #6622AA;
+  font-family: "Arial, sans-serif";
+  font-weight: bold;
+  font-size: 0.8em;
+}
+
 #mapOfBirthplaces {
   margin-left: 12px;
-  background: #EECCAA;
+  padding: 12px;
+  background: #EEDDFF;
   float: left;
-  border-top: solid;
-  border-bottom: solid;
-  border-left: solid;
-  border-right: solid;
+  border: solid;
+  border-color: #AA44EE;
+  border-radius: 20px;
 }
 
 #neighborhood {
-  width: 512px;
-  height: 512px;
+  width: 512px; 
+  height: 512px; 
 }
 
 #mapCaption {
@@ -69,8 +97,4 @@ body {
   margin-left: 40px;
 }
 
-#mapCaption h2 {
-  font-family: "Arial, sans-serif";
-  font-weight: bold;
-  font-size: x-large;
-}
+
