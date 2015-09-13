@@ -167,8 +167,6 @@ var viewModel = function( m ) {
         if( m.places.length > 0 ) {
             meanLatitude = meanLatitude / m.places.length;
             meanLongitude = meanLongitude / m.places.length;
-            console.log( meanLatitude );
-	    console.log( meanLongitude );
         } // if
 
         result.meanLatitude = meanLatitude;
@@ -269,9 +267,13 @@ var view = function( vm ) {
             $("#origins").append( listItem );
         } // for
 
-	$("#yearOfStatehood").attr("value", 1846);
-	$("#currentYear").attr("value", (new Date()).getFullYear() );
-    };
+        var loYear = 1846; // year that Iowa became a state
+        var hiYear = (new Date()).getFullYear();
+
+	$("#loYear").attr("value", loYear);
+	$("#hiYear").attr("value", hiYear );
+
+    }; // makeListOfBirthplaces()
 
     $(document).ready( makeListOfBirthplaces );
 
