@@ -7,7 +7,6 @@
 <script src="js/jquery.validate.min.js"></script>
 <script src="js/knockout-3.3.0.js"></script>
 <script src="http://maps.googleapis.com/maps/api/js"></script>
-<script src="js/neighborhood.js"></script>
 </head>
 
 <body>
@@ -15,11 +14,11 @@
 <div class="container">
 <div class="content">
 <div class="col12" id="searchBox">
-<form action="" id="range">
+<form data-bind="submit: filter" id="range">
 <span class="labels">Search within a range of years: </span>
-<input type="text" class="year required digits" id="loYear">
+<input type="text" class="year required digits" name="loYear" id="loYear">
 <span class="labels">to</span>
-<input type="text" class="year required digits" id="hiYear">
+<input type="text" class="year required digits" name="hiYear" id="hiYear">
 <input type="submit" class="submitButton" value="Submit">
 </form>
 </div>
@@ -32,7 +31,8 @@
 <div class="col12">
 <div class="col3" id="listOfBirthplaces">
 <h2 class="labels">People</h2>
-<div id="origins">
+<div id="origins" data-bind="foreach: places">
+  <button type="button" class="nameButton" data-bind="text: person.toString"></button><br>
 </div>
 </div>
 
@@ -47,6 +47,8 @@
 
 </div><!-- content -->
 </div><!-- container -->
+
+<script src="js/neighborhood.js"></script>
 
 </body>
 

@@ -260,23 +260,15 @@ var view = function( vm ) {
 
     google.maps.event.addDomListener(window, 'load', initializeMap);
 
-    var makeListOfBirthplaces = function() {
-        var listOfBirthplaces = $("#origins");
-        for( var i = 0; i < vm.getNumberOfPlaces(); i++ ) {
-            var listItem = "<button type='button' class='nameButton'>" + vm.getPlace(i).person.toString + "</button><br>";
-            $("#origins").append( listItem );
-        } // for
-
+    var setDefaultSearchBounds = function() {
         var loYear = 1846; // year that Iowa became a state
         var hiYear = (new Date()).getFullYear();
 
 	$("#loYear").attr("value", loYear);
 	$("#hiYear").attr("value", hiYear );
+    }; // setDefaultSearchBounds()
 
-    }; // makeListOfBirthplaces()
-
-    $(document).ready( makeListOfBirthplaces );
-
+    setDefaultSearchBounds();
 
     return that;
 }; // view()
@@ -285,6 +277,15 @@ var ourModel = model();
 var ourViewModel = viewModel( ourModel );
 var ourView = view( ourViewModel );
 
+var myViewModel = function() {
+    var that = this;
+    that.places = ko.observableArray( ourModel.places );
+    var ly = $("#loYear").val();
+    var hy = $("#hiYear").val();
+    that.filter = function( formElement) { console.log( ly + "---" + hy  ) };
+};
+
+ko.applyBindings(new myViewModel() );
 
 
 

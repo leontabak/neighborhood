@@ -34,17 +34,16 @@ body {
 #listAndMap {
   margin-top: 12px;
   margin-bottom: 40px;
-  clear: both;
 }
 
 #listOfBirthplaces {
   background: #EEDDFF;
   margin-right: 12px;
+  padding-bottom: 48px;
   width: 192px;
   border: solid;
   border-color: #AA44EE;
   border-radius: 20px;
-  float: left;
 }
 
 #listOfBirthplaces h2 {
