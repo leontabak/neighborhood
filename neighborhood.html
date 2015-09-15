@@ -7,6 +7,10 @@
 <script src="js/jquery.validate.min.js"></script>
 <script src="js/knockout-3.3.0.js"></script>
 <script src="http://maps.googleapis.com/maps/api/js"></script>
+<script src="js/neighborhood.js"></script>
+<script> 
+  $(document).ready( go );
+</script>
 </head>
 
 <body>
@@ -32,14 +36,17 @@
 <div class="col3" id="listOfBirthplaces">
 <h2 class="labels">People</h2>
 <div id="origins" data-bind="foreach: places">
-  <button type="button" class="nameButton" data-bind="text: person.toString"></button><br>
+  <div data-bind="if: inRange()">
+  <button type="button" class="nameButton nameButtonColor" 
+      data-bind="text: person.fullName, click: choose"></button><br>
+  </div>
 </div>
 </div>
 
 <div class="col9" id="mapOfBirthplaces">
 <div id="neighborhood"></div>
 <div id="mapCaption">
-<h2 class=labels>Places of Birth</h2>
+<h2 class="labels">Places of Birth</h2>
 </div>
 </div>
 </div>

@@ -15,23 +15,42 @@ var model = function() {
 
     var makePerson = function( firstName, middleName, lastName ) {
 	var result = {};
+
 	result.firstName = firstName;
 	result.middleName = middleName;
 	result.lastName = lastName;
-        result.toString = firstName + " " + middleName + " " + lastName;
+	result.fullName = firstName + " " + middleName + " " + lastName;
+
 	return result;
     }; // makePerson()
 
     var makePlace = function( latitude, longitude, 
             firstName, middleName, lastName, 
             city, state, birthday ) {
-        return {
-	    latitude: latitude,
-	    longitude: longitude,
-	    person: makePerson( firstName, middleName, lastName ),
-            city: city,
-            state: state,
-	    birthday: birthday };
+
+	var rangeCheck = true;
+
+	// Some code to check out how Knockout's if binding works.
+	//	if( birthday.getFullYear() < 1900 || birthday.getFullYear() > 1950 ) {
+	//    rangeCheck = false;
+	//} // if
+
+	var result = {};
+
+	result.latitude = latitude;
+	result.longitude = longitude;
+	result.person = makePerson( firstName, middleName, lastName );
+        result.city = city;
+        result.state = state;
+	result.birthday = birthday;
+
+	result.inRange = ko.computed( function() { return rangeCheck; } );
+	result.setInRange = function() { rangeCheck = true; };
+	result.setOutOfRange = function() { rangeCheck = false; };
+
+        result.choose = function() { console.log( "look at this face" ); };
+
+        return result;
     }; // makePlace()
 
 
@@ -187,54 +206,64 @@ var viewModel = function( m ) {
 var view = function( vm ) {
     var that = {};
 
+    var loYear = 1846; // year that Iowa became a state
+    var hiYear = (new Date()).getFullYear();
+
+    $("#loYear").attr("value", loYear);
+    $("#hiYear").attr("value", hiYear );
+
     var makeInformationWindow = function( place ) {
         var today = new Date();
         var birthday = place.birthday;
         var verb = " was born in ";
 
         if( vm.compareDates( birthday, today ) > 0 ) {
-	    verb = " will be born in ";
+            verb = " will be born in ";
         } // if
 
-        var content = place.person.toString + verb + place.city + ", " +
+        var content = place.person.fullName + verb + place.city + ", " +
             place.state + " on " + vm.dateToString( place.birthday );
 
         return new google.maps.InfoWindow({content: content});
-    }; // makeInformationWindow()
+     }; // makeInformationWindow()
 
-    var informationWindows = [];
+     var informationWindows = [];
 
-    for( var i = 0; i < vm.getNumberOfPlaces(); i++ ) {
-        informationWindows[i] = makeInformationWindow( vm.getPlace(i) );
-    } // for
+     for( var i = 0; i < vm.getNumberOfPlaces(); i++ ) {
+         informationWindows[i] = makeInformationWindow( vm.getPlace(i) );
+     } // for
+
+    var em = vm.getExtremaAndMeans();
+
+    var mapSpecification = {
+        center:new google.maps.LatLng(em.meanLatitude, em.meanLongitude),
+        zoom:8,
+        mapTypeId:google.maps.MapTypeId.ROADMAP
+    };
+
+    var margin = 0.5;
+    var southwest = new google.maps.LatLng( em.minimumLatitude - margin, em.minimumLongitude - margin );
+    var northeast = new google.maps.LatLng( em.maximumLatitude + margin, em.maximumLongitude + margin );
+
+    var bounds = new google.maps.LatLngBounds( southwest, northeast );
+
+    var markers = [];
 
 
     function initializeMap() {
 
-      var em = vm.getExtremaAndMeans();
-
-
-      var mapSpecification = {
-          center:new google.maps.LatLng(em.meanLatitude, em.meanLongitude),
-          zoom:8,
-          mapTypeId:google.maps.MapTypeId.ROADMAP
-      };
-
       var neighborhoodMap=new google.maps.Map(document.getElementById("neighborhood"),mapSpecification);
-
-      var markers = [];
 
       for( var i = 0; i < vm.getNumberOfPlaces(); i++ ) {
           var marker = new google.maps.Marker({
     	      map: neighborhoodMap,
               position: { lat: vm.getPlace(i).latitude, lng: vm.getPlace(i).longitude },
-    	      title: vm.getPlace(i).person.toString,
-    	      id: i
+    	      title: vm.getPlace(i).person.fullName,
+              id: i
     	      });
       
           markers.push( marker );
       } // for
-
 
       var addClickListener = function(i) {
           var marker = markers[i];
@@ -248,44 +277,56 @@ var view = function( vm ) {
           addClickListener(i);
       } // for
 
-
-      var margin = 0.5;
-      var southwest = new google.maps.LatLng( em.minimumLatitude - margin, em.minimumLongitude - margin );
-      var northeast = new google.maps.LatLng( em.maximumLatitude + margin, em.maximumLongitude + margin );
-
-      var bounds = new google.maps.LatLngBounds( southwest, northeast );
-
       neighborhoodMap.fitBounds( bounds );
     } // initializeMap()
 
     google.maps.event.addDomListener(window, 'load', initializeMap);
 
-    var setDefaultSearchBounds = function() {
-        var loYear = 1846; // year that Iowa became a state
-        var hiYear = (new Date()).getFullYear();
-
-	$("#loYear").attr("value", loYear);
-	$("#hiYear").attr("value", hiYear );
-    }; // setDefaultSearchBounds()
-
-    setDefaultSearchBounds();
-
     return that;
 }; // view()
 
-var ourModel = model();
-var ourViewModel = viewModel( ourModel );
-var ourView = view( ourViewModel );
+var go = function() {
+    var ourModel = model();
+    var ourViewModel = viewModel( ourModel );
+    var ourView = view( ourViewModel );
 
-var myViewModel = function() {
-    var that = this;
-    that.places = ko.observableArray( ourModel.places );
-    var ly = $("#loYear").val();
-    var hy = $("#hiYear").val();
-    that.filter = function( formElement) { console.log( ly + "---" + hy  ) };
-};
+    var myViewModel = function() {
+        var that = this;
+        that.places = ko.observableArray( ourModel.places );
+        that.selectedPlace = ko.observable(0);
 
-ko.applyBindings(new myViewModel() );
+        that.filter = function( formElement) { 
+            var ly = $("#loYear").val();
+            var hy = $("#hiYear").val();
+
+            console.log( ly + "---" + hy  ); 
+            console.log( "length of array = "  + ourModel.places.length );
+	    for( var i = 0; i < ourModel.places.length; i++ ) {
+	        var place = ourModel.places[i];	    
+                var birthday = place.birthday;
+	        var year = birthday.getFullYear();
+                var check = " is not in range";
+	        if( (ly <= year) && (year <= hy) ) {
+                    check = " is in range";
+		    place.setInRange();
+	        } // if
+		else {
+		    place.setOutOfRange();
+		} // else
+	        console.log( year + check );
+	    } // for
+            that.selectedPlace += 1;
+        }; // filter()
+
+        that.choose = function() { 
+            console.log( "button pushed" ); 
+            $(".nameButton").removeClass( "nameButtonColor" );
+	    $(".nameButton").addClass( "selectedNameColor" ); 
+        };
+    }; // myViewModel()
+
+    ko.applyBindings(new myViewModel() );
+}; // go()
 
 
 
