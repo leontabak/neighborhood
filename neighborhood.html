@@ -36,10 +36,8 @@
 <div class="col3" id="listOfBirthplaces">
 <h2 class="labels">People</h2>
 <div id="origins" data-bind="foreach: places">
-  <div data-bind="if: inRange()">
   <button type="button" class="nameButton nameButtonColor" 
       data-bind="text: person.fullName, click: choose"></button><br>
-  </div>
 </div>
 </div>
 

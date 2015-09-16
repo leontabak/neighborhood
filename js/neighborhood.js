@@ -28,13 +28,6 @@ var model = function() {
             firstName, middleName, lastName, 
             city, state, birthday ) {
 
-	var rangeCheck = true;
-
-	// Some code to check out how Knockout's if binding works.
-	//	if( birthday.getFullYear() < 1900 || birthday.getFullYear() > 1950 ) {
-	//    rangeCheck = false;
-	//} // if
-
 	var result = {};
 
 	result.latitude = latitude;
@@ -43,10 +36,6 @@ var model = function() {
         result.city = city;
         result.state = state;
 	result.birthday = birthday;
-
-	result.inRange = ko.computed( function() { return rangeCheck; } );
-	result.setInRange = function() { rangeCheck = true; };
-	result.setOutOfRange = function() { rangeCheck = false; };
 
         result.choose = function() { console.log( "look at this face" ); };
 
@@ -247,37 +236,37 @@ var view = function( vm ) {
 
     var bounds = new google.maps.LatLngBounds( southwest, northeast );
 
-    var markers = [];
-
+    that.markers = [];
+    that.neighborhoodMap = null;
 
     function initializeMap() {
 
-      var neighborhoodMap=new google.maps.Map(document.getElementById("neighborhood"),mapSpecification);
+      that.neighborhoodMap=new google.maps.Map(document.getElementById("neighborhood"),mapSpecification);
 
       for( var i = 0; i < vm.getNumberOfPlaces(); i++ ) {
           var marker = new google.maps.Marker({
-    	      map: neighborhoodMap,
+    	      map: that.neighborhoodMap,
               position: { lat: vm.getPlace(i).latitude, lng: vm.getPlace(i).longitude },
     	      title: vm.getPlace(i).person.fullName,
               id: i
     	      });
       
-          markers.push( marker );
+          that.markers.push( marker );
       } // for
 
       var addClickListener = function(i) {
-          var marker = markers[i];
+          var marker = that.markers[i];
           var iw = informationWindows[i];
-          var fun =  function() { iw.open( neighborhoodMap, marker ); };
+          var fun =  function() { iw.open( that.neighborhoodMap, marker ); };
           google.maps.event.addListener( marker, 'click', fun );
       }; // funMaker
 
 
-      for( var i = 0; i < markers.length; i++ ) {
+      for( var i = 0; i < that.markers.length; i++ ) {
           addClickListener(i);
       } // for
 
-      neighborhoodMap.fitBounds( bounds );
+      that.neighborhoodMap.fitBounds( bounds );
     } // initializeMap()
 
     google.maps.event.addDomListener(window, 'load', initializeMap);
@@ -293,7 +282,6 @@ var go = function() {
     var myViewModel = function() {
         var that = this;
         that.places = ko.observableArray( ourModel.places );
-        that.selectedPlace = ko.observable(0);
 
         that.filter = function( formElement) { 
             var ly = $("#loYear").val();
@@ -301,21 +289,26 @@ var go = function() {
 
             console.log( ly + "---" + hy  ); 
             console.log( "length of array = "  + ourModel.places.length );
-	    for( var i = 0; i < ourModel.places.length; i++ ) {
-	        var place = ourModel.places[i];	    
-                var birthday = place.birthday;
-	        var year = birthday.getFullYear();
-                var check = " is not in range";
-	        if( (ly <= year) && (year <= hy) ) {
-                    check = " is in range";
-		    place.setInRange();
-	        } // if
-		else {
-		    place.setOutOfRange();
-		} // else
-	        console.log( year + check );
+	    that.places.removeAll();
+	    ourModel = model();
+	    var markers = ourView.markers;
+	    var neighborhoodMap = ourView.neighborhoodMap;
+
+	    for( var i = 0; i < markers.length; i++ ) {
+		markers[i].setMap(null);
 	    } // for
-            that.selectedPlace += 1;
+
+	    for( var i = 0; i < ourModel.places.length; i++ ) {
+                var year = ourModel.places[i].birthday.getFullYear();
+		if( (ly < year) && (year < hy) ) {
+		    that.places.push( ourModel.places[i] );
+		    markers[i].setMap( neighborhoodMap );
+                    console.log( "add " + year );
+		} // if
+		else {
+		    console.log( "do not add " + year );
+		} // else
+	    } // for
         }; // filter()
 
         that.choose = function() { 
