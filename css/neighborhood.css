@@ -4,10 +4,18 @@
   07 September 2015
 */
 
+/*
+Specify the color between and around the elements of the application. 
+*/
 body {
   background: #CCFFEE;
 }
 
+/*
+Specify the size, typeface, weight, and color of all
+text except for the text on buttons and on the map
+and its information windows.
+*/
 .labels {
   color: #6622AA;
   font-family: "Arial, sans-serif";
@@ -15,6 +23,10 @@ body {
   font-size: x-large;
 }
 
+/*
+Specify the styling of that part of the application
+in which user enters an interval (a range of years).
+*/
 #searchBox {
   background: #EEDDFF;
   margin-top: 40px;
@@ -25,17 +37,31 @@ body {
   border-radius: 20px;
 }
 
+/*
+Specify the size of the field in which user
+enters a year and the typeface with which that
+year is displayed.
+*/
 .year {
   width: 60px;
   font-family: "Arial, sans-serif";
   font-size: large;
 }
 
+/*
+Specify the separation of the list of names of
+accomplished Iowans and the map that shows their
+places of birth from other elements of the application.
 #listAndMap {
   margin-top: 12px;
   margin-bottom: 40px;
 }
 
+/*
+Specify colors and dimensions of the element of
+the application that contains buttons with the 
+names of accomplished Iowans.
+*/
 #listOfBirthplaces {
   background: #EEDDFF;
   margin-right: 12px;
@@ -46,16 +72,26 @@ body {
   border-radius: 20px;
 }
 
+
 #listOfBirthplaces h2 {
   padding: 8px;
 }
 
+/*
+Specify spacing and typeface for buttons that
+bear the names of accomplished Iowans.
+*/
 #origins {
   margin-bottom: 60px;
   padding: -8px;
   font-family: "Arial, sans-serif";
 }
 
+/*
+Specify dimensions, spacing, and the color, size, and
+typeface of text for a button that bears the name of
+an accomplished Iowan.
+*/
 .nameButton {
   border-radius: 8px;
   margin-top: 2px;
@@ -68,14 +104,42 @@ body {
   font-size: 0.8em;
 }
 
+/*
+Specify the color of a button that
+bears the name of an accomplished Iowan.
+*/
 .nameButtonColor {
   background: #CCFFEE;
+}
+
+/*
+Specify the color that a button that
+bears the name of an accomplished Iowan
+assumes when the mouse passes over the button.
+*/
+.nameButton:hover {
+  background: #EEFFDD;
+}
+
+/*
+Specify the color that a button that
+bears the name of an accomplished Iowan
+assumes when the mouse is clicked on the button.
+*/
+.nameButton:focus {
+  background: #6622AA;
+  color: #CCFFEE;
 }
 
 .selectedNameButtonColor {
   background: #FFFFFF;
 }
 
+/*
+Specify the dimensions, spacing, color, and type
+on the button in the search bar in which a range
+of years can be entered.
+*/
 .submitButton {
   background: #CCFFEE;
   border-radius: 8px;
@@ -89,6 +153,11 @@ body {
   font-size: 0.8em;
 }
 
+/*
+Specify the color, dimensions, and spacing
+of the element of the application that contains
+the map.
+*/
 #mapOfBirthplaces {
   width: 560px;
   margin-left: 12px;
@@ -100,11 +169,18 @@ body {
   border-radius: 20px;
 }
 
+/*
+Specify the dimensions of the map.
+*/
 #neighborhood {
   width: 512px; 
   height: 512px; 
 }
 
+/*
+Specify the spacing for the caption
+on the map.
+*/
 #mapCaption {
   margin-top: 18px;
   margin-bottom: 36px;
