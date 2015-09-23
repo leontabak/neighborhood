@@ -4,7 +4,10 @@
 
 // Burlington, IA 40.808, -91.115
 // Cedar Falls, IA 42.534, -92.445
+// Clinton, IA 41.844, -90.188
+// Cresco, IA 43.381, -92.114
 // Decorah, IA 43.303, -91.785
+// Gladbrook, IA 42.187, -92.715
 // Mount Pleasant, IA 40.971, -91.548
 // Riverside, IA 41.479, -91.581
 // Solon, IA 41.807, -91.494
@@ -15,6 +18,11 @@
 // the development of science and technology.
 var model = function() {
     var that = {};
+
+    // Define an array of objects, each of which describes a
+    // person together with that person's date of birth and
+    // place of birth.
+    var places = [];
 
     // Define a function that will create an object
     // that describes a person (first, middle, and last name).
@@ -44,17 +52,22 @@ var model = function() {
         result.city = city;
         result.state = state;
 	result.birthday = birthday;
+        result.marker = null;
 
-        result.choose = function() { console.log( "look at this face: " + result.person.fullName ); };
+	//        result.choose = function() { 
+        //    console.log( "look at this face: " + result.person.fullName );
+        //    if( result.marker.getAnimation() != null ) {
+        //        result.marker.setAnimation( null );
+	//    } // if
+	//    else {
+        //        result.marker.setAnimation( google.maps.Animation.BOUNCE );
+	//    } // else
+        //}; // choose()
 
         return result;
     }; // makePlace()
 
-
-    // Define an array of objects, each of which describes a
-    // person together with that person's date of birth and
-    // place of birth.
-    var places = [];
+    // Create the objects and store them in the array.
     places.push( makePlace( 42.534, -92.445,
 			"Marc", "", "Andreessen", "Cedar Falls", "Iowa", new Date( 1971, 6, 9 ) ));
     places.push( makePlace( 41.807, -91.494,
@@ -63,10 +76,10 @@ var model = function() {
 			    "Clifford", "", "Berry", "Gladbrook", "Iowa", new Date( 1918, 3, 19 ) ));
     places.push( makePlace( 43.381, -92.114,
 		        "Norman", "", "Borlaug", "Cresco", "Iowa", new Date( 1914, 2, 25 ) ));
-    places.push( makePlace( 40.808, -91.115,
-			"Wallace", "", "Carothers", "Burlington", "Iowa", new Date( 1896, 3, 27 ) ));
     places.push( makePlace( 41.844, -90.188,
 			 "Donald", "", "Campbell", "Clinton", "Iowa", new Date( 1904, 7, 5 ) ));
+    places.push( makePlace( 40.808, -91.115,
+			"Wallace", "", "Carothers", "Burlington", "Iowa", new Date( 1896, 3, 27 ) ));
     places.push( makePlace( 41.671, -91.346,
 			"Herbert", "",  "Hoover", "West Branch", "Iowa", new Date( 1874, 7, 10 ) ));
     places.push( makePlace( 41.479, -91.581,
@@ -314,6 +327,13 @@ var view = function( vm ) {
      // in the information window.
      // Store the information windows in the array.
      var informationWindows = [];
+    that.getNumberOfInformationWindows = function() {
+        return informationWindows.length;
+    }; // getNumberOfInformationWindows()
+
+    that.getInformationWindow = function( index ) {
+        return informationWindows[index];
+    }; // getInformationWindow()
 
      for( var i = 0; i < vm.getNumberOfPlaces(); i++ ) {
          var place = vm.getPlace(i);
@@ -345,7 +365,16 @@ var view = function( vm ) {
 
     var bounds = new google.maps.LatLngBounds( southwest, northeast );
 
-    that.markers = [];
+    var markers = [];
+
+    that.getNumberOfMarkers = function() {
+        return markers.length;
+    }; // getNumberOfMarkers()
+
+    that.getMarker = function( index ) {
+        return markers[index];
+    }; // getMarker()
+
     that.neighborhoodMap = null;
 
     var initializeMap = function() {
@@ -355,21 +384,23 @@ var view = function( vm ) {
 
       // Create a marker for each object in the model and store in an array.
       for( var i = 0; i < vm.getNumberOfPlaces(); i++ ) {
+          var place = vm.getPlace(i);
           var marker = new google.maps.Marker({
     	      map: that.neighborhoodMap,
-              position: { lat: vm.getPlace(i).latitude, lng: vm.getPlace(i).longitude },
-    	      title: vm.getPlace(i).person.fullName,
+              position: { lat: place.latitude, lng: place.longitude },
+    	      title: place.person.fullName,
               id: i
     	      });
       
-          that.markers.push( marker );
+          place.marker = marker;
+          markers.push( marker );
       } // for
 
       // Define a function that will tell a marker
       // what to do when the mouse is clicked.
       // (The marker will display its information window.)
       var addClickListener = function(i) {
-          var marker = that.markers[i];
+          var marker = markers[i];
           var iw = informationWindows[i];
           var fun =  function() { iw.open( that.neighborhoodMap, marker ); };
           google.maps.event.addListener( marker, 'click', fun );
@@ -378,7 +409,7 @@ var view = function( vm ) {
       // Associated the function that responds to mouse
       // clicks with the marker that listens (waits) for 
       // mouse clicks.
-      for( var i = 0; i < that.markers.length; i++ ) {
+      for( var i = 0; i < markers.length; i++ ) {
           addClickListener(i);
       } // for
 
@@ -400,11 +431,69 @@ var go = function() {
     var ourViewModel = viewModel( ourModel );
     var ourView = view( ourViewModel );
 
+    var toggleMarker = function( index ) { 
+        var result = function() {
+            var marker = ourView.getMarker( index );
+            if( marker.getAnimation() != null ) {
+                marker.setAnimation( null );
+	    } // if
+	    else {
+                marker.setAnimation( google.maps.Animation.BOUNCE );
+	    } // else
+        }; // result()
+	return result;
+    }; // toggleMarker()
+
+
+    var openInformationWindow = function( index ) {
+        var result = function() {
+            var informationWindow = ourView.getInformationWindow( index );
+            var marker = ourView.getMarker( index );
+            var map = ourView.neighborhoodMap;
+            informationWindow.open( map, marker );
+        }; // result()
+        return result;
+    }; // openInformationWindow()
+
+    var closeInformationWindow = function( index ) {
+        var result = function() {
+            var informationWindow = ourView.getInformationWindow( index );
+            var marker = ourView.getMarker( index );
+            var map = ourView.neighborhoodMap;
+            informationWindow.close( map, marker );
+        }; // result()
+        return result;
+    }; // closeInformationWindow()
+
+
+    var toggleMarkerAndWindow = function( index ) {
+        var result = function() {
+            var map = ourView.neighborhoodMap;
+            var marker = ourView.getMarker( index );
+            var informationWindow = ourView.getInformationWindow( index );
+            if( marker.getAnimation() != null ) {
+                marker.setAnimation( null );
+                informationWindow.close( map, marker );
+	    } // if
+	    else {
+                marker.setAnimation( google.maps.Animation.BOUNCE );
+                informationWindow.open( map, marker );
+	    } // else
+        }; // result()
+	return result;
+    }; // toggleMarkerAndWindow()
+
     var myViewModel = function() {
         var that = this;
         // Tell Knockout framework where to find the model
         // that contains the data to be displayed on the page.
-        that.places = ko.observableArray( ourModel.places );
+        that.places = ko.observableArray();
+	for( var i = 0; i < ourViewModel.getNumberOfPlaces(); i++ ) {
+            var place = ourViewModel.getPlace(i);
+            place.choose = toggleMarkerAndWindow( i );
+            that.places.push( place );
+	} // for
+
 
         // Define the function that will respond to input
         // in the search field.
@@ -420,12 +509,12 @@ var go = function() {
 	    that.places.removeAll();
 
 	    ourModel = model();
-	    var markers = ourView.markers;
+	    //var markers = ourView.markers;
 	    var neighborhoodMap = ourView.neighborhoodMap;
 
             // Remove all markers from the map.
-	    for( var i = 0; i < markers.length; i++ ) {
-		markers[i].setMap(null);
+	    for( var i = 0; i < ourView.getNumberofMarkers(); i++ ) {
+		ourView.getMarker(i).setMap(null);
 	    } // for
 
             // Add all markers that identify the places of birth
@@ -437,7 +526,7 @@ var go = function() {
                 var year = ourModel.places[i].birthday.getFullYear();
 		if( (ly < year) && (year < hy) ) {
 		    that.places.push( ourModel.places[i] );
-		    markers[i].setMap( neighborhoodMap );
+		    ourView.getMarker(i).setMap( neighborhoodMap );
                     //console.log( "add " + year );
 		} // if
 		else {
