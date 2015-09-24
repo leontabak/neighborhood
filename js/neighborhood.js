@@ -515,6 +515,38 @@ var go = function() {
             var ly = $("#loYear").val();
             var hy = $("#hiYear").val();
 
+            // validate inputs
+            var isFourDigitPositiveInteger = function( n ) {
+                return /^[1-9]\d\d\d$/.test( n );
+            }; 
+
+            var warningMessage = "";
+
+            if( !isFourDigitPositiveInteger(ly) ) {
+                ly = 1846;
+                formElement.elements["loYear"].value = ly;
+                warningMessage += "The first year must be a four digit positive integer.\n";
+            } // if
+
+            if( !isFourDigitPositiveInteger(hy) ) {
+                hy = (new Date()).getFullYear();
+                formElement.elements["hiYear"].value = hy; 
+                warningMessage += "The second year must be a four digit positive integer.\n";
+            } // if
+
+            if( (warningMessage === "") && (ly > hy) ) {
+                ly = 1846;
+                formElement.elements["loYear"].value = ly;
+                hy = (new Date()).getFullYear();
+                formElement.elements["hiYear"].value = hy; 
+                warningMessage += "The first year must be less than or equal to the second year.";
+            } // if
+
+            if( warningMessage != "" ) {
+                alert( warningMessage );
+            } // if
+            // end validation of inputs
+
 	    var neighborhoodMap = ourView.getNeighborhoodMap();
 
             // Make visible all markers that identify the places of birth

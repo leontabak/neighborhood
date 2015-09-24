@@ -4,7 +4,6 @@
 <link rel="stylesheet" type="text/css" href="css/neighborhood.css">
 <link rel="stylesheet" type="text/css" href="css/aeon-grid.min.css">
 <script src="js/jquery-1.11.3.min.js"></script>
-<script src="js/jquery.validate.min.js"></script>
 <script src="js/knockout-3.3.0.js"></script>
 <script src="http://maps.googleapis.com/maps/api/js"></script>
 <script src="js/neighborhood.js"></script>
@@ -20,9 +19,9 @@
 <div class="col12" id="searchBox">
 <form data-bind="submit: filter" id="range">
 <span class="labels">Search within a range of years: </span>
-<input type="text" class="year required digits" name="loYear" id="loYear">
+<input type="text" class="year" name="loYear" id="loYear">
 <span class="labels">to</span>
-<input type="text" class="year required digits" name="hiYear" id="hiYear">
+<input type="text" class="year" name="hiYear" id="hiYear">
 <input type="submit" class="submitButton" value="Submit">
 </form>
 </div>
