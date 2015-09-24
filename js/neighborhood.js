@@ -375,18 +375,22 @@ var view = function( vm ) {
         return markers[index];
     }; // getMarker()
 
-    that.neighborhoodMap = null;
+    var neighborhoodMap = null;
+
+    that.getNeighborhoodMap = function() {
+        return neighborhoodMap;
+    }; // getNeighborhoodMap()
 
     var initializeMap = function() {
 
       // Create the map.
-      that.neighborhoodMap=new google.maps.Map(document.getElementById("neighborhood"),mapSpecification);
+      neighborhoodMap=new google.maps.Map(document.getElementById("neighborhood"),mapSpecification);
 
       // Create a marker for each object in the model and store in an array.
       for( var i = 0; i < vm.getNumberOfPlaces(); i++ ) {
           var place = vm.getPlace(i);
           var marker = new google.maps.Marker({
-    	      map: that.neighborhoodMap,
+    	      map: neighborhoodMap,
               position: { lat: place.latitude, lng: place.longitude },
     	      title: place.person.fullName,
               id: i
@@ -402,7 +406,16 @@ var view = function( vm ) {
       var addClickListener = function(i) {
           var marker = markers[i];
           var iw = informationWindows[i];
-          var fun =  function() { iw.open( that.neighborhoodMap, marker ); };
+          var fun =  function() {
+              console.log( "listening" ); 
+              iw.open( that.getNeighborhoodMap(), marker );
+              if( marker.getAnimation() != null ) {
+                  marker.setAnimation( null );
+              } // if
+              else {
+                  marker.setAnimation( google.maps.Animation.BOUNCE );
+              } // else
+          };
           google.maps.event.addListener( marker, 'click', fun );
       }; // funMaker
 
@@ -417,7 +430,7 @@ var view = function( vm ) {
       // space around all of the places of birth.
       // (All places of birth will be visible, with space
       // between the place and the map's boundary.)
-      that.neighborhoodMap.fitBounds( bounds );
+      neighborhoodMap.fitBounds( bounds );
     } // initializeMap()
 
     google.maps.event.addDomListener(window, 'load', initializeMap);
@@ -449,7 +462,7 @@ var go = function() {
         var result = function() {
             var informationWindow = ourView.getInformationWindow( index );
             var marker = ourView.getMarker( index );
-            var map = ourView.neighborhoodMap;
+            var map = ourView.getNeighborhoodMap();
             informationWindow.open( map, marker );
         }; // result()
         return result;
@@ -459,7 +472,7 @@ var go = function() {
         var result = function() {
             var informationWindow = ourView.getInformationWindow( index );
             var marker = ourView.getMarker( index );
-            var map = ourView.neighborhoodMap;
+            var map = ourView.getNeighborhoodMap();
             informationWindow.close( map, marker );
         }; // result()
         return result;
@@ -468,7 +481,7 @@ var go = function() {
 
     var toggleMarkerAndWindow = function( index ) {
         var result = function() {
-            var map = ourView.neighborhoodMap;
+            var map = ourView.getNeighborhoodMap();
             var marker = ourView.getMarker( index );
             var informationWindow = ourView.getInformationWindow( index );
             if( marker.getAnimation() != null ) {
@@ -491,9 +504,9 @@ var go = function() {
 	for( var i = 0; i < ourViewModel.getNumberOfPlaces(); i++ ) {
             var place = ourViewModel.getPlace(i);
             place.choose = toggleMarkerAndWindow( i );
+            place.visible = ko.observable(true);
             that.places.push( place );
 	} // for
-
 
         // Define the function that will respond to input
         // in the search field.
@@ -502,37 +515,26 @@ var go = function() {
             var ly = $("#loYear").val();
             var hy = $("#hiYear").val();
 
-            //console.log( ly + "---" + hy  ); 
-            //console.log( "length of array = "  + ourModel.places.length );
+	    var neighborhoodMap = ourView.getNeighborhoodMap();
 
-            // Remove (temporarily) all buttons from the model and page.
-	    that.places.removeAll();
-
-	    ourModel = model();
-	    //var markers = ourView.markers;
-	    var neighborhoodMap = ourView.neighborhoodMap;
-
-            // Remove all markers from the map.
-	    for( var i = 0; i < ourView.getNumberofMarkers(); i++ ) {
-		ourView.getMarker(i).setMap(null);
-	    } // for
-
-            // Add all markers that identify the places of birth
+            // Make visible all markers that identify the places of birth
             // of people whose dates of birth lie within the
             // specified range of years.
-            // Similarly, add all buttons that identify persons
+            // Similarly, make visible all buttons that identify persons
             // whose dates of birth lie within the specified range.
-	    for( var i = 0; i < ourModel.places.length; i++ ) {
-                var year = ourModel.places[i].birthday.getFullYear();
-		if( (ly < year) && (year < hy) ) {
-		    that.places.push( ourModel.places[i] );
-		    ourView.getMarker(i).setMap( neighborhoodMap );
-                    //console.log( "add " + year );
-		} // if
-		else {
-		    //console.log( "do not add " + year );
-		} // else
-	    } // for
+            // Make all other markers and buttons invisible.
+            for( var i = 0; i < that.places().length; i++ ) {
+                var place = that.places()[i];
+                var year = place.birthday.getFullYear();
+                if( (ly < year) && (year < hy) ) {
+                    place.visible(true);
+                    ourView.getMarker(i).setMap( neighborhoodMap );
+                } // if
+                else {
+                    place.visible(false);
+                    ourView.getMarker(i).setMap( null );
+                } // else
+            } // for
         }; // filter()
 
     }; // myViewModel()
