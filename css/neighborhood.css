@@ -4,27 +4,22 @@
   07 September 2015
 */
 
-html {
-  background: #CCFFEE;
-}
 
 /*
 Specify the color between and around the elements of the application. 
 */
 body {
-  background: #CCFFEE;
+  opacity: 1.0;
+  background: #CCFFEE !important;
 }
 
-/*
-Specify the size, typeface, weight, and color of all
-text except for the text on buttons and on the map
-and its information windows.
-*/
-.labels {
+/* Specify the color of text on the page. */
+label {
   color: #6622AA;
-  font-family: "Arial, sans-serif";
-  font-weight: bold;
-  font-size: x-large;
+}
+
+.container-fluid h2 {
+  color: #6622AA;
 }
 
 /*
@@ -43,7 +38,6 @@ in which user enters an interval (a range of years).
   border-color: #AA44EE;
   border-radius: 20px;
 }
-
 
 /*
 Specify the separation of the list of names of
@@ -69,7 +63,6 @@ names of accomplished Iowans.
   border-radius: 20px;
 }
 
-
 #listOfBirthplaces h2 {
   padding: 8px;
 }
@@ -79,9 +72,8 @@ Specify spacing and typeface for buttons that
 bear the names of accomplished Iowans.
 */
 #origins {
-  margin-bottom: 60px;
+  margin-bottom: 0px;
   padding: -8px;
-/*  font-family: "Arial, sans-serif"; */
 }
 
 /*

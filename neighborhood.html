@@ -31,20 +31,22 @@
 <div class="col-sm-12" id="searchBox">
 <form data-bind="submit: filter" class="form-inline" role="form">
 <div class="form-group">
-<span class="labels">Search within a range of years: </span>
+<label for="loYear" class="input-lg">People born between: </loYear>
 <input type="text" class="form-control input-lg" name="loYear" id="loYear">
-<span class="labels">to</span>
+<label for="hiYear" class="input-lg">and</label>
 <input type="text" class="form-control input-lg" name="hiYear" id="hiYear">
 <button type="submit" class="btn btn-info btn-lg">SEARCH</button>
 </div><!-- .form-group -->
 </form>
+<div class="alert alert-warning" style="visibility: hidden">
+</div>
 </div><!-- .col-sm-12 -->
 </div><!-- .row -->
 
 <div class="row">
 <div id="listAndMap">
 <div class="col-sm-3" id="listOfBirthplaces">
-<h2 class="labels">People</h2>
+<h2>People</h2>
 <div class="btn-group-vertical btn-group-lg">
 <div id="origins" data-bind="foreach: places">
   <button type="button" class="btn btn-info btn-lg btn-block" 
@@ -56,7 +58,7 @@
 <div class="col-sm-9" id="mapOfBirthplaces">
 <div id="neighborhood"></div>
 <div id="mapCaption">
-<h2 class="labels">Places of Birth</h2>
+<h2>Places of Birth</h2>
 </div><!-- #mapCaption -->
 </div><!-- #neighorhood -->
 </div><!-- .col-sm-9 -->

@@ -517,6 +517,8 @@ var go = function() {
 
             var warningMessage = "";
 
+            // Check values of years that were entered.
+            // Construct a warning message if values are invalid.
             if( !isFourDigitPositiveInteger(ly) ) {
                 ly = 1846; // year that Iowa became a state
                 formElement.elements["loYear"].value = ly;
@@ -539,9 +541,16 @@ var go = function() {
                 warningMessage += "The first year must be less than or equal to the second year.";
             } // if
 
+            // Display warning message if necessary.
             if( warningMessage != "" ) {
-                alert( warningMessage );
+                $(".alert-warning").html( warningMessage);
+                $(".alert-warning").css( "visibility", "visible" );
             } // if
+            else {
+                $(".alert-warning").html( "" );
+                $(".alert-warning").css( "visibility", "hidden" );
+            } // else
+
             // end validation of inputs
 
 	    var neighborhoodMap = ourView.getNeighborhoodMap();
