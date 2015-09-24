@@ -286,8 +286,12 @@ var view = function( vm ) {
         var wikipediaURL = "http://en.wikipedia.org/w/api.php?action=query&format=json" +
           "&prop=revisions&rvprop=content&titles=" + firstName + "%20" + lastName;
 
+        var ifWikipediaDoesNotRespond = function() {
+            parse( '{query: {pages: "alma_mater [[WikiPedia unavailable]]|"}}' );
+        };
+
         // Use a JQuery function to read data from an on-line service.
-        $.ajax( wikipediaURL, ajaxSettings );
+        $.ajax( wikipediaURL, ajaxSettings ).fail( ifWikipediaDoesNotRespond );
     }; // getSchoolsAttended()
 
     // Define a function that can be used to create an information

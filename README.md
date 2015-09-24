@@ -17,6 +17,11 @@ played in the television programs and motion pictures have
 appeared at this festival. My own daughters received an award
 for best costumes from the hand of Walter Koenig (Mr. Chekov).
 
+The program makes use of the Google Maps and Wikipedia APIs.
+It uses String methods and a regular expression to search 
+through the text that Wikipedia returns to find the names 
+of the colleges and universities that a person attended.
+
 The program makes use of the Bootstrap, JQuery, and 
 Knockout libraries.
 
