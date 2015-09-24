@@ -287,7 +287,8 @@ var view = function( vm ) {
           "&prop=revisions&rvprop=content&titles=" + firstName + "%20" + lastName;
 
         var ifWikipediaDoesNotRespond = function() {
-            parse( '{query: {pages: "alma_mater [[WikiPedia unavailable]]|"}}' );
+            console.log( "Wikipedia is not responding." );
+            informationWindow.setContent( informationWindow.getContent() + "Wikipedia is not responding." );;
         };
 
         // Use a JQuery function to read data from an on-line service.
