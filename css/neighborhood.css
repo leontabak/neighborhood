@@ -4,6 +4,10 @@
   07 September 2015
 */
 
+html {
+  background: #CCFFEE;
+}
+
 /*
 Specify the color between and around the elements of the application. 
 */
@@ -29,6 +33,9 @@ in which user enters an interval (a range of years).
 */
 #searchBox {
   background: #EEDDFF;
+  width: 80%;
+  margin-left: 12px;
+  margin-right: 12px;
   margin-top: 40px;
   margin-bottom: 24px;
   padding: 12px;
@@ -37,16 +44,6 @@ in which user enters an interval (a range of years).
   border-radius: 20px;
 }
 
-/*
-Specify the size of the field in which user
-enters a year and the typeface with which that
-year is displayed.
-*/
-.year {
-  width: 60px;
-  font-family: "Arial, sans-serif";
-  font-size: large;
-}
 
 /*
 Specify the separation of the list of names of
@@ -64,9 +61,9 @@ names of accomplished Iowans.
 */
 #listOfBirthplaces {
   background: #EEDDFF;
+  margin-left: 12px;
   margin-right: 12px;
   padding-bottom: 48px;
-  width: 192px;
   border: solid;
   border-color: #AA44EE;
   border-radius: 20px;
@@ -84,73 +81,7 @@ bear the names of accomplished Iowans.
 #origins {
   margin-bottom: 60px;
   padding: -8px;
-  font-family: "Arial, sans-serif";
-}
-
-/*
-Specify dimensions, spacing, and the color, size, and
-typeface of text for a button that bears the name of
-an accomplished Iowan.
-*/
-.nameButton {
-  border-radius: 8px;
-  margin-top: 2px;
-  margin-bottom: 12px;
-  margin-left: 20px;
-  width: 12em;
-  color: #6622AA;
-  font-family: "Arial, sans-serif";
-  font-weight: bold;
-  font-size: 0.8em;
-}
-
-/*
-Specify the color of a button that
-bears the name of an accomplished Iowan.
-*/
-.nameButtonColor {
-  background: #CCFFEE;
-}
-
-/*
-Specify the color that a button that
-bears the name of an accomplished Iowan
-assumes when the mouse passes over the button.
-*/
-.nameButton:hover {
-  background: #EEFFDD;
-}
-
-/*
-Specify the color that a button that
-bears the name of an accomplished Iowan
-assumes when the mouse is clicked on the button.
-*/
-.nameButton:focus {
-  background: #6622AA;
-  color: #CCFFEE;
-}
-
-.selectedNameButtonColor {
-  background: #FFFFFF;
-}
-
-/*
-Specify the dimensions, spacing, color, and type
-on the button in the search bar in which a range
-of years can be entered.
-*/
-.submitButton {
-  background: #CCFFEE;
-  border-radius: 8px;
-  margin-top: 2px;
-  margin-bottom: 12px;
-  margin-left: 20px;
-  width: 12em;
-  color: #6622AA;
-  font-family: "Arial, sans-serif";
-  font-weight: bold;
-  font-size: 0.8em;
+/*  font-family: "Arial, sans-serif"; */
 }
 
 /*

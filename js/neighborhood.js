@@ -52,17 +52,7 @@ var model = function() {
         result.city = city;
         result.state = state;
 	result.birthday = birthday;
-        result.marker = null;
-
-	//        result.choose = function() { 
-        //    console.log( "look at this face: " + result.person.fullName );
-        //    if( result.marker.getAnimation() != null ) {
-        //        result.marker.setAnimation( null );
-	//    } // if
-	//    else {
-        //        result.marker.setAnimation( google.maps.Animation.BOUNCE );
-	//    } // else
-        //}; // choose()
+        //result.marker = null;
 
         return result;
     }; // makePlace()
@@ -160,7 +150,7 @@ var viewModel = function( m ) {
             case 11: monthName = "December"; break;
         }; // switch
 
-        var result = monthName + " " + date.getUTCDate() + "," + date.getFullYear();
+        var result = monthName + " " + date.getUTCDate() + ", " + date.getFullYear();
         return result;
     } // dateToString()
 
@@ -238,7 +228,8 @@ var view = function( vm ) {
     // Place the initial (default) range of years
     // in the search bar.
     var loYear = 1846; // year that Iowa became a state
-    var hiYear = (new Date()).getFullYear();
+    var hiYear = 2228; // year of Captain Kirk's birth 
+    // or make upper bound on range this year: (new Date()).getFullYear();
 
     $("#loYear").attr("value", loYear);
     $("#hiYear").attr("value", hiYear );
@@ -272,6 +263,10 @@ var view = function( vm ) {
                oneSchool = oneSchool.replace( "]]", "" );
                result = result + "<br>" + oneSchool;
             } // while
+
+            if( result === "" ) {
+                result = "<br>No schools found.";
+            } // if
 
 	    informationWindow.setContent( informationWindow.getContent() + result );
         }; // parse()
@@ -523,21 +518,23 @@ var go = function() {
             var warningMessage = "";
 
             if( !isFourDigitPositiveInteger(ly) ) {
-                ly = 1846;
+                ly = 1846; // year that Iowa became a state
                 formElement.elements["loYear"].value = ly;
                 warningMessage += "The first year must be a four digit positive integer.\n";
             } // if
 
             if( !isFourDigitPositiveInteger(hy) ) {
-                hy = (new Date()).getFullYear();
+                hy = 2228; // year of Captain Kirk's birth
+                // or make this year the upper bound of range: (new Date()).getFullYear();
                 formElement.elements["hiYear"].value = hy; 
                 warningMessage += "The second year must be a four digit positive integer.\n";
             } // if
 
             if( (warningMessage === "") && (ly > hy) ) {
-                ly = 1846;
+                ly = 1846; // year that Iowa became a state
                 formElement.elements["loYear"].value = ly;
-                hy = (new Date()).getFullYear();
+                hy = 2228; // year of Captain Kirk's birth
+                // or make this year the upper bound of range: (new Date()).getFullYear();
                 formElement.elements["hiYear"].value = hy; 
                 warningMessage += "The first year must be less than or equal to the second year.";
             } // if
@@ -558,7 +555,7 @@ var go = function() {
             for( var i = 0; i < that.places().length; i++ ) {
                 var place = that.places()[i];
                 var year = place.birthday.getFullYear();
-                if( (ly < year) && (year < hy) ) {
+                if( (ly <= year) && (year <= hy) ) {
                     place.visible(true);
                     ourView.getMarker(i).setMap( neighborhoodMap );
                 } // if
