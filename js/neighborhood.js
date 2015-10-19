@@ -127,7 +127,7 @@ var viewModel = function( m ) {
 	        } // else
 	    } // else
         } // else
-    } // compareDates()
+    }; // compareDates()
 
     // Define a function that creates a string
     // that represents a date with the full name
@@ -148,11 +148,11 @@ var viewModel = function( m ) {
             case 9: monthName = "October"; break;
             case 10: monthName = "November"; break;
             case 11: monthName = "December"; break;
-        }; // switch
+        } // switch
 
         var result = monthName + " " + date.getUTCDate() + ", " + date.getFullYear();
         return result;
-    } // dateToString()
+    }; // dateToString()
 
     // Define an accessor method that returns
     // the number of place (person, date of birth, place of birth)
@@ -256,12 +256,13 @@ var view = function( vm ) {
             // Concatenate the names of the schools, placing an HTML <br> tag
             // before each name.
             var re = /\[\[[a-zA-Z ]*\]\]/g;
-            var schools;
-            while( schools = re.exec( almaMater ) ) {
+            var schools = re.exec( almaMater );
+            while( schools !== null ) {
                var oneSchool = schools[0];
                oneSchool = oneSchool.replace( "[[", "" );
                oneSchool = oneSchool.replace( "]]", "" );
                result = result + "<br>" + oneSchool;
+               schools = re.exec( almaMater );
             } // while
 
             if( result === "" ) {
@@ -288,7 +289,7 @@ var view = function( vm ) {
 
         var ifWikipediaDoesNotRespond = function() {
             console.log( "Wikipedia is not responding." );
-            informationWindow.setContent( informationWindow.getContent() + "Wikipedia is not responding." );;
+            informationWindow.setContent( informationWindow.getContent() + "Wikipedia is not responding." );
         };
 
         // Use a JQuery function to read data from an on-line service.
@@ -409,21 +410,21 @@ var view = function( vm ) {
           var fun =  function() {
               console.log( "listening" ); 
               iw.open( that.getNeighborhoodMap(), marker );
-              if( marker.getAnimation() != null ) {
+              if( marker.getAnimation() !== null ) {
                   marker.setAnimation( null );
               } // if
               else {
                   marker.setAnimation( google.maps.Animation.BOUNCE );
               } // else
-          };
+          }; // fun()
           google.maps.event.addListener( marker, 'click', fun );
-      }; // funMaker
+      }; // addClickListener()
 
       // Associated the function that responds to mouse
       // clicks with the marker that listens (waits) for 
       // mouse clicks.
-      for( var i = 0; i < markers.length; i++ ) {
-          addClickListener(i);
+      for( var j = 0; j < markers.length; j++ ) {
+          addClickListener(j);
       } // for
 
       // Adjust the size of the map to allow for some
@@ -431,9 +432,9 @@ var view = function( vm ) {
       // (All places of birth will be visible, with space
       // between the place and the map's boundary.)
       neighborhoodMap.fitBounds( bounds );
-    } // initializeMap()
+    }; // initializeMap()
 
-    google.maps.event.addDomListener(window, 'load', initializeMap);
+    //google.maps.event.addDomListener(window, 'load', initializeMap);
 
     return that;
 }; // view()
@@ -447,7 +448,7 @@ var go = function() {
     var toggleMarker = function( index ) { 
         var result = function() {
             var marker = ourView.getMarker( index );
-            if( marker.getAnimation() != null ) {
+            if( marker.getAnimation() !== null ) {
                 marker.setAnimation( null );
 	    } // if
 	    else {
@@ -484,7 +485,7 @@ var go = function() {
             var map = ourView.getNeighborhoodMap();
             var marker = ourView.getMarker( index );
             var informationWindow = ourView.getInformationWindow( index );
-            if( marker.getAnimation() != null ) {
+            if( marker.getAnimation() !== null ) {
                 marker.setAnimation( null );
                 informationWindow.close( map, marker );
 	    } // if
@@ -526,28 +527,28 @@ var go = function() {
             // Construct a warning message if values are invalid.
             if( !isFourDigitPositiveInteger(ly) ) {
                 ly = 1846; // year that Iowa became a state
-                formElement.elements["loYear"].value = ly;
+                formElement.elements.loYear.value = ly;
                 warningMessage += "The first year must be a four digit positive integer.\n";
             } // if
 
             if( !isFourDigitPositiveInteger(hy) ) {
                 hy = 2228; // year of Captain Kirk's birth
                 // or make this year the upper bound of range: (new Date()).getFullYear();
-                formElement.elements["hiYear"].value = hy; 
+                formElement.elements.hiYear.value = hy; 
                 warningMessage += "The second year must be a four digit positive integer.\n";
             } // if
 
             if( (warningMessage === "") && (ly > hy) ) {
                 ly = 1846; // year that Iowa became a state
-                formElement.elements["loYear"].value = ly;
+                formElement.elements.loYear.value = ly;
                 hy = 2228; // year of Captain Kirk's birth
                 // or make this year the upper bound of range: (new Date()).getFullYear();
-                formElement.elements["hiYear"].value = hy; 
+                formElement.elements.hiYear.value = hy; 
                 warningMessage += "The first year must be less than or equal to the second year.";
             } // if
 
             // Display warning message if necessary.
-            if( warningMessage != "" ) {
+            if( warningMessage !== "" ) {
                 $(".alert-warning").html( warningMessage);
                 $(".alert-warning").css( "visibility", "visible" );
             } // if

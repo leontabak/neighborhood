@@ -1,72 +1,76 @@
 <!DOCTYPE html>
 <html>
-<head>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<meta charset="utf-8">
-<meta http-equi="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Illustrious Iowans</title>
 
-<title>Illustrious Iowans</title>
+    <link rel="stylesheet" type="text/css" href="css/neighborhood.css">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
 
-<link rel="stylesheet" type="text/css" href="css/neighborhood.css">
-<link rel="stylesheet" href="css/bootstrap.min.css">
+    <script src="js/jquery-1.11.3.min.js"></script>
+    <script src="js/knockout-3.3.0.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="http://maps.googleapis.com/maps/api/js"></script>
+    <script src="js/neighborhood.js"></script>
 
-<script src="js/jquery-1.11.3.min.js"></script>
-<script src="js/knockout-3.3.0.js"></script>
-<script src="js/bootstrap.min.js"></script>
-<script src="http://maps.googleapis.com/maps/api/js"></script>
-<script src="js/neighborhood.js"></script>
+    <script> 
+      $(document).ready( go );
+    </script>
+  </head>
 
-<script> 
-  $(document).ready( go );
-</script>
+  <body>
 
-</head>
+    <div id="map">
+    </div>
 
-<body>
+    <script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA8SOav5FiGfVdAjvL_2kvC-urwW2RvjP0&amp;signed_in=true&amp;callback=initializeMap">
+    </script>
 
-<div class="container-fluid">
 
-<div class="row">
-<div class="col-sm-12" id="searchBox">
-<form data-bind="submit: filter" class="form-inline" role="form">
-<div class="form-group">
-<label for="loYear" class="input-lg">People born between: </loYear>
-<input type="text" class="form-control input-lg" name="loYear" id="loYear">
-<label for="hiYear" class="input-lg">and</label>
-<input type="text" class="form-control input-lg" name="hiYear" id="hiYear">
-<button type="submit" class="btn btn-info btn-lg">SEARCH</button>
-</div><!-- .form-group -->
-</form>
-<div class="alert alert-warning" style="visibility: hidden">
-</div>
-</div><!-- .col-sm-12 -->
-</div><!-- .row -->
+    <div class="container-fluid">
 
-<div class="row">
-<div id="listAndMap">
-<div class="col-sm-3" id="listOfBirthplaces">
-<h2>People</h2>
-<div class="btn-group-vertical btn-group-lg">
-<div id="origins" data-bind="foreach: places">
-  <button type="button" class="btn btn-info btn-lg btn-block" 
-      data-bind="text: person.fullName, click: choose, visible: visible"></button>
-</div><!-- #origins -->
-</div>
-</div><!-- col-sm-3 -->
+      <div class="row">
+        <div class="col-sm-12" id="searchBox">
+          <form data-bind="submit: filter" class="form-inline">
+            <div class="form-group">
+              <label for="loYear" class="input-lg">People born between: </label>
+              <input type="text" class="form-control input-lg" name="loYear" id="loYear">
+              <label for="hiYear" class="input-lg">and</label>
+              <input type="text" class="form-control input-lg" name="hiYear" id="hiYear">
+              <button type="submit" class="btn btn-info btn-lg">SEARCH</button>  
+            </div><!-- .form-group -->
+          </form>
+          <div class="alert alert-warning" style="visibility: hidden"></div>
+        </div><!-- .col-sm-12 -->
+      </div><!-- .row -->
 
-<div class="col-sm-9" id="mapOfBirthplaces">
-<div id="neighborhood"></div>
-<div id="mapCaption">
-<h2>Places of Birth</h2>
-</div><!-- #mapCaption -->
-</div><!-- #neighorhood -->
-</div><!-- .col-sm-9 -->
-</div><!-- #listAndMap -->
-</div><!-- .row -->
+      <div class="row">
+        <div id="listAndMap">
+          <div class="col-sm-3" id="listOfBirthplaces">
+            <h2>People</h2>
+            <div class="btn-group-vertical btn-group-lg">
+              <div id="origins" data-bind="foreach: places">
+                <button type="button" class="btn btn-info btn-lg btn-block" 
+                  data-bind="text: person.fullName, click: choose, visible: visible"></button>
+              </div><!-- #origins -->
+            </div><!-- btn-group-vertical btn-group-lg -->
+          </div><!-- col-sm-3 -->
 
-</div><!-- .container-fluid -->
+          <div class="col-sm-9" id="mapOfBirthplaces">
+            <div id="neighborhood"></div>
+            <div id="mapCaption">
+              <h2>Places of Birth</h2>
+            </div><!-- #mapCaption -->
+          </div><!-- .col-sm-9 -->
+        </div><!-- #listAndMap -->
+      </div><!-- .row -->
 
-</body>
+    </div><!-- .container-fluid -->
+
+  </body>
 
 </html>
