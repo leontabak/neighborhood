@@ -6,7 +6,7 @@
 
 
 /*
-Specify the color between and around the elements of the application. 
+Specify the color between and around the elements of the application.
 */
 body {
   opacity: 1.0;
@@ -50,7 +50,7 @@ places of birth from other elements of the application.
 
 /*
 Specify colors and dimensions of the element of
-the application that contains buttons with the 
+the application that contains buttons with the
 names of accomplished Iowans.
 */
 #listOfBirthplaces {
@@ -96,8 +96,8 @@ the map.
 Specify the dimensions of the map.
 */
 #neighborhood {
-  width: 512px; 
-  height: 512px; 
+  width: 512px;
+  height: 512px;
 }
 
 /*

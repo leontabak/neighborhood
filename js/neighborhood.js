@@ -40,8 +40,8 @@ var model = function() {
     // Define a function that will create an object
     // that describes a person together with that person's
     // date of birth and place of birth.
-    var makePlace = function( latitude, longitude, 
-            firstName, middleName, lastName, 
+    var makePlace = function( latitude, longitude,
+            firstName, middleName, lastName,
             city, state, birthday ) {
 
 	var result = {};
@@ -228,7 +228,7 @@ var view = function( vm ) {
     // Place the initial (default) range of years
     // in the search bar.
     var loYear = 1846; // year that Iowa became a state
-    var hiYear = 2228; // year of Captain Kirk's birth 
+    var hiYear = 2228; // year of Captain Kirk's birth
     // or make upper bound on range this year: (new Date()).getFullYear();
 
     $("#loYear").attr("value", loYear);
@@ -321,7 +321,7 @@ var view = function( vm ) {
         return new google.maps.InfoWindow({content: content});
      }; // makeInformationWindow()
 
-     // Make all an array. 
+     // Make all an array.
      // Make an information window for each person in the model.
      // Read on Wikipedia the names of schools that person attended
      // and append that list of schools to the text that is already
@@ -396,7 +396,7 @@ var view = function( vm ) {
     	      title: place.person.fullName,
               id: i
     	      });
-      
+
           place.marker = marker;
           markers.push( marker );
       } // for
@@ -408,7 +408,7 @@ var view = function( vm ) {
           var marker = markers[i];
           var iw = informationWindows[i];
           var fun =  function() {
-              console.log( "listening" ); 
+              console.log( "listening" );
               iw.open( that.getNeighborhoodMap(), marker );
               if( marker.getAnimation() !== null ) {
                   marker.setAnimation( null );
@@ -421,7 +421,7 @@ var view = function( vm ) {
       }; // addClickListener()
 
       // Associated the function that responds to mouse
-      // clicks with the marker that listens (waits) for 
+      // clicks with the marker that listens (waits) for
       // mouse clicks.
       for( var j = 0; j < markers.length; j++ ) {
           addClickListener(j);
@@ -445,7 +445,7 @@ var go = function() {
     var ourViewModel = viewModel( ourModel );
     var ourView = view( ourViewModel );
 
-    var toggleMarker = function( index ) { 
+    var toggleMarker = function( index ) {
         var result = function() {
             var marker = ourView.getMarker( index );
             if( marker.getAnimation() !== null ) {
@@ -511,7 +511,7 @@ var go = function() {
 
         // Define the function that will respond to input
         // in the search field.
-        that.filter = function( formElement) { 
+        that.filter = function( formElement) {
             // Read the years that were entered in the search box.
             var ly = $("#loYear").val();
             var hy = $("#hiYear").val();
@@ -519,7 +519,7 @@ var go = function() {
             // validate inputs
             var isFourDigitPositiveInteger = function( n ) {
                 return /^[1-9]\d\d\d$/.test( n );
-            }; 
+            };
 
             var warningMessage = "";
 
@@ -534,7 +534,7 @@ var go = function() {
             if( !isFourDigitPositiveInteger(hy) ) {
                 hy = 2228; // year of Captain Kirk's birth
                 // or make this year the upper bound of range: (new Date()).getFullYear();
-                formElement.elements.hiYear.value = hy; 
+                formElement.elements.hiYear.value = hy;
                 warningMessage += "The second year must be a four digit positive integer.\n";
             } // if
 
@@ -543,7 +543,7 @@ var go = function() {
                 formElement.elements.loYear.value = ly;
                 hy = 2228; // year of Captain Kirk's birth
                 // or make this year the upper bound of range: (new Date()).getFullYear();
-                formElement.elements.hiYear.value = hy; 
+                formElement.elements.hiYear.value = hy;
                 warningMessage += "The first year must be less than or equal to the second year.";
             } // if
 

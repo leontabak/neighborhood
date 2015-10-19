@@ -16,7 +16,7 @@
     <script src="http://maps.googleapis.com/maps/api/js"></script>
     <script src="js/neighborhood.js"></script>
 
-    <script> 
+    <script>
       $(document).ready( go );
     </script>
   </head>
@@ -41,7 +41,7 @@
               <input type="text" class="form-control input-lg" name="loYear" id="loYear">
               <label for="hiYear" class="input-lg">and</label>
               <input type="text" class="form-control input-lg" name="hiYear" id="hiYear">
-              <button type="submit" class="btn btn-info btn-lg">SEARCH</button>  
+              <button type="submit" class="btn btn-info btn-lg">SEARCH</button>
             </div><!-- .form-group -->
           </form>
           <div class="alert alert-warning" style="visibility: hidden"></div>
@@ -54,7 +54,7 @@
             <h2>People</h2>
             <div class="btn-group-vertical btn-group-lg">
               <div id="origins" data-bind="foreach: places">
-                <button type="button" class="btn btn-info btn-lg btn-block" 
+                <button type="button" class="btn btn-info btn-lg btn-block"
                   data-bind="text: person.fullName, click: choose, visible: visible"></button>
               </div><!-- #origins -->
             </div><!-- btn-group-vertical btn-group-lg -->
