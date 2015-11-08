@@ -222,7 +222,7 @@ var viewModel = function( m ) {
 
 // Define a function that will construct a map, markers,
 // and information windows.
-var view = function( vm ) {
+var decoratorHelper = function( vm ) {
     var that = {};
 
     // Place the initial (default) range of years
@@ -382,74 +382,67 @@ var view = function( vm ) {
         return neighborhoodMap;
     }; // getNeighborhoodMap()
 
-    var initializeMap = function() {
+    // Create a marker for each object in the model and store in an array.
+    for( var i = 0; i < vm.getNumberOfPlaces(); i++ ) {
+        var place = vm.getPlace(i);
+        var marker = new google.maps.Marker({
+            map: neighborhoodMap,
+            position: { lat: place.latitude, lng: place.longitude },
+    	    title: place.person.fullName,
+            id: i
+    	});
 
-      // Create a marker for each object in the model and store in an array.
-      for( var i = 0; i < vm.getNumberOfPlaces(); i++ ) {
-          var place = vm.getPlace(i);
-          var marker = new google.maps.Marker({
-    	      map: neighborhoodMap,
-              position: { lat: place.latitude, lng: place.longitude },
-    	      title: place.person.fullName,
-              id: i
-    	      });
+        place.marker = marker;
+        markers.push( marker );
+    } // for
 
-          place.marker = marker;
-          markers.push( marker );
-      } // for
+    // Define a function that will tell a marker
+    // what to do when the mouse is clicked.
+    // (The marker will display its information window.)
+    var addClickListener = function(i) {
+        var marker = markers[i];
+        var iw = informationWindows[i];
+        var fun =  function() {
+            console.log( "listening" );
+            iw.open( that.getNeighborhoodMap(), marker );
+            if( marker.getAnimation() !== null ) {
+                marker.setAnimation( null );
+            } // if
+            else {
+                marker.setAnimation( google.maps.Animation.BOUNCE );
+            } // else
+        }; // fun()
+        google.maps.event.addListener( marker, 'click', fun );
+    }; // addClickListener()
 
-      // Define a function that will tell a marker
-      // what to do when the mouse is clicked.
-      // (The marker will display its information window.)
-      var addClickListener = function(i) {
-          var marker = markers[i];
-          var iw = informationWindows[i];
-          var fun =  function() {
-              console.log( "listening" );
-              iw.open( that.getNeighborhoodMap(), marker );
-              if( marker.getAnimation() !== null ) {
-                  marker.setAnimation( null );
-              } // if
-              else {
-                  marker.setAnimation( google.maps.Animation.BOUNCE );
-              } // else
-          }; // fun()
-          google.maps.event.addListener( marker, 'click', fun );
-      }; // addClickListener()
+    // Associated the function that responds to mouse
+    // clicks with the marker that listens (waits) for
+    // mouse clicks.
+    for( var j = 0; j < markers.length; j++ ) {
+        addClickListener(j);
+    } // for
 
-      // Associated the function that responds to mouse
-      // clicks with the marker that listens (waits) for
-      // mouse clicks.
-      for( var j = 0; j < markers.length; j++ ) {
-          addClickListener(j);
-      } // for
-
-      // Adjust the size of the map to allow for some
-      // space around all of the places of birth.
-      // (All places of birth will be visible, with space
-      // between the place and the map's boundary.)
-      neighborhoodMap.fitBounds( bounds );
-    }; // initializeMap()
-
-    initializeMap();
-
-    //google.maps.event.addDomListener(window, 'load', initializeMap);
+    // Adjust the size of the map to allow for some
+    // space around all of the places of birth.
+    // (All places of birth will be visible, with space
+    // between the place and the map's boundary.)
+    neighborhoodMap.fitBounds( bounds );
 
     return that;
-}; // view()
+}; // decoratorHelper()
 
-// Define the function that will build the model, viewModel, and view.
+// Define the function that will build the model andviewModel.
 var go = function() {
     var ourModel = model();
     ourViewModel = viewModel( ourModel );
 }; // go()
 
 var decorateMap = function() {
-    var ourView = view( ourViewModel );
+    var ourDecoratorHelper = decoratorHelper( ourViewModel );
 
     var toggleMarker = function( index ) {
         var result = function() {
-            var marker = ourView.getMarker( index );
+            var marker = ourDecoratorHelper.getMarker( index );
             if( marker.getAnimation() !== null ) {
                 marker.setAnimation( null );
 	    } // if
@@ -463,9 +456,9 @@ var decorateMap = function() {
 
     var openInformationWindow = function( index ) {
         var result = function() {
-            var informationWindow = ourView.getInformationWindow( index );
-            var marker = ourView.getMarker( index );
-            var map = ourView.getNeighborhoodMap();
+            var informationWindow = ourDecoratorHelper.getInformationWindow( index );
+            var marker = ourDecoratorHelper.getMarker( index );
+            var map = ourDecoratorHelper.getNeighborhoodMap();
             informationWindow.open( map, marker );
         }; // result()
         return result;
@@ -473,9 +466,9 @@ var decorateMap = function() {
 
     var closeInformationWindow = function( index ) {
         var result = function() {
-            var informationWindow = ourView.getInformationWindow( index );
-            var marker = ourView.getMarker( index );
-            var map = ourView.getNeighborhoodMap();
+            var informationWindow = ourDecoratorHelper.getInformationWindow( index );
+            var marker = ourDecoratorHelper.getMarker( index );
+            var map = ourDecoratorHelper.getNeighborhoodMap();
             informationWindow.close( map, marker );
         }; // result()
         return result;
@@ -484,9 +477,9 @@ var decorateMap = function() {
 
     var toggleMarkerAndWindow = function( index ) {
         var result = function() {
-            var map = ourView.getNeighborhoodMap();
-            var marker = ourView.getMarker( index );
-            var informationWindow = ourView.getInformationWindow( index );
+            var map = ourDecoratorHelper.getNeighborhoodMap();
+            var marker = ourDecoratorHelper.getMarker( index );
+            var informationWindow = ourDecoratorHelper.getInformationWindow( index );
             if( marker.getAnimation() !== null ) {
                 marker.setAnimation( null );
                 informationWindow.close( map, marker );
@@ -499,7 +492,7 @@ var decorateMap = function() {
 	return result;
     }; // toggleMarkerAndWindow()
 
-    var myViewModel = function() {
+    var myKnockoutHelper = function() {
         var that = this;
         // Tell Knockout framework where to find the model
         // that contains the data to be displayed on the page.
@@ -572,20 +565,20 @@ var decorateMap = function() {
                 var year = place.birthday.getFullYear();
                 if( (ly <= year) && (year <= hy) ) {
                     place.visible(true);
-                    ourView.getMarker(i).setMap( neighborhoodMap );
+                    ourDecoratorHelper.getMarker(i).setMap( neighborhoodMap );
                 } // if
                 else {
                     place.visible(false);
-                    ourView.getMarker(i).setMap( null );
+                    ourDecoratorHelper.getMarker(i).setMap( null );
                 } // else
             } // for
         }; // filter()
 
-    }; // myViewModel()
+    }; // myKnockoutHelper()
 
     // Use Knockout framework to connect data in model
     // with data displayed on HTML page.
-    ko.applyBindings(new myViewModel() );
+    ko.applyBindings(new myKnockoutHelper() );
 }; // decorateMap()
 
 

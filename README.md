@@ -1,7 +1,7 @@
 
 Neighborhood Map: Illustrious Iowans
 Author: Leon Tabak
-Date: 24 September 2015
+Date: 07 November 2015
 
 This application draws a map and marks on the map
 the places of birth of several Iowans who contributed
@@ -25,13 +25,10 @@ of the colleges and universities that a person attended.
 The program makes use of the Bootstrap, JQuery, and 
 Knockout libraries.
 
-The application is responsive. On a large screen,
-readers see a search bar at the top of the page,
-a vertical array of buttons on the left side of
-the page, and a map below the search bar and to
-the right of the buttons. On a small screen, readers
-see the search bar, group of buttons, and map one
-above the other.
+The application is responsive.
+Readers see a search bar at the top of the page
+and a vertical array of buttons on the left side of
+the page over a map.
 
 Readers can:
 1) click on a marker on the map. One click causes
