@@ -93,22 +93,13 @@ the map.
   border-radius: 20px;
 }
 
-/*
-Specify the dimensions of the map.
-*/
-#neighborhood {
-  width: 512px;
-  height: 512px;
+#bigMap {
+  height: 100%;
+  width: 100%;
+  left: 0;
+  position: absolute;
+  top: 0;
 }
 
-/*
-Specify the spacing for the caption
-on the map.
-*/
-#mapCaption {
-  margin-top: 18px;
-  margin-bottom: 36px;
-  margin-left: 40px;
-}
 
 

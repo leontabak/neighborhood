@@ -1,4 +1,9 @@
 <!DOCTYPE html>
+<!--
+  Leon Tabak
+  Project 5: Neighborhood Map
+  07 November 2015
+-->
 <html>
   <head>
     <meta charset="utf-8">
@@ -14,39 +19,6 @@
     <script src="js/knockout-3.3.0.js"></script>
     <script src="js/bootstrap.min.js"></script>
     <script src="js/neighborhood.js"></script>
-
-
-    <style>
-    #bigMap {
-      height: 100%;
-      width: 100%;
-      left: 0;
-      position: absolute;
-      top: 0;
-    }
-    </style>
-
-    <script>
-      var neighborhoodMap = null;
-      var ourViewModel = null;
-
-      var myInitializer = function() {
-
-        var mapSpecification = {
-            center:new google.maps.LatLng(42.0, -90.0),
-            zoom:8,
-            mapTypeId:google.maps.MapTypeId.ROADMAP
-        }; // mapSpecification
-
-        // Create the map.
-        neighborhoodMap=new google.maps.Map(document.getElementById("bigMap"),mapSpecification);
-        ausElysium();
-      };
-    </script>
-
-    <script>
-      $(document).ready( go );
-    </script>
   </head>
 
   <body>
@@ -91,7 +63,6 @@
       </div><!-- .row -->
 
     </div><!-- .container-fluid -->
-
   </body>
 
 </html>

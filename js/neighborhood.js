@@ -1,6 +1,6 @@
 // JavaScript for Project 5: Neighborhood
 // Leon Tabak
-// 07 September 2015
+// 07 November 2015
 
 // Burlington, IA 40.808, -91.115
 // Cedar Falls, IA 42.534, -92.445
@@ -384,11 +384,6 @@ var view = function( vm ) {
 
     var initializeMap = function() {
 
-	console.log( "Wir betreten feuertrunken." );
-
-      // Create the map.
-      //* neighborhoodMap=new google.maps.Map(document.getElementById("neighborhood"),mapSpecification);
-
       // Create a marker for each object in the model and store in an array.
       for( var i = 0; i < vm.getNumberOfPlaces(); i++ ) {
           var place = vm.getPlace(i);
@@ -449,7 +444,7 @@ var go = function() {
     ourViewModel = viewModel( ourModel );
 }; // go()
 
-var ausElysium = function() {
+var decorateMap = function() {
     var ourView = view( ourViewModel );
 
     var toggleMarker = function( index ) {
@@ -591,9 +586,26 @@ var ausElysium = function() {
     // Use Knockout framework to connect data in model
     // with data displayed on HTML page.
     ko.applyBindings(new myViewModel() );
-}; // ausElysium()
+}; // decorateMap()
 
 
+var neighborhoodMap = null;
+var ourViewModel = null;
+
+var myInitializer = function() {
+
+    var mapSpecification = {
+        center:new google.maps.LatLng(42.0, -90.0),
+        zoom:8,
+        mapTypeId:google.maps.MapTypeId.ROADMAP
+    }; // mapSpecification
+
+    // Create the map.
+    neighborhoodMap=new google.maps.Map(document.getElementById("bigMap"),mapSpecification);
+    decorateMap();
+}; // myInitializer()
+
+$(document).ready( go );
 
 
 
