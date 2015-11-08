@@ -27,7 +27,7 @@ Specify the styling of that part of the application
 in which user enters an interval (a range of years).
 */
 #searchBox {
-  background: #EEDDFF;
+  background: rgba( 248, 222, 255, 0.8 );
   width: 80%;
   margin-left: 12px;
   margin-right: 12px;
@@ -38,6 +38,7 @@ in which user enters an interval (a range of years).
   border-color: #AA44EE;
   border-radius: 20px;
 }
+
 
 /*
 Specify the separation of the list of names of
@@ -54,7 +55,7 @@ the application that contains buttons with the
 names of accomplished Iowans.
 */
 #listOfBirthplaces {
-  background: #EEDDFF;
+  background: rgba( 248, 222, 255, 0.8 );
   margin-left: 12px;
   margin-right: 12px;
   padding-bottom: 48px;

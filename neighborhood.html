@@ -13,8 +13,36 @@
     <script src="js/jquery-1.11.3.min.js"></script>
     <script src="js/knockout-3.3.0.js"></script>
     <script src="js/bootstrap.min.js"></script>
-    <script src="http://maps.googleapis.com/maps/api/js"></script>
     <script src="js/neighborhood.js"></script>
+
+
+    <style>
+    #bigMap {
+      height: 100%;
+      width: 100%;
+      left: 0;
+      position: absolute;
+      top: 0;
+    }
+    </style>
+
+    <script>
+      var neighborhoodMap = null;
+      var ourViewModel = null;
+
+      var myInitializer = function() {
+
+        var mapSpecification = {
+            center:new google.maps.LatLng(42.0, -90.0),
+            zoom:8,
+            mapTypeId:google.maps.MapTypeId.ROADMAP
+        }; // mapSpecification
+
+        // Create the map.
+        neighborhoodMap=new google.maps.Map(document.getElementById("bigMap"),mapSpecification);
+        ausElysium();
+      };
+    </script>
 
     <script>
       $(document).ready( go );
@@ -23,11 +51,11 @@
 
   <body>
 
-    <div id="map">
+    <div id="bigMap">
     </div>
 
     <script async defer
-        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA8SOav5FiGfVdAjvL_2kvC-urwW2RvjP0&amp;signed_in=true&amp;callback=initializeMap">
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA8SOav5FiGfVdAjvL_2kvC-urwW2RvjP0&amp;signed_in=true&amp;callback=myInitializer">
     </script>
 
 
@@ -59,13 +87,6 @@
               </div><!-- #origins -->
             </div><!-- btn-group-vertical btn-group-lg -->
           </div><!-- col-sm-3 -->
-
-          <div class="col-sm-9" id="mapOfBirthplaces">
-            <div id="neighborhood"></div>
-            <div id="mapCaption">
-              <h2>Places of Birth</h2>
-            </div><!-- #mapCaption -->
-          </div><!-- .col-sm-9 -->
         </div><!-- #listAndMap -->
       </div><!-- .row -->
 

@@ -376,7 +376,7 @@ var view = function( vm ) {
         return markers[index];
     }; // getMarker()
 
-    var neighborhoodMap = null;
+    //* var neighborhoodMap = null;
 
     that.getNeighborhoodMap = function() {
         return neighborhoodMap;
@@ -384,8 +384,10 @@ var view = function( vm ) {
 
     var initializeMap = function() {
 
+	console.log( "Wir betreten feuertrunken." );
+
       // Create the map.
-      neighborhoodMap=new google.maps.Map(document.getElementById("neighborhood"),mapSpecification);
+      //* neighborhoodMap=new google.maps.Map(document.getElementById("neighborhood"),mapSpecification);
 
       // Create a marker for each object in the model and store in an array.
       for( var i = 0; i < vm.getNumberOfPlaces(); i++ ) {
@@ -434,6 +436,8 @@ var view = function( vm ) {
       neighborhoodMap.fitBounds( bounds );
     }; // initializeMap()
 
+    initializeMap();
+
     //google.maps.event.addDomListener(window, 'load', initializeMap);
 
     return that;
@@ -442,7 +446,10 @@ var view = function( vm ) {
 // Define the function that will build the model, viewModel, and view.
 var go = function() {
     var ourModel = model();
-    var ourViewModel = viewModel( ourModel );
+    ourViewModel = viewModel( ourModel );
+}; // go()
+
+var ausElysium = function() {
     var ourView = view( ourViewModel );
 
     var toggleMarker = function( index ) {
@@ -559,8 +566,6 @@ var go = function() {
 
             // end validation of inputs
 
-	    var neighborhoodMap = ourView.getNeighborhoodMap();
-
             // Make visible all markers that identify the places of birth
             // of people whose dates of birth lie within the
             // specified range of years.
@@ -586,7 +591,7 @@ var go = function() {
     // Use Knockout framework to connect data in model
     // with data displayed on HTML page.
     ko.applyBindings(new myViewModel() );
-}; // go()
+}; // ausElysium()
 
 
 
