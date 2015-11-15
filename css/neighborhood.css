@@ -23,6 +23,23 @@ label {
 }
 
 /*
+Specify the styling of the button
+that makes the search box and the array
+of buttons visible or invisible.
+*/
+#toggle {
+  background: rgba( 248, 222, 255, 0.8 );
+  margin-left: 12px;
+  margin-right: 12px;
+  margin-bottom: 6px;
+  margin-top: 32px;
+  padding: 12px;
+  border: solid;
+  border-color: #AA44EE;
+  border-radius: 20px;
+}
+
+/*
 Specify the styling of that part of the application
 in which user enters an interval (a range of years).
 */
@@ -31,8 +48,8 @@ in which user enters an interval (a range of years).
   width: 80%;
   margin-left: 12px;
   margin-right: 12px;
-  margin-top: 40px;
-  margin-bottom: 24px;
+  margin-top: 6px;
+  margin-bottom: 6px;
   padding: 12px;
   border: solid;
   border-color: #AA44EE;
@@ -44,8 +61,9 @@ in which user enters an interval (a range of years).
 Specify the separation of the list of names of
 accomplished Iowans and the map that shows their
 places of birth from other elements of the application.
+*/
 #listAndMap {
-  margin-top: 12px;
+  margin-top: 6px;
   margin-bottom: 40px;
 }
 
@@ -58,7 +76,7 @@ names of accomplished Iowans.
   background: rgba( 248, 222, 255, 0.8 );
   margin-left: 12px;
   margin-right: 12px;
-  padding-bottom: 48px;
+  padding-bottom: 24px;
   border: solid;
   border-color: #AA44EE;
   border-radius: 20px;

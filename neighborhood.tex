@@ -1,0 +1,60 @@
+
+GLOBAL
+  +neighborhoodMap: GoogleMap
+  +ourViewModel: viewModel
+  +myInitializer()
+  +go()
+
+Person
+  +firstName: String
+  +middleName: String
+  +lastName: String
+
+Place
+  +latitude: float
+  +longitude: float
+  +person: Person
+  +city: String
+  +state: String
+  +birthday: Date
+
+ExtremaAndMeans
+  +meanLatitude: float
+  +meanLongitude: float
+  +minimumLatitude: float
+  +maximumLatitude: float
+  +minimumLongitude: float
+  +maximumLongitude: float
+
+model()
+  -makePerson( firstName: String, middleName: String, lastName: String ): Person
+  -makePlace( latitude: float, longitude: float, firstName: String, middleName: String, lastName: String, birthday: Date )
+  +places: Place[]
+
+viewModel( m: model )
+  +compareDates( a: Date, b: Date ): int
+  +dateToString( date: Date ): String
+  +getNumberOfPlaces(): int
+  +getPlace( index: int ): Place
+  +getExtremaAndMeans(): ExtremaAndMeans
+
+decoratorHelper( vm : viewModel )
+  -loYear: int
+  -hiYear: int
+  -getSchoolsAttended( firstName: String, lastName: String, informationWindow: InformationWindow )
+    -parse( dataStructure )
+  -makeInformationWindow( place: Place )
+  -addClickListener( i: int )
+  +getNumberOfInformationWindows(): int
+  +getInformationWindow( index: int ): InformationWindow
+  +getNumberOfMarkers(): int
+  +geMarker( index: int ): Marker
+  +getNeighborhoodMap: GoogleMap
+
+decorateMap()
+  -toggleMarker( index: int )
+  -openInformationWindow( index: int )
+  -closeInformationWindow( index: int )
+  -toggleMarkerAndWindow( index: int )
+  -myKnockoutHelper()
+
