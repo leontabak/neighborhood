@@ -31,11 +31,36 @@
     </script>
 
 
+    <script>
+    // Define the listener for the button that
+    // makes the controls (the search box and
+    // array of buttons) visible or hidden.
+    var tc = (function() {
+      var that = {};
+      var visible = true;
+      that.toggleControls = function() {
+        if( visible ) {
+          $("#toggleButton").text( "SHOW CONTROLS" );
+          $("#searchBox").css( "visibility", "hidden" );
+          $("#listAndMap").css( "visibility", "hidden" );
+          visible = false;
+        } // if
+        else {
+          $("#toggleButton").text( "HIDE CONTROLS" );
+          $("#searchBox").css( "visibility", "visible" );
+          $("#listAndMap").css( "visibility", "visible" );
+          visible = true;
+        } // else
+      };
+      return that;
+    })();
+    </script>
+
     <div class="container-fluid">
 
       <div class="row">
-        <div class="col-sm-3" id="toggle">
-          <button type="button" class="btn btn-info btn-lg">HIDE CONTROLS</button>
+        <div class="col-sm-3" id="toggle" onclick="tc.toggleControls()">
+          <button type="button" id="toggleButton" class="btn btn-info btn-lg">HIDE CONTROLS</button>
         </div><!-- .col-sm-3 -->
       </div> <!-- .row -->
 
