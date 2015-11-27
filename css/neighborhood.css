@@ -4,6 +4,10 @@
   07 September 2015
 */
 
+html {
+  width: 100%;
+  height: 100%;
+}
 
 /*
 Specify the color between and around the elements of the application.
@@ -11,6 +15,8 @@ Specify the color between and around the elements of the application.
 body {
   opacity: 1.0;
   background: #CCFFEE !important;
+  width: 100%;
+  height: 100%;
 }
 
 /* Specify the color of text on the page. */

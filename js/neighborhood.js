@@ -288,7 +288,7 @@ var decoratorHelper = function( vm ) {
           "&prop=revisions&rvprop=content&titles=" + firstName + "%20" + lastName;
 
         var ifWikipediaDoesNotRespond = function() {
-            console.log( "Wikipedia is not responding." );
+            console.alert( "Wikipedia is not responding." );
             informationWindow.setContent( informationWindow.getContent() + "Wikipedia is not responding." );
         };
 
@@ -400,16 +400,28 @@ var decoratorHelper = function( vm ) {
     // what to do when the mouse is clicked.
     // (The marker will display its information window.)
     var addClickListener = function(i) {
+        console.log( "listening for clicks on marker# " + i );
+
         var marker = markers[i];
         var iw = informationWindows[i];
+        var map = that.getNeighborhoodMap(); 
+
         var fun =  function() {
-            console.log( "listening" );
-            iw.open( that.getNeighborhoodMap(), marker );
+
+            var numberOfMarkers = that.getNumberOfMarkers();
+            for( var j = 0; j < numberOfMarkers; j++ ) {
+		var anotherWindow = informationWindows[j];
+                var anotherMarker = markers[j];
+                anotherWindow.close( map, anotherMarker );
+            } // for
+
+            iw.open( map, marker );
             if( marker.getAnimation() !== null ) {
                 marker.setAnimation( null );
             } // if
             else {
                 marker.setAnimation( google.maps.Animation.BOUNCE );
+                setTimeout( function() { marker.setAnimation(null); }, 2000);
             } // else
         }; // fun()
         google.maps.event.addListener( marker, 'click', fun );
@@ -447,18 +459,40 @@ var decorateMap = function() {
                 marker.setAnimation( null );
 	    } // if
 	    else {
+                console.log( "decorateMap toggleMarker result: marker# " + index );
                 marker.setAnimation( google.maps.Animation.BOUNCE );
+		//          stopAnimation( marker );
 	    } // else
         }; // result()
 	return result;
     }; // toggleMarker()
 
-
+    /*
     var openInformationWindow = function( index ) {
+        console.log( "openInformationWindow" );
         var result = function() {
-            var informationWindow = ourDecoratorHelper.getInformationWindow( index );
-            var marker = ourDecoratorHelper.getMarker( index );
+
             var map = ourDecoratorHelper.getNeighborhoodMap();
+            var informationWindow;
+            var marker;
+
+            // Only one information window may be open at a time,
+            // so close any windows that might be open before opening
+            // a new window.
+            var numberOfMarkers = ourDecoratorHelper.getNumberOfMarkers();
+            console.log( "OpenInformationWindow: number of markers = " + numberOfMarkers );
+            for( var markerIndex = 0; markerIndex < numberOfMarkers; markerIndex++ ) {
+                console.log( "openInformationWindow: inside loop / markerIndex = " + markerIndex );
+		if( markerIndex !== index ) {
+		    console.log( "openInformationWindow: inside for / inside if / makerIndex = " + markerIndex );
+                  informationWindow = ourDecoratorHelper.getInformationWindow( index );
+                  marker = ourDecoratorHelper.getMarker( index );
+                  informationWindow.close( map, marker );
+                } // if
+            } // for
+
+            informationWindow = ourDecoratorHelper.getInformationWindow( index );
+            marker = ourDecoratorHelper.getMarker( index );
             informationWindow.open( map, marker );
         }; // result()
         return result;
@@ -473,10 +507,14 @@ var decorateMap = function() {
         }; // result()
         return result;
     }; // closeInformationWindow()
-
+    */
 
     var toggleMarkerAndWindow = function( index ) {
+        var closeAllInformationWindows = function() {
+        };
+
         var result = function() {
+            console.log( "toggleMarkerAndWindow / result / markerIndex = " + index );
             var map = ourDecoratorHelper.getNeighborhoodMap();
             var marker = ourDecoratorHelper.getMarker( index );
             var informationWindow = ourDecoratorHelper.getInformationWindow( index );
@@ -486,6 +524,16 @@ var decorateMap = function() {
 	    } // if
 	    else {
                 marker.setAnimation( google.maps.Animation.BOUNCE );
+                setTimeout( function() { marker.setAnimation(null); }, 2000 );
+                console.log( "toggleMarkerWindow / result / else clause / markerIndex = " + index );
+
+          	var numberOfMarkers = ourDecoratorHelper.getNumberOfMarkers();
+                for( var markerIndex = 0; markerIndex < numberOfMarkers; markerIndex++ ) {
+                    var anotherWindow = ourDecoratorHelper.getInformationWindow( markerIndex );
+                    var anotherMarker = ourDecoratorHelper.getMarker( markerIndex );
+                    anotherWindow.close( map, anotherMarker );
+                } // for
+
                 informationWindow.open( map, marker );
 	    } // else
         }; // result()
@@ -590,6 +638,8 @@ var myInitializer = function() {
     var mapSpecification = {
         center:new google.maps.LatLng(42.0, -90.0),
         zoom:8,
+        draggable: false,
+        scrollwheel: false,
         mapTypeId:google.maps.MapTypeId.ROADMAP
     }; // mapSpecification
 
