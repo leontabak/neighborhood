@@ -621,12 +621,16 @@ var decorateMap = function() {
                 } // else
             } // for
         }; // filter()
-
+	that.loBound = ko.observable("1900");
+	that.hiBound = ko.observable("1950");
+        that.difference = ko.pureComputed( function() { console.log( "edit!" ); return that.hiBound() - that.loBound(); }, this );
+        that.changeReporter = function() { console.log( "changed!" ); return true; };
+        return that;
     }; // myKnockoutHelper()
 
     // Use Knockout framework to connect data in model
     // with data displayed on HTML page.
-    ko.applyBindings(new myKnockoutHelper() );
+    ko.applyBindings( myKnockoutHelper() );
 }; // decorateMap()
 
 

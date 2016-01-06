@@ -54,6 +54,12 @@
       };
       return that;
     })();
+
+    //var boundsModel = {
+    //  loBound: ko.observable(1970),
+    //  hiBound: ko.observable(1980)
+    //};
+    //ko.applyBindings( boundsModel ); 
     </script>
 
     <div class="container-fluid">
@@ -66,15 +72,25 @@
 
       <div class="row">
         <div class="col-sm-12" id="searchBox">
-          <form data-bind="submit: filter" class="form-inline">
-            <div class="form-group">
+          <!--<form data-bind="submit: filter" class="form-inline">-->
+            <div class="form-inline form-group">
               <label for="loYear" class="input-lg">People born between: </label>
-              <input type="text" class="form-control input-lg" name="loYear" id="loYear">
+              <input
+                  type="text" 
+                  class="form-control input-lg" 
+                  name="loYear" 
+                  id="loYear" 
+                  data-bind="textInput: loBound, event: {keypress: changeReporter}"/>
               <label for="hiYear" class="input-lg">and</label>
-              <input type="text" class="form-control input-lg" name="hiYear" id="hiYear">
-              <button type="submit" class="btn btn-info btn-lg">SEARCH</button>
+              <input
+                  type="text"
+                  class="form-control input-lg"
+                  name="hiYear"
+                  id="hiYear"
+                  data-bind="textInput: hiBound"/>
+              <label type="text" class="form-control input-lg">((<span data-bind="text: difference"></span>))<label/>
             </div><!-- .form-group -->
-          </form>
+          <!--</form>-->
           <div class="alert alert-warning" style="visibility: hidden"></div>
         </div><!-- .col-sm-12 -->
       </div><!-- .row -->
