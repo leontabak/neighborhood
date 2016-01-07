@@ -76,19 +76,26 @@
             <div class="form-inline form-group">
               <label for="loYear" class="input-lg">People born between: </label>
               <input
-                  type="text" 
+                  type="search" 
                   class="form-control input-lg" 
                   name="loYear" 
                   id="loYear" 
-                  data-bind="textInput: loBound, event: {keypress: changeReporter}"/>
+                  data-bind="textInput: loBound, event: {keyup: changeReporter}"/>
               <label for="hiYear" class="input-lg">and</label>
               <input
-                  type="text"
+                  type="search"
                   class="form-control input-lg"
                   name="hiYear"
                   id="hiYear"
-                  data-bind="textInput: hiBound"/>
-              <label type="text" class="form-control input-lg">((<span data-bind="text: difference"></span>))<label/>
+                  data-bind="textInput: hiBound, event: {keyup: changeReporter}"/>
+
+              <!-- This label is for debugging purposes only.
+              <label
+                  type="text"
+                  class="form-control input-lg">
+                      ((<span data-bind="text: difference"></span>))
+              <label/>
+              -->
             </div><!-- .form-group -->
           <!--</form>-->
           <div class="alert alert-warning" style="visibility: hidden"></div>

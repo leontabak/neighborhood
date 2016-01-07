@@ -400,7 +400,7 @@ var decoratorHelper = function( vm ) {
     // what to do when the mouse is clicked.
     // (The marker will display its information window.)
     var addClickListener = function(i) {
-        console.log( "listening for clicks on marker# " + i );
+        //console.log( "listening for clicks on marker# " + i );
 
         var marker = markers[i];
         var iw = informationWindows[i];
@@ -510,11 +510,11 @@ var decorateMap = function() {
     */
 
     var toggleMarkerAndWindow = function( index ) {
-        var closeAllInformationWindows = function() {
-        };
+        //var closeAllInformationWindows = function() {
+        //};
 
         var result = function() {
-            console.log( "toggleMarkerAndWindow / result / markerIndex = " + index );
+            //console.log( "toggleMarkerAndWindow / result / markerIndex = " + index );
             var map = ourDecoratorHelper.getNeighborhoodMap();
             var marker = ourDecoratorHelper.getMarker( index );
             var informationWindow = ourDecoratorHelper.getInformationWindow( index );
@@ -525,7 +525,7 @@ var decorateMap = function() {
 	    else {
                 marker.setAnimation( google.maps.Animation.BOUNCE );
                 setTimeout( function() { marker.setAnimation(null); }, 2000 );
-                console.log( "toggleMarkerWindow / result / else clause / markerIndex = " + index );
+                //console.log( "toggleMarkerWindow / result / else clause / markerIndex = " + index );
 
           	var numberOfMarkers = ourDecoratorHelper.getNumberOfMarkers();
                 for( var markerIndex = 0; markerIndex < numberOfMarkers; markerIndex++ ) {
@@ -554,10 +554,12 @@ var decorateMap = function() {
 
         // Define the function that will respond to input
         // in the search field.
-        that.filter = function( formElement) {
+        that.filter = function() { // function( formElement) {
             // Read the years that were entered in the search box.
             var ly = $("#loYear").val();
             var hy = $("#hiYear").val();
+
+            //console.log( "changed! ly = " + ly + " hy = " + hy );
 
             // validate inputs
             var isFourDigitPositiveInteger = function( n ) {
@@ -569,62 +571,64 @@ var decorateMap = function() {
             // Check values of years that were entered.
             // Construct a warning message if values are invalid.
             if( !isFourDigitPositiveInteger(ly) ) {
-                ly = 1846; // year that Iowa became a state
-                formElement.elements.loYear.value = ly;
+                //ly = 1846; // year that Iowa became a state
+                //formElement.elements.loYear.value = ly;
                 warningMessage += "The first year must be a four digit positive integer.\n";
             } // if
 
             if( !isFourDigitPositiveInteger(hy) ) {
-                hy = 2228; // year of Captain Kirk's birth
+                //hy = 2228; // year of Captain Kirk's birth
                 // or make this year the upper bound of range: (new Date()).getFullYear();
-                formElement.elements.hiYear.value = hy;
+                //formElement.elements.hiYear.value = hy;
                 warningMessage += "The second year must be a four digit positive integer.\n";
             } // if
 
             if( (warningMessage === "") && (ly > hy) ) {
-                ly = 1846; // year that Iowa became a state
-                formElement.elements.loYear.value = ly;
-                hy = 2228; // year of Captain Kirk's birth
+                //ly = 1846; // year that Iowa became a state
+                //formElement.elements.loYear.value = ly;
+                //hy = 2228; // year of Captain Kirk's birth
                 // or make this year the upper bound of range: (new Date()).getFullYear();
-                formElement.elements.hiYear.value = hy;
+                //formElement.elements.hiYear.value = hy;
                 warningMessage += "The first year must be less than or equal to the second year.";
             } // if
 
-            // Display warning message if necessary.
             if( warningMessage !== "" ) {
+                // Display warning message if necessary.
                 $(".alert-warning").html( warningMessage);
                 $(".alert-warning").css( "visibility", "visible" );
             } // if
             else {
+                // Otherwise, display no warning message.
                 $(".alert-warning").html( "" );
                 $(".alert-warning").css( "visibility", "hidden" );
+
+                // Make visible all markers that identify the places of birth
+                // of people whose dates of birth lie within the
+                // specified range of years.
+                // Similarly, make visible all buttons that identify persons
+                // whose dates of birth lie within the specified range.
+                // Make all other markers and buttons invisible.
+                for( var i = 0; i < that.places().length; i++ ) {
+                    var place = that.places()[i];
+                    var year = place.birthday.getFullYear();
+                    if( (ly <= year) && (year <= hy) ) {
+                        place.visible(true);
+                        ourDecoratorHelper.getMarker(i).setMap( neighborhoodMap );
+                    } // if
+                    else {
+                        place.visible(false);
+                        ourDecoratorHelper.getMarker(i).setMap( null );
+                    } // else
+                } // for
             } // else
-
-            // end validation of inputs
-
-            // Make visible all markers that identify the places of birth
-            // of people whose dates of birth lie within the
-            // specified range of years.
-            // Similarly, make visible all buttons that identify persons
-            // whose dates of birth lie within the specified range.
-            // Make all other markers and buttons invisible.
-            for( var i = 0; i < that.places().length; i++ ) {
-                var place = that.places()[i];
-                var year = place.birthday.getFullYear();
-                if( (ly <= year) && (year <= hy) ) {
-                    place.visible(true);
-                    ourDecoratorHelper.getMarker(i).setMap( neighborhoodMap );
-                } // if
-                else {
-                    place.visible(false);
-                    ourDecoratorHelper.getMarker(i).setMap( null );
-                } // else
-            } // for
         }; // filter()
-	that.loBound = ko.observable("1900");
-	that.hiBound = ko.observable("1950");
+	that.loBound = ko.observable( $("#loYear").val() );
+	that.hiBound = ko.observable( $("#hiYear").val() );
+
+        // that.difference is for debugging purposes only.
         that.difference = ko.pureComputed( function() { console.log( "edit!" ); return that.hiBound() - that.loBound(); }, this );
-        that.changeReporter = function() { console.log( "changed!" ); return true; };
+
+        that.changeReporter = function() { that.filter(); };
         return that;
     }; // myKnockoutHelper()
 
