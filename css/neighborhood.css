@@ -117,12 +117,22 @@ the map.
   border-radius: 20px;
 }
 
+
 #bigMap {
-  height: 100%;
-  width: 100%;
-  left: 0;
   position: absolute;
+
+  /* 
+    give the map a height that exceeds combined
+    heights of buttons and search field
+  */
+  height: 1200px;
+
+  width: 100%;
+
+  left: 0;
+  right: 0;
   top: 0;
+  bottom: 0;
 }
 
 

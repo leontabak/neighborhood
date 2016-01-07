@@ -446,7 +446,33 @@ var decoratorHelper = function( vm ) {
 // Define the function that will build the model andviewModel.
 var go = function() {
     var ourModel = model();
+    // The next statement assigns a value to a global variable.
     ourViewModel = viewModel( ourModel );
+
+    // Define the listener for the button that
+    // makes the controls (the search box and
+    // array of buttons) visible or hidden.
+    // The next statement assigns a value to a global variable.
+    tc = (function() {
+      var that = {};
+      var visible = true;
+      that.toggleControls = function() {
+        if( visible ) {
+          $("#toggleButton").text( "SHOW CONTROLS" );
+          $("#searchBox").css( "visibility", "hidden" );
+          $("#listAndMap").css( "visibility", "hidden" );
+          visible = false;
+        } // if
+        else {
+          $("#toggleButton").text( "HIDE CONTROLS" );
+          $("#searchBox").css( "visibility", "visible" );
+          $("#listAndMap").css( "visibility", "visible" );
+          visible = true;
+        } // else
+      };
+      return that;
+    })();
+
 }; // go()
 
 var decorateMap = function() {
@@ -510,9 +536,6 @@ var decorateMap = function() {
     */
 
     var toggleMarkerAndWindow = function( index ) {
-        //var closeAllInformationWindows = function() {
-        //};
-
         var result = function() {
             //console.log( "toggleMarkerAndWindow / result / markerIndex = " + index );
             var map = ourDecoratorHelper.getNeighborhoodMap();
@@ -548,6 +571,13 @@ var decorateMap = function() {
 	for( var i = 0; i < ourViewModel.getNumberOfPlaces(); i++ ) {
             var place = ourViewModel.getPlace(i);
             place.choose = toggleMarkerAndWindow( i );
+
+            // Apparently, this next statement (call to the
+            // button's click handler) is needed.
+            // Without it, the first selection of a
+            // button requires 2 clicks. Subsequent selections
+            // require only 1 click.
+            place.choose();
             place.visible = ko.observable(true);
             that.places.push( place );
 	} // for
@@ -596,6 +626,13 @@ var decorateMap = function() {
                 // Display warning message if necessary.
                 $(".alert-warning").html( warningMessage);
                 $(".alert-warning").css( "visibility", "visible" );
+                // Because the user has not made a valid selection,
+                // hide all markers and buttons (none have been selected!).
+                for( var i = 0; i < that.places().length; i++ ) {
+                    var place = that.places()[i];
+                    place.visible( false );
+                    ourDecoratorHelper.getMarker(i).setMap( null );
+                } // for
             } // if
             else {
                 // Otherwise, display no warning message.
@@ -640,13 +677,14 @@ var decorateMap = function() {
 
 var neighborhoodMap = null;
 var ourViewModel = null;
+var tc = null;
 
 var myInitializer = function() {
 
     var mapSpecification = {
         center:new google.maps.LatLng(42.0, -90.0),
-        zoom:8,
-        draggable: false,
+        zoom: 8,
+        draggable: true,
         scrollwheel: false,
         mapTypeId:google.maps.MapTypeId.ROADMAP
     }; // mapSpecification
@@ -655,6 +693,7 @@ var myInitializer = function() {
     neighborhoodMap=new google.maps.Map(document.getElementById("bigMap"),mapSpecification);
     decorateMap();
 }; // myInitializer()
+
 
 $(document).ready( go );
 
