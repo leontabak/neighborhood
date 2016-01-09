@@ -493,48 +493,6 @@ var decorateMap = function() {
 	return result;
     }; // toggleMarker()
 
-    /*
-    var openInformationWindow = function( index ) {
-        console.log( "openInformationWindow" );
-        var result = function() {
-
-            var map = ourDecoratorHelper.getNeighborhoodMap();
-            var informationWindow;
-            var marker;
-
-            // Only one information window may be open at a time,
-            // so close any windows that might be open before opening
-            // a new window.
-            var numberOfMarkers = ourDecoratorHelper.getNumberOfMarkers();
-            console.log( "OpenInformationWindow: number of markers = " + numberOfMarkers );
-            for( var markerIndex = 0; markerIndex < numberOfMarkers; markerIndex++ ) {
-                console.log( "openInformationWindow: inside loop / markerIndex = " + markerIndex );
-		if( markerIndex !== index ) {
-		    console.log( "openInformationWindow: inside for / inside if / makerIndex = " + markerIndex );
-                  informationWindow = ourDecoratorHelper.getInformationWindow( index );
-                  marker = ourDecoratorHelper.getMarker( index );
-                  informationWindow.close( map, marker );
-                } // if
-            } // for
-
-            informationWindow = ourDecoratorHelper.getInformationWindow( index );
-            marker = ourDecoratorHelper.getMarker( index );
-            informationWindow.open( map, marker );
-        }; // result()
-        return result;
-    }; // openInformationWindow()
-
-    var closeInformationWindow = function( index ) {
-        var result = function() {
-            var informationWindow = ourDecoratorHelper.getInformationWindow( index );
-            var marker = ourDecoratorHelper.getMarker( index );
-            var map = ourDecoratorHelper.getNeighborhoodMap();
-            informationWindow.close( map, marker );
-        }; // result()
-        return result;
-    }; // closeInformationWindow()
-    */
-
     var toggleMarkerAndWindow = function( index ) {
         var result = function() {
             //console.log( "toggleMarkerAndWindow / result / markerIndex = " + index );

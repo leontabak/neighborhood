@@ -102,22 +102,11 @@ bear the names of accomplished Iowans.
 }
 
 /*
-Specify the color, dimensions, and spacing
-of the element of the application that contains
-the map.
+Specify the dimensions of a map that fills 
+the window's width and has a height sufficient
+to encompass the buttons and search fields of
+the application.
 */
-#mapOfBirthplaces {
-  width: 560px;
-  margin-left: 12px;
-  padding: 12px;
-  background: #EEDDFF;
-  float: left;
-  border: solid;
-  border-color: #AA44EE;
-  border-radius: 20px;
-}
-
-
 #bigMap {
   position: absolute;
 

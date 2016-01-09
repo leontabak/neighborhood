@@ -1,60 +1,185 @@
 
-GLOBAL
-  +neighborhoodMap: GoogleMap
-  +ourViewModel: viewModel
-  +myInitializer()
-  +go()
+\documentclass[twoside]{article}
+\title{Summary of Design \\
+  Neighborhood Map Project}
+\author{Leon Tabak}
+\date{08 January 2016}
+\begin{document}
+\maketitle
 
-Person
-  +firstName: String
-  +middleName: String
-  +lastName: String
+\section*{Styles}
 
-Place
-  +latitude: float
-  +longitude: float
-  +person: Person
-  +city: String
-  +state: String
-  +birthday: Date
+\subsection*{css/neighborhood.css}
 
-ExtremaAndMeans
-  +meanLatitude: float
-  +meanLongitude: float
-  +minimumLatitude: float
-  +maximumLatitude: float
-  +minimumLongitude: float
-  +maximumLongitude: float
+\begin{itemize}
+  \item element selectors
+  \begin{itemize}
+    \item body
+    \item html
+    \item label
+    \end{itemize}
 
-model()
-  -makePerson( firstName: String, middleName: String, lastName: String ): Person
-  -makePlace( latitude: float, longitude: float, firstName: String, middleName: String, lastName: String, birthday: Date )
-  +places: Place[]
+  \item id selectors
+  \begin{itemize}
+    \item \#bigMap
+    \item \#listAndMap
+    \item \#listOfBirthplaces
+    \item \#origins
+    \item \#searchBox
+    \item \#toggle
+    \end{itemize}
 
-viewModel( m: model )
-  +compareDates( a: Date, b: Date ): int
-  +dateToString( date: Date ): String
-  +getNumberOfPlaces(): int
-  +getPlace( index: int ): Place
-  +getExtremaAndMeans(): ExtremaAndMeans
+  \item descendant selectors
+  \begin{itemize}
+    \item .container-fluid h2
+    \item \#listOfBirthplaces h2
+    \end{itemize}
+  \end{itemize}
 
-decoratorHelper( vm : viewModel )
-  -loYear: int
-  -hiYear: int
-  -getSchoolsAttended( firstName: String, lastName: String, informationWindow: InformationWindow )
-    -parse( dataStructure )
-  -makeInformationWindow( place: Place )
-  -addClickListener( i: int )
-  +getNumberOfInformationWindows(): int
-  +getInformationWindow( index: int ): InformationWindow
-  +getNumberOfMarkers(): int
-  +geMarker( index: int ): Marker
-  +getNeighborhoodMap: GoogleMap
+\section*{JavaScript Code}
 
-decorateMap()
-  -toggleMarker( index: int )
-  -openInformationWindow( index: int )
-  -closeInformationWindow( index: int )
-  -toggleMarkerAndWindow( index: int )
-  -myKnockoutHelper()
+\subsection*{js/neighborhood.js}
 
+\begin{itemize}
+  \item definition of model()
+  \begin{itemize}
+    \item contains definition of makePerson( firstName, middleName, lastName )
+    \item contains definition of makePlace( latitude, longitude, firstName, middleName, lastName, city, state, birthdate )
+    \end{itemize}
+
+  \item definition of viewModel( m )
+  \begin{itemize}
+    \item contains definition of compareDates( a, b )
+    \item contains definition of dateToString( date )
+    \item contains definition of getNumberOfPlaces()
+    \item contains definition of getPlace( index )
+    \item contains definition of getExtremaAndMeans()
+    \end{itemize}
+
+  \item definition of decoratorHelper( vm )
+  \begin{itemize}
+    \item contains definition of getSchoolsAttended( firstName, lastName, informationWindow )
+    \begin{itemize}
+      \item contains definition of parse( dataStructure )
+      \end{itemize}
+    \item contains definition of makeInformationWindow( place )
+    \item contains definition of getNumberOfInformationWindows()
+    \item contains definition of getInformationWindow( index )
+    \item contains definition of getNumberOfMarkers()
+    \item contains definition of getMarker( index )
+    \item contains definition of getNeighborhoodMap()
+    \item contains definition of addClickListener( i )
+    \begin{itemize}
+      \item contains definition of fun()
+      \end{itemize}
+    \end{itemize}
+
+  \item definition of go()
+  \begin{itemize}
+    \item contains definition of anonymous function
+    \end{itemize}
+
+  \item definition of decorateMap()
+  \begin{itemize}
+    \item contains definition of toggleMarker
+    \begin{itemize}
+      \item contains definition of result()
+      \end{itemize}
+    \item contains definition of toggleMarkerAndWindow( index )
+    \begin{itemize}
+      \item contains definition of result()
+      \end{itemize}
+    \item contains definition of myKnockoutHelper()
+    \begin{itemize}
+      \item contains definition of filter()
+      \end{itemize}
+    \end{itemize}
+
+  \item definition of myInitializer
+  \end{itemize}
+
+\section*{Objects}
+
+\begin{tabular}{|l|} \hline 
+\parbox[t]{12cm}{\textbf{GLOBAL}} \\ \hline
+  +\parbox[t]{12cm}{neighborhoodMap: GoogleMap} \\
+  +\parbox[t]{12cm}{ourViewModel: viewModel} \\
+  +\parbox[t]{12cm}{myInitializer(): void} \\
+  +\parbox[t]{12cm}{go(): void} \\
+  +\parbox[t]{12cm}{tc(): toggleControls()} \\
+  +\parbox[t]{12cm}{decorateMap(): void} \\
+  +\parbox[t]{12cm}{decoratorHelper( vm ): objects' public functions} \\
+  +\parbox[t]{12cm}{viewModel( m ): object's public functions} \\
+  +\parbox[t]{12cm}{model(): Place[ \hspace*{0.1cm} ]} \\ \hline
+  \end{tabular}
+  
+\begin{tabular}{|l|} \hline 
+\parbox[t]{12cm}{\textbf{Person}} \\ \hline
+  +\parbox[t]{12cm}{firstName: String} \\
+  +\parbox[t]{12cm}{middleName: String} \\
+  +\parbox[t]{12cm}{lastName: String} \\ \hline
+  \end{tabular}
+  
+\begin{tabular}{|l|} \hline 
+\parbox[t]{12cm}{\textbf{Place}} \\ \hline
+  +\parbox[t]{12cm}{latitude: float} \\
+  +\parbox[t]{12cm}{longitude: float} \\
+  +\parbox[t]{12cm}{person: Person} \\
+  +\parbox[t]{12cm}{city: String} \\
+  +\parbox[t]{12cm}{state: String} \\
+  +\parbox[t]{12cm}{birthday: Date} \\ \hline
+  \end{tabular}
+  
+\begin{tabular}{|l|} \hline 
+\parbox[t]{12cm}{\textbf{ExtremaAndMeans}} \\ \hline
+  +\parbox[t]{12cm}{meanLatitude: float} \\
+  +\parbox[t]{12cm}{meanLongitude: float} \\
+  +\parbox[t]{12cm}{minimumLatitude: float} \\
+  +\parbox[t]{12cm}{maximumLatitude: float} \\
+  +\parbox[t]{12cm}{minimumLongitude: float} \\
+  +\parbox[t]{12cm}{maximumLongitude: float} \\ \hline
+  \end{tabular}
+  
+\begin{tabular}{|l|} \hline 
+\parbox[t]{12cm}{\textbf{model()}} \\ \hline
+  -\parbox[t]{12cm}{makePerson( firstName: String, middleName: String, 
+   lastName: String ): Person} \\
+  -\parbox[t]{12cm}{makePlace( latitude: float, longitude: float, 
+              firstName: String, middleName: String, lastName: String, 
+              birthday: Date )} \\
+  +\parbox[t]{12cm}{places: Place[ \hspace*{0.1cm} ]} \\ \hline
+  \end{tabular}
+  
+\begin{tabular}{|l|} \hline 
+\parbox[t]{12cm}{\textbf{viewModel( m: model )}} \\ \hline
+  +\parbox[t]{12cm}{compareDates( a: Date, b: Date ): int} \\
+  +\parbox[t]{12cm}{dateToString( date: Date ): String} \\
+  +\parbox[t]{12cm}{getNumberOfPlaces(): int} \\
+  +\parbox[t]{12cm}{getPlace( index: int ): Place} \\
+  +\parbox[t]{12cm}{getExtremaAndMeans(): ExtremaAndMeans} \\ \hline
+  \end{tabular}
+  
+\begin{tabular}{|l|} \hline 
+\parbox[t]{12cm}{\textbf{decoratorHelper( vm : viewModel )}} \\ \hline
+  -\parbox[t]{12cm}{loYear: int} \\
+  -\parbox[t]{12cm}{hiYear: int} \\
+  -\parbox[t]{12cm}{getSchoolsAttended( firstName: String, lastName: String, informationWindow: InformationWindow )} \\
+    \hspace*{1cm}-\parbox[t]{12cm}{parse( dataStructure )} \\
+  -\parbox[t]{12cm}{makeInformationWindow( place: Place )} \\
+  -\parbox[t]{12cm}{addClickListener( i: int )} \\
+  +\parbox[t]{12cm}{getNumberOfInformationWindows(): int} \\
+  +\parbox[t]{12cm}{getInformationWindow( index: int ): InformationWindow} \\
+  +\parbox[t]{12cm}{getNumberOfMarkers(): int} \\
+  +\parbox[t]{12cm}{geMarker( index: int ): Marker} \\
+  +\parbox[t]{12cm}{getNeighborhoodMap: GoogleMap} \\ \hline
+  \end{tabular}
+  
+\begin{tabular}{|l|} \hline 
+\parbox[t]{12cm}{\textbf{decorateMap()}} \\ \hline
+  -\parbox[t]{12cm}{toggleMarker( index: int ): result()} \\
+  -\parbox[t]{12cm}{toggleMarkerAndWindow( index: int ): result()} \\
+  -\parbox[t]{12cm}{myKnockoutHelper(): object's public functions} \\ \hline
+  \end{tabular}
+  
+
+\end{document}

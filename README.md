@@ -3,7 +3,7 @@ Neighborhood Map: Illustrious Iowans
 ====================================  
 Author: Leon Tabak  
 ------------------
-Date: 07 November 2015  
+Date: 08 January 2016
 ----------------------
 
 To use this application:  
@@ -12,6 +12,9 @@ To use this application:
     * Click on one of the names in the array of buttons.   
     * Click on one of the markers (push pins) on the map.  
     * Change the range of years in the search boxes.  
+    * Click on the HIDE CONTROLS/SHOW CONTROLS button.
+      Hiding the controls (the buttons and search fields)
+      makes more of the map visible.
 
 This application draws a map and marks on the map
 the places of birth of several Iowans who contributed
