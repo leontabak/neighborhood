@@ -1,6 +1,6 @@
 // JavaScript for Project 5: Neighborhood
 // Leon Tabak
-// 07 November 2015
+// 08 January 2016
 
 // Burlington, IA 40.808, -91.115
 // Cedar Falls, IA 42.534, -92.445
