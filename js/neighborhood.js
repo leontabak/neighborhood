@@ -477,7 +477,6 @@ var go = function() {
       };
       return that;
     })();
-
 }; // go()
 
 var decorateMap = function() {
@@ -664,9 +663,21 @@ var myInitializer = function() {
             mapTypeId:google.maps.MapTypeId.ROADMAP
         }; // mapSpecification
 
+        // This effort to make the height of the map
+        // equal or exceed the combined heights of the
+        // buttons and search fields appears not to work.
+
+        //var documentHeight = $(document).height();
+        //console.log( documentHeight );
+        //$("#bigMap").css( "height", documentHeight );
+
         // Create the map.
         neighborhoodMap=new google.maps.Map(document.getElementById("bigMap"),mapSpecification);
         decorateMap();
+
+        // This next statement was part of an unsuccessful
+        // effort to fix the height of the map.
+        //google.maps.event.trigger( neighborhoodMap, 'resize' );
     } // else
 }; // myInitializer()
 
