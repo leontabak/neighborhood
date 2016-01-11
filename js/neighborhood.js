@@ -642,7 +642,7 @@ var myInitializer = function() {
     var mapSpecification = {
         center:new google.maps.LatLng(42.0, -90.0),
         zoom: 8,
-        draggable: true,
+        draggable: false,
         scrollwheel: false,
         mapTypeId:google.maps.MapTypeId.ROADMAP
     }; // mapSpecification

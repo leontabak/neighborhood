@@ -11,7 +11,9 @@ To use this application:
   * Do one or more of the following:  
     * Click on one of the names in the array of buttons.   
     * Click on one of the markers (push pins) on the map.  
-    * Change the range of years in the search boxes.  
+    * Change (edit) the range of years in the search boxes.
+      A year must be a positive four digit decimal integer.
+      The first year must be less than or equal to the second year.  
     * Click on the HIDE CONTROLS/SHOW CONTROLS button.
       Hiding the controls (the buttons and search fields)
       makes more of the map visible.
