@@ -17,6 +17,10 @@
 // that describes Iowans who have contributed to
 // the development of science and technology.
 var model = function() {
+    // Define the object that this function will
+    // return to its caller.
+    // The object is empty initially, This function
+    // will add a property to the object later.
     var that = {};
 
     // Define an array of objects, each of which describes a
@@ -278,7 +282,8 @@ var decoratorHelper = function( vm ) {
         var ajaxSettings = {
             dataType: "jsonp",
             crossDomain: true,
-            success: parse
+            success: parse,
+            error: ifWikipediaDoesNotRespond
         }; // ajaxSettings
 
         // Construct a URL that contains a query.
@@ -288,12 +293,12 @@ var decoratorHelper = function( vm ) {
           "&prop=revisions&rvprop=content&titles=" + firstName + "%20" + lastName;
 
         var ifWikipediaDoesNotRespond = function() {
-            console.alert( "Wikipedia is not responding." );
+            alert( "Wikipedia is not responding." );
             informationWindow.setContent( informationWindow.getContent() + "Wikipedia is not responding." );
         };
 
         // Use a JQuery function to read data from an on-line service.
-        $.ajax( wikipediaURL, ajaxSettings ).fail( ifWikipediaDoesNotRespond );
+        $.ajax( wikipediaURL, ajaxSettings );
     }; // getSchoolsAttended()
 
     // Define a function that can be used to create an information
@@ -638,18 +643,31 @@ var ourViewModel = null;
 var tc = null;
 
 var myInitializer = function() {
+    if( typeof google === "undefined" ) {
+	//alert( "google is undefined" );
+        // Display warning message if necessary.
+	var warningMessage = "No response from Google Maps. Check network connection.";
+        $(".alert-warning").html( warningMessage);
+        $(".alert-warning").css( "visibility", "visible" );
+    } // if
+    else {
+	//alert( "google is defined" );
+        // Display warning message if necessary.
+        $(".alert-warning").html( "" );
+        $(".alert-warning").css( "visibility", "hidden" );
 
-    var mapSpecification = {
-        center:new google.maps.LatLng(42.0, -90.0),
-        zoom: 8,
-        draggable: false,
-        scrollwheel: false,
-        mapTypeId:google.maps.MapTypeId.ROADMAP
-    }; // mapSpecification
+        var mapSpecification = {
+            center:new google.maps.LatLng(42.0, -90.0),
+            zoom: 8,
+            draggable: false,
+            scrollwheel: false,
+            mapTypeId:google.maps.MapTypeId.ROADMAP
+        }; // mapSpecification
 
-    // Create the map.
-    neighborhoodMap=new google.maps.Map(document.getElementById("bigMap"),mapSpecification);
-    decorateMap();
+        // Create the map.
+        neighborhoodMap=new google.maps.Map(document.getElementById("bigMap"),mapSpecification);
+        decorateMap();
+    } // else
 }; // myInitializer()
 
 
