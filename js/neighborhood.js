@@ -186,7 +186,8 @@ var viewModel = function( m ) {
         var minimumLongitude = m.places[0].longitude;
         var maximumLongitude = m.places[0].longitude;
 
-        for( var i = 1; i < m.places.length; i++ ) {
+        var numberOfPlaces = m.places.length;
+        for( var i = 1; i < numberOfPlaces; i++ ) {
             meanLatitude += m.places[i].latitude;
             meanLongitude += m.places[i].longitude;
 
@@ -251,15 +252,36 @@ var decoratorHelper = function( vm ) {
             // Find all of the text that lies between the
             // word "alma_mater" and the character "|".
             var str = JSON.stringify( dataStructure.query.pages );
-            var i = str.indexOf( "alma_mater" );
-            var j = str.indexOf( "|", i + 9 );
-            var almaMater = str.slice( i, j );
+
+            // Here I am following a suggestion that came from 
+            // the last reviewer of my code.
+            // I will use a regular expression to find that
+            // part of the record that contains a list of schools.
+            // I previously searched for the indices of
+            // prefix and suffix and then extracted a substring.
+
+            var re = /alma_mater([^\|]*)\|/;
+            //var i = str.indexOf( "alma_mater" );
+            //var j = str.indexOf( "|", i + 9 );
+            //var almaMater = str.slice( i, j );
+            var almaMater = re.exec( str );
+            if( (almaMater !== null) && 
+                (Object.prototype.toString.call( almaMater) === '[object Array]') &&
+                (almaMater.length > 0) ) {
+                //console.log( "0: " + almaMater[0] );
+                //console.log( "1: " + almaMater[1] );
+                almaMater = almaMater[1];
+	    } // if
+            else {
+                //console.log( "no alma mater" );
+                almaMater = "";
+	    } // else
 
             // Find names of schools enclosed in paired
             // square brackets. For example, [[Worcester Polytechnic Institute]].
             // Concatenate the names of the schools, placing an HTML <br> tag
             // before each name.
-            var re = /\[\[[a-zA-Z ]*\]\]/g;
+            re = /\[\[[a-zA-Z ]*\]\]/g;
             var schools = re.exec( almaMater );
             while( schools !== null ) {
                var oneSchool = schools[0];
