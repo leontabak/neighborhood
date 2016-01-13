@@ -246,12 +246,12 @@ var decoratorHelper = function( vm ) {
     // the marker on the map at the place of that person's birth.
     var getSchoolsAttended = function( firstName, lastName, informationWindow ) {
 
-        var parse = function( dataStructure ) {
+        var parse = function( wikiResponse ) {
             var result = "";
 
             // Find all of the text that lies between the
             // word "alma_mater" and the character "|".
-            var str = JSON.stringify( dataStructure.query.pages );
+            var str = JSON.stringify( wikiResponse.query.pages );
 
             // Here I am following a suggestion that came from 
             // the last reviewer of my code.
@@ -298,14 +298,20 @@ var decoratorHelper = function( vm ) {
 	    informationWindow.setContent( informationWindow.getContent() + result );
         }; // parse()
 
+        var ifWikipediaDoesNotRespond = function() {
+            alert( "Wikipedia is not responding." );
+            informationWindow.setContent( informationWindow.getContent() + "Wikipedia is not responding." );
+        };
+
+        var alarmClock = setTimeout( ifWikipediaDoesNotRespond, 2000 );
+
         // Specify the kind of access to the on-line service and
         // the function that will do something with the data that
         // is received.
         var ajaxSettings = {
             dataType: "jsonp",
             crossDomain: true,
-            success: parse,
-            error: ifWikipediaDoesNotRespond
+            success: function(response) { clearTimeout(alarmClock); parse(response); }
         }; // ajaxSettings
 
         // Construct a URL that contains a query.
@@ -313,11 +319,6 @@ var decoratorHelper = function( vm ) {
         // that it identifies by first and last name.
         var wikipediaURL = "http://en.wikipedia.org/w/api.php?action=query&format=json" +
           "&prop=revisions&rvprop=content&titles=" + firstName + "%20" + lastName;
-
-        var ifWikipediaDoesNotRespond = function() {
-            alert( "Wikipedia is not responding." );
-            informationWindow.setContent( informationWindow.getContent() + "Wikipedia is not responding." );
-        };
 
         // Use a JQuery function to read data from an on-line service.
         $.ajax( wikipediaURL, ajaxSettings );
