@@ -18,6 +18,7 @@
     <script src="js/jquery-1.11.3.min.js"></script>
     <script src="js/knockout-3.3.0.js"></script>
     <script src="js/bootstrap.min.js"></script>
+    <script src="js/moment.min.js"></script>
     <script src="js/neighborhood.js"></script>
   </head>
 
@@ -27,20 +28,23 @@
     </div><!-- #bigMap -->
 
     <script async defer
-        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA8SOav5FiGfVdAjvL_2kvC-urwW2RvjP0&amp;signed_in=true&amp;callback=myInitializer"
-        onerror="myInitializer()">
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA8SOav5FiGfVdAjvL_2kvC-urwW2RvjP0&amp;signed_in=true&amp;callback=vm.mapInitializer"
+        onerror="vm.mapInitializer()">
     </script>
-
 
     <div class="container-fluid">
 
       <div class="row">
-        <div class="col-sm-3" id="toggle" onclick="tc.toggleControls()">
-          <button type="button" id="toggleButton" class="btn btn-info btn-lg">HIDE CONTROLS</button>
+        <div class="col-sm-3" id="toggle">
+          <button type="button" 
+                  id="toggleButton" 
+                  class="btn btn-info btn-lg" 
+                  data-bind="text: hideShowLabel, click: toggleVisibility">
+          </button>
         </div><!-- .col-sm-3 -->
       </div> <!-- .row -->
 
-      <div class="row">
+      <div class="row" data-bind="visible: show">
         <div class="col-sm-12" id="searchBox">
           <!--<form data-bind="submit: filter" class="form-inline">-->
             <div class="form-inline form-group">
@@ -68,22 +72,8 @@
               -->
             </div><!-- .form-group -->
           <!--</form>-->
-          <div class="alert alert-warning" style="visibility: hidden"></div>
+          <div class="alert alert-warning" style="visibility: warn"></div>
         </div><!-- .col-sm-12 -->
-      </div><!-- .row -->
-
-      <div class="row">
-        <div id="listAndMap">
-          <div class="col-sm-3" id="listOfBirthplaces">
-            <h2>People</h2>
-            <div class="btn-group-vertical btn-group-lg">
-              <div id="origins" data-bind="foreach: places">
-                <button type="button" class="btn btn-info btn-lg btn-block"
-                  data-bind="text: person.fullName, click: choose, visible: visible"></button>
-              </div><!-- #origins -->
-            </div><!-- btn-group-vertical btn-group-lg -->
-          </div><!-- col-sm-3 -->
-        </div><!-- #listAndMap -->
       </div><!-- .row -->
 
     </div><!-- .container-fluid -->
