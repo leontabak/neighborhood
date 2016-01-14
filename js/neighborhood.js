@@ -390,8 +390,6 @@ var koModel = function() {
         var ly = self.loBound();
         var hy = self.hiBound();
 
-        console.log( "report change (" + ly + ", " + hy + ")" );
-
         var isFourDigitPositiveInteger = function( n ) {
             return /^[1-9]\d\d\d$/.test( n );
         }; // isFourDigitPositiveInteger()
@@ -414,8 +412,6 @@ var koModel = function() {
             warningMessage += "The first year must be less than or equal to the second year.";
             self.warn(true);
         } // if
-
-        console.log( "warning = " + warningMessage );
 
         self.warning(warningMessage);
     }; // changeReporter()
