@@ -1,11 +1,15 @@
 
-// JavaScript for Project 5: Neighborhood
-// Leon Tabak
-// 14 January 2016
+/**
+    Define a function that will create an object
+    that describes Iowans who have contributed to
+    the development of science and technology.
 
-// Define a function that will create an object
-// that describes Iowans who have contributed to
-// the development of science and technology.
+    <h1>JavaScript for Project 5: Neighborhood</h1>
+
+    @author Leon Tabak <l.tabak@ieee.org>
+    @version 14 January 2016
+    @return {Object}
+*/
 var model = function() {
     // Define the object that this function will
     // return to its caller.
@@ -123,6 +127,15 @@ var model = function() {
     return that;
 }; // model()
 
+/**
+    Define a function that completes the construction
+    of the database by gathering information from
+    Wikipedia, builds a map, and returns methods for
+    accessing the database and map.
+
+    @param {Object} model contains names, dates and places of birth
+    @return {Object}
+*/
 var viewModel = function( model ) {
     // Define the object that this function will
     // return to its caller.
@@ -185,6 +198,73 @@ var viewModel = function( model ) {
             var dob = exemplars[index].birthday;
             return startDate.isSameOrBefore(dob) && dob.isSameOrBefore(endDate);
         }; // isInRange()
+
+
+        // Define a method that computes the bounds and center of
+        // of region that contains all of the places that are
+        // described in the model.
+        that.getExtremaAndMeans = function( startDate, endDate ) {
+            var result = {};
+
+            // Find extrema and means of latitude and longitude.
+            var meanLatitude = 0.0;
+            var meanLongitude = 0.0;
+            var minimumLatitude = -90.0;
+            var maximumLatitude = +90.0;
+            var minimumLongitude = -180.0;
+            var maximumLongitude = -180.0;
+
+            var numberInRange = 0;
+            var numberOfExemplars = that.getNumberOfExemplars();
+            for( var i = 0; i < numberOfExemplars; i++ ) {
+                if( that.isInRange( i, startDate, endDate ) ) {
+                    var latitude = that.getLatitude(i);
+                    var longitude = that.getLongitude(i);
+
+                    meanLatitude += latitude(;
+                    meanLongitude += longitude;
+
+                    if( latitude < minimumLatitude ) {
+            	        minimumLatitude = latitude;
+                    } // if
+                    if( latitude > maximumLatitude ) {
+        	        maximumLatitude = latitude;
+                    } // if
+
+                    if( longitude < minimumLongitude ) {
+        	        minimumLongitude = longitude;
+                    } // if
+                    if( longitude < maximumLongitude ) {
+        	        maximumLongitude = longitude;
+                    } // if
+		} // if
+            } // for
+
+            if( numberInRange > 0 ) {
+                meanLatitude = meanLatitude / numberInRange;
+                meanLongitude = meanLongitude / numberInRange;
+            } // if
+            else {
+                // Define the center and bounds of
+                // eastern Iowa.
+                meanLatitude = +42.0;
+                meanLongitude = -92.0;
+                minimumLatitude = +40.0;
+                maximumLatitude = +44.0;
+                minimumLongitude = -94.0;
+                maximumLongitude = -90.0;
+	    } // else
+
+            result.meanLatitude = meanLatitude;
+            result.meanLongitude = meanLongitude;
+
+            result.minimumLatitude = minimumLatitude;
+            result.maximumLatitude = maximumLatitude;
+            result.minimumLongitude = minimumLongitude;
+            result.maximumLongitude = maximumLongitude;
+
+            return result;
+        }; // getExtremaAndMeans()
 
         that.getBirthday = function( index ) {
             return exemplars[index].birthday;
@@ -325,15 +405,10 @@ var viewModel = function( model ) {
 
     that.mapInitializer = function() {
         if( typeof google === "undefined" ) {
-            //alert( "google is undefined" );
-            // Display warning message if necessary.
             var warningMessage = "No response from Google Maps. Check network connection.";
             alert( warningMessage );
         } // if
         else {
-            //alert( "google is defined" );
-            // Display warning message if necessary.
-
             var mapSpecification = {
                 center:new google.maps.LatLng(42.0, -90.0),
                 zoom: 8,
@@ -343,7 +418,7 @@ var viewModel = function( model ) {
             }; // mapSpecification
 
             // Create the map.
-            neighborhoodMap=new google.maps.Map(document.getElementById("bigMap"),mapSpecification);
+            that.neighborhoodMap=new google.maps.Map(document.getElementById("bigMap"),mapSpecification);
             //decorateMap();
         } // else
     }; // mapInitializer()
