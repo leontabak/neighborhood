@@ -4,10 +4,21 @@
     that describes Iowans who have contributed to
     the development of science and technology.
 
-    <h1>JavaScript for Project 5: Neighborhood</h1>
-
-    @author Leon Tabak <l.tabak@ieee.org>
+    @public
+    @function model
+    @author Leon Tabak [<l.tabak@ieee.org>]
     @version 14 January 2016
+    @property {Object} that is the object that this function returns to its caller
+    @property {Array} that.exemplars contains descriptions of people
+    @property {String} that.exemplars.name identifies a person
+    @property {String} that.exemplars.name.firstName
+    @property {String} that.exemplars.name.middleName
+    @property {String} that.exemplars.name.lastName
+    @property {number} that.exemplars.latitude place of birth
+    @property {number} that.exemplars.longitude place of birth
+    @property {String} that.exemplars.city where person was born
+    @property {String} that.exemplars.state where person was born
+    @property {Array} that.exemplars.schools where person studied
     @return {Object}
 */
 var model = function() {
@@ -42,14 +53,14 @@ var model = function() {
             city, state, 
             birthday ) {
 
-	var result = {};
+        var result = {};
 
-	result.name = makeName( firstName, middleName, lastName );
-	result.latitude = latitude;
-	result.longitude = longitude;
+        result.name = makeName( firstName, middleName, lastName );
+        result.latitude = latitude;
+        result.longitude = longitude;
         result.city = city;
         result.state = state;
-	result.birthday = birthday;
+        result.birthday = birthday;
         result.schools = [];
 
         return result;
@@ -57,67 +68,67 @@ var model = function() {
 
     // Create the objects and store them in the array.
     exemplars.push( makeExemplar( 
-			"Marc", "", "Andreessen",
+                        "Marc", "", "Andreessen",
                         42.534, -92.445,
                         "Cedar Falls", "Iowa",
                         moment( {year: 1971, month: 6, day: 9} ) ));
 
     exemplars.push( makeExemplar( 
-			"Leo", "", "Beranek",
+                        "Leo", "", "Beranek",
                         41.807, -91.494,
                         "Solon", "Iowa",
                         moment( {year: 1914, month: 8, day: 15} ) ));
 
     exemplars.push( makeExemplar( 
-			"Clifford", "", "Berry",
+                        "Clifford", "", "Berry",
                         42.187, -92.715,
                         "Gladbrook", "Iowa",
                         moment( {year: 1918, month: 3, day: 19} ) ));
 
     exemplars.push( makeExemplar( 
-		        "Norman", "", "Borlaug",
+                        "Norman", "", "Borlaug",
                         43.381, -92.114,
                         "Cresco", "Iowa",
                         moment( {year: 1914, month: 2, day: 25} ) ));
 
     exemplars.push( makeExemplar( 
-			"Donald", "", "Campbell",
+                        "Donald", "", "Campbell",
                         41.844, -90.188,
                         "Clinton", "Iowa",
                         moment( {year: 1904, month: 7, day: 5} ) ));
 
     exemplars.push( makeExemplar( 
-			"Wallace", "", "Carothers",
+                        "Wallace", "", "Carothers",
                         40.808, -91.115,
                         "Burlington", "Iowa",
                         moment( {year: 1896, month: 3, day: 27} ) ));
 
     exemplars.push( makeExemplar( 
-			"Herbert", "",  "Hoover",
+                        "Herbert", "",  "Hoover",
                         41.671, -91.346,
                         "West Branch", "Iowa",
                         moment( {year: 1874, month: 7, day: 10} ) ));
 
     exemplars.push( makeExemplar( 
-			"James", "Tiberius", "Kirk",
+                        "James", "Tiberius", "Kirk",
                         41.479, -91.581,
                         "Riverside", "Iowa",
                         moment( {year: 2228, month: 2, day: 28} ) ));
 
     exemplars.push( makeExemplar( 
-			"Robert", "", "Noyce",
+                        "Robert", "", "Noyce",
                         40.808, -91.115,
                         "Burlington", "Iowa",
                         moment( {year: 1927, month: 11, day: 12} ) ));
 
     exemplars.push( makeExemplar( 
-			"James", "", "Van Allen",
+                        "James", "", "Van Allen",
                         40.971, -91.548,
                         "Mount Pleasant", "Iowa",
                         moment( {year: 1914, month: 8, day: 7} ) ));
 
     exemplars.push( makeExemplar( 
-			"Oswald", "", "Veblen",
+                        "Oswald", "", "Veblen",
                         43.303, -91.785,
                         "Decorah", "Iowa",
                         moment( {year: 1880, month: 5, day: 24} ) ));
@@ -133,7 +144,30 @@ var model = function() {
     Wikipedia, builds a map, and returns methods for
     accessing the database and map.
 
+    @author Leon Tabak <l.tabak@ieee.org>
+    @version 14 January 2016
     @param {Object} model contains names, dates and places of birth
+    @property {Object} that is the object that this function returns to its caller
+    @property {Object} that.ee is an &ldquo;exemplar explorer&rdquo;
+    @property {Function} that.ee.getNumberOfExemplars
+    @property {Function} that.ee.getFirstName
+    @property {Function} that.ee.getMiddlename
+    @property {Function} that.ee.getLastName
+    @property {Function} that.ee.getFullName
+    @property {Function} that.ee.getCity
+    @property {Function} that.ee.getState
+    @property {Function} that.ee.getCityState
+    @property {Function} that.ee.getLatitude
+    @property {Function} that.ee.getLongitude
+    @property {Function} that.ee.isInRange
+    @property {Function} that.ee.getExtremaAndMeans
+    @property {Function} that.ee.getBirthday
+    @property {Function} that.ee.getBirthdayString
+    @property {Function} that.ee.getSchools
+    @property {Function} that.ee.getSchoolsString
+    @property {Function} that.ee.getLabel
+    @property {Function} that.ee.getInfo
+    @property {Function} that.ee.addSchool
     @return {Object}
 */
 var viewModel = function( model ) {
@@ -221,23 +255,23 @@ var viewModel = function( model ) {
                     var latitude = that.getLatitude(i);
                     var longitude = that.getLongitude(i);
 
-                    meanLatitude += latitude(;
+                    meanLatitude += latitude;
                     meanLongitude += longitude;
 
                     if( latitude < minimumLatitude ) {
-            	        minimumLatitude = latitude;
+                        minimumLatitude = latitude;
                     } // if
                     if( latitude > maximumLatitude ) {
-        	        maximumLatitude = latitude;
+                        maximumLatitude = latitude;
                     } // if
 
                     if( longitude < minimumLongitude ) {
-        	        minimumLongitude = longitude;
+                        minimumLongitude = longitude;
                     } // if
                     if( longitude < maximumLongitude ) {
-        	        maximumLongitude = longitude;
+                        maximumLongitude = longitude;
                     } // if
-		} // if
+                } // if
             } // for
 
             if( numberInRange > 0 ) {
@@ -253,7 +287,7 @@ var viewModel = function( model ) {
                 maximumLatitude = +44.0;
                 minimumLongitude = -94.0;
                 maximumLongitude = -90.0;
-	    } // else
+            } // else
 
             result.meanLatitude = meanLatitude;
             result.meanLongitude = meanLongitude;
@@ -353,11 +387,11 @@ var viewModel = function( model ) {
                 //console.log( "0: " + almaMater[0] );
                 //console.log( "1: " + almaMater[1] );
                 almaMater = almaMater[1];
-	    } // if
+            } // if
             else {
                 //console.log( "no alma mater" );
                 almaMater = "";
-	    } // else
+            } // else
 
             // Find names of schools enclosed in paired
             // square brackets. For example, [[Worcester Polytechnic Institute]].
@@ -390,7 +424,7 @@ var viewModel = function( model ) {
             success: function(response) { clearTimeout(alarmClock); parse(response); }
         }; // ajaxSettings
 
-	var firstName = ee.getFirstName(index);
+        var firstName = ee.getFirstName(index);
         var lastName = ee.getLastName(index);
 
         // Construct a URL that contains a query.
@@ -434,6 +468,23 @@ var viewModel = function( model ) {
     return that;
 }; // viewModel()
 
+/**
+    Define knockout observables (these are functions that connect
+    text seen on the screen with variables in the code).
+
+    @author Leon Tabak <l.tabak@ieee.org>
+    @version 14 January 2016
+    @param {Object} vm is the collection of methods for accessing the database and map
+    @property {Function} this.show
+    @property {Function} this.hideShowLabel
+    @property {Function} this.loBound
+    @property {Function} this.hiBound
+    @property {Function} this.toggleVisibility
+    @property {Function} this.exemplars
+    @property {Function} this.warn
+    @property {Function} this.warning
+    @property {Function} this.changeReporter
+*/
 var koModel = function( vm ) {
     var self = this;
     self.show = ko.observable(true);
@@ -444,7 +495,7 @@ var koModel = function( vm ) {
         else {
             return "SHOW CONTROLS";
         } // else
-	}); // hideShowLabel()
+        }); // hideShowLabel()
     
     
     self.loBound = ko.observable(1846);
@@ -519,6 +570,15 @@ var koModel = function( vm ) {
 var m;
 var vm;
 
+/**
+    Create the model and the view model and bind
+    the knockout observables to the program's variables
+    when the DOM (Document Object Model&mdash;the data structure
+    that describes the organization of a Web page) is ready.
+
+    @author Leon Tabak <l.tabak@ieee.org>
+    @version 14 January 2016
+*/
 var go = function() {
     m = model();
     vm = viewModel( m );
