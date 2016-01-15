@@ -359,7 +359,7 @@ var viewModel = function( model ) {
     return that;
 }; // viewModel()
 
-var koModel = function() {
+var koModel = function( vm ) {
     var self = this;
     self.show = ko.observable(true);
     self.hideShowLabel = ko.pureComputed(function() {
@@ -383,6 +383,16 @@ var koModel = function() {
             self.show(false);
         } // else
     }; // toggleVisility()
+
+    self.exemplars = ko.observableArray();
+    var numberOfExemplars = vm.ee.getNumberOfExemplars();
+    for( var i = 0; i < numberOfExemplars; i++ ) {
+        var oneExemplar = {};
+        oneExemplar.index = i;
+        oneExemplar.label = vm.ee.getLabel(i);
+        oneExemplar.visible = ko.observable(true);
+        self.exemplars.push( oneExemplar );
+    } // for
 
     self.warn = ko.observable(false);
     self.warning = ko.observable("Valid input.");
@@ -414,7 +424,21 @@ var koModel = function() {
         } // if
 
         self.warning(warningMessage);
+
+        var startDate = moment({ year: ly, month: 0, day: 1});
+        var endDate = moment({ year: hy, month: 0, day: 1});
+        var numberOfExemplars = vm.ee.getNumberOfExemplars();
+        for( var i = 0; i < numberOfExemplars; i++ ) {
+            if( vm.ee.isInRange(i, startDate, endDate ) ) {
+                self.exemplars()[i].visible(true);
+            } // if
+            else {
+                self.exemplars()[i].visible(false);
+            } // else
+        } // for
+
     }; // changeReporter()
+
 }; // koModel()
 
 var m;
@@ -423,7 +447,7 @@ var vm;
 var go = function() {
     m = model();
     vm = viewModel( m );
-    ko.applyBindings( koModel() );
+    ko.applyBindings( koModel(vm) );
 }; // go()
 
 $(document).ready(go);

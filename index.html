@@ -76,6 +76,20 @@
         </div><!-- .col-sm-12 -->
       </div><!-- .row -->
 
+      <div class="row" data-bind="visible: show">
+        <div id="listAndMap">
+          <div class="col-sm-3" id="listOfBirthplaces">
+            <h2>People</h2>
+            <div class="btn-group-vertical btn-group-lg">
+              <div id="origins" data-bind="foreach: exemplars">
+                <button type="button" class="btn btn-info btn-lg btn-block"
+                  data-bind="text: label, visible: visible"></button>
+              </div><!-- #origins -->
+            </div><!-- btn-group-vertical btn-group-lg -->
+          </div><!-- col-sm-3 -->
+        </div><!-- #listAndMap -->
+      </div><!-- .row -->
+
     </div><!-- .container-fluid -->
 
   </body>
