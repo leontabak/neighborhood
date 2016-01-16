@@ -457,6 +457,14 @@ var viewModel = function( model ) {
         lookUpSchools( i, that.ee );
     } // for
 
+    var markerResponderMaker = function( index ) {
+        var i = index;
+
+        return function() {
+            console.log( "marker #" + i );
+        };
+    }; // markerResponderMaker()
+
     var decorateMap = function() {
         var numberOfExemplars = that.ee.getNumberOfExemplars();
         for( var i = 0; i < numberOfExemplars; i++ ) {
@@ -469,6 +477,7 @@ var viewModel = function( model ) {
 		    title: name,
 		    id: i
 		});
+            marker.addListener( 'click', markerResponderMaker(i) );
             that.ee.setMarker(i, marker);
         } // for
     }; // decorateMap()
