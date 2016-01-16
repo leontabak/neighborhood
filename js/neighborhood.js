@@ -19,6 +19,7 @@
     @property {String} that.exemplars.city where person was born
     @property {String} that.exemplars.state where person was born
     @property {Array} that.exemplars.schools where person studied
+    @property {google.maps.Marker} that.exemplars.marker a pin on a map
     @return {Object}
 */
 var model = function() {
@@ -62,6 +63,7 @@ var model = function() {
         result.state = state;
         result.birthday = birthday;
         result.schools = [];
+        result.marker = null;
 
         return result;
     }; // makeExemplar()
@@ -144,30 +146,32 @@ var model = function() {
     Wikipedia, builds a map, and returns methods for
     accessing the database and map.
 
-    @author Leon Tabak <l.tabak@ieee.org>
+    @author Leon Tabak l.tabak@ieee.org
     @version 14 January 2016
     @param {Object} model contains names, dates and places of birth
     @property {Object} that is the object that this function returns to its caller
     @property {Object} that.ee is an &ldquo;exemplar explorer&rdquo;
-    @property {Function} that.ee.getNumberOfExemplars
-    @property {Function} that.ee.getFirstName
-    @property {Function} that.ee.getMiddlename
-    @property {Function} that.ee.getLastName
-    @property {Function} that.ee.getFullName
-    @property {Function} that.ee.getCity
-    @property {Function} that.ee.getState
-    @property {Function} that.ee.getCityState
-    @property {Function} that.ee.getLatitude
-    @property {Function} that.ee.getLongitude
-    @property {Function} that.ee.isInRange
-    @property {Function} that.ee.getExtremaAndMeans
-    @property {Function} that.ee.getBirthday
-    @property {Function} that.ee.getBirthdayString
-    @property {Function} that.ee.getSchools
-    @property {Function} that.ee.getSchoolsString
-    @property {Function} that.ee.getLabel
-    @property {Function} that.ee.getInfo
-    @property {Function} that.ee.addSchool
+    @property {Function} that.ee.getNumberOfExemplars()
+    @property {Function} that.ee.getFirstName(index)
+    @property {Function} that.ee.getMiddlename(index)
+    @property {Function} that.ee.getLastName(index)
+    @property {Function} that.ee.getFullName(index)
+    @property {Function} that.ee.getCity(index)
+    @property {Function} that.ee.getState(index)
+    @property {Function} that.ee.getCityState(index)
+    @property {Function} that.ee.getLatitude(index)
+    @property {Function} that.ee.getLongitude(index)
+    @property {Function} that.ee.isInRange(index,startDate,endDate)
+    @property {Function} that.ee.getExtremaAndMeans()
+    @property {Function} that.ee.getBirthday(index)
+    @property {Function} that.ee.getBirthdayString(index)
+    @property {Function} that.ee.getSchools(index)
+    @property {Function} that.ee.getSchoolsString(index)
+    @property {Function} that.ee.getLabel(index)
+    @property {Function} that.ee.getInfo(index)
+    @property {Function} that.ee.getMarker(index)
+    @property {Function} that.ee.addSchool(index,school)
+    @property {Function} that.ee.setMarker(index,marker)
     @return {Object}
 */
 var viewModel = function( model ) {
@@ -328,6 +332,10 @@ var viewModel = function( model ) {
             } // else
         }; // getSchoolsString()
 
+        that.getMarker = function( index ) {
+            return that.exemplars[i].marker;
+        }; // getMarker()
+
         that.getLabel = function( index ) {
             return that.getLastName(index).toUpperCase();
         }; // getLabel()
@@ -350,6 +358,10 @@ var viewModel = function( model ) {
         that.addSchool = function( index, school ) {
             exemplars[index].schools.push( school );
         }; // addSchool()
+
+        that.setMarker = function( index, marker ) {
+            exemplars[index].marker = marker;
+        }; // setMarker()
 
         return that;
     }; // exemplarExplorer()
@@ -437,6 +449,29 @@ var viewModel = function( model ) {
         $.ajax( wikipediaURL, ajaxSettings );
     }; // lookUpSchools()
 
+    // Build the database.
+    that.ee = exemplarExplorer( model );
+    var n = that.ee.getNumberOfExemplars();
+    for( var i = 0; i < n; i++ ) {
+        // Go to Wikipedia to find school(s) that person #i attended.
+        lookUpSchools( i, that.ee );
+    } // for
+
+    var decorateMap = function() {
+        var numberOfExemplars = that.ee.getNumberOfExemplars();
+        for( var i = 0; i < numberOfExemplars; i++ ) {
+            var latitude = that.ee.getLatitude(i);
+	    var longitude = that.ee.getLongitude(i);
+	    var name = that.ee.getFullName(i);
+            var marker = new google.maps.Marker({
+		    map: that.neighborhoodMap,
+		    position: {lat: latitude, lng: longitude },
+		    title: name,
+		    id: i
+		}); 
+        } // for
+    }; // decorateMap()
+
     that.mapInitializer = function() {
         if( typeof google === "undefined" ) {
             var warningMessage = "No response from Google Maps. Check network connection.";
@@ -453,17 +488,10 @@ var viewModel = function( model ) {
 
             // Create the map.
             that.neighborhoodMap=new google.maps.Map(document.getElementById("bigMap"),mapSpecification);
-            //decorateMap();
+            decorateMap();
         } // else
     }; // mapInitializer()
 
-    // Build the database.
-    that.ee = exemplarExplorer( model );
-    var n = that.ee.getNumberOfExemplars();
-    for( var i = 0; i < n; i++ ) {
-        // Go to Wikipedia to find school(s) that person #i attended.
-        lookUpSchools( i, that.ee );
-    } // for
 
     return that;
 }; // viewModel()
@@ -475,15 +503,15 @@ var viewModel = function( model ) {
     @author Leon Tabak <l.tabak@ieee.org>
     @version 14 January 2016
     @param {Object} vm is the collection of methods for accessing the database and map
-    @property {Function} this.show
-    @property {Function} this.hideShowLabel
-    @property {Function} this.loBound
-    @property {Function} this.hiBound
-    @property {Function} this.toggleVisibility
-    @property {Function} this.exemplars
-    @property {Function} this.warn
-    @property {Function} this.warning
-    @property {Function} this.changeReporter
+    @property {Function} this.show buttons and search bar visible?
+    @property {Function} this.hideShowLabel label (HIDE or SHOW) on button
+    @property {Function} this.loBound lower bound on range of years
+    @property {Function} this.hiBound upper bound on range of years
+    @property {Function} this.toggleVisibility how to respond to click on HIDE/SHOW button
+    @property {Function} this.exemplars array of records of people
+    @property {Function} this.warn show warning message?
+    @property {Function} this.warning show this message
+    @property {Function} this.changeReporter what to do in response to changed range
 */
 var koModel = function( vm ) {
     var self = this;
