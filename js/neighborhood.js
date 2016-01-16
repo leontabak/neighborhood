@@ -333,7 +333,7 @@ var viewModel = function( model ) {
         }; // getSchoolsString()
 
         that.getMarker = function( index ) {
-            return that.exemplars[i].marker;
+            return exemplars[index].marker;
         }; // getMarker()
 
         that.getLabel = function( index ) {
@@ -468,7 +468,8 @@ var viewModel = function( model ) {
 		    position: {lat: latitude, lng: longitude },
 		    title: name,
 		    id: i
-		}); 
+		});
+            that.ee.setMarker(i, marker);
         } // for
     }; // decorateMap()
 
@@ -511,7 +512,7 @@ var viewModel = function( model ) {
     @property {Function} this.exemplars array of records of people
     @property {Function} this.warn show warning message?
     @property {Function} this.warning show this message
-    @property {Function} this.changeReporter what to do in response to changed range
+    @property {Function} this.changeRange what to do in response to changed range
 */
 var koModel = function( vm ) {
     var self = this;
@@ -538,6 +539,15 @@ var koModel = function( vm ) {
         } // else
     }; // toggleVisility()
 
+
+    var buttonResponderMaker = function( index ) {
+        var i = index;
+
+        return function() {
+            console.log( "button #" + i );
+        }; 
+    }; // buttonResponderMaker()
+
     self.exemplars = ko.observableArray();
     var numberOfExemplars = vm.ee.getNumberOfExemplars();
     for( var i = 0; i < numberOfExemplars; i++ ) {
@@ -545,12 +555,13 @@ var koModel = function( vm ) {
         oneExemplar.index = i;
         oneExemplar.label = vm.ee.getLabel(i);
         oneExemplar.visible = ko.observable(true);
+        oneExemplar.buttonResponder = buttonResponderMaker(i);
         self.exemplars.push( oneExemplar );
     } // for
 
     self.warn = ko.observable(false);
     self.warning = ko.observable("Valid input.");
-    self.changeReporter = function() {
+    self.changeRange = function() {
         var ly = self.loBound();
         var hy = self.hiBound();
 
@@ -580,18 +591,20 @@ var koModel = function( vm ) {
         self.warning(warningMessage);
 
         var startDate = moment({ year: ly, month: 0, day: 1});
-        var endDate = moment({ year: hy, month: 0, day: 1});
+        var endDate = moment({ year: hy, month: 11, day: 31});
         var numberOfExemplars = vm.ee.getNumberOfExemplars();
         for( var i = 0; i < numberOfExemplars; i++ ) {
             if( vm.ee.isInRange(i, startDate, endDate ) ) {
                 self.exemplars()[i].visible(true);
+                vm.ee.getMarker(i).setMap( vm.neighborhoodMap );
             } // if
             else {
                 self.exemplars()[i].visible(false);
+                vm.ee.getMarker(i).setMap( null );
             } // else
         } // for
 
-    }; // changeReporter()
+    }; // changeRange()
 
 }; // koModel()
 

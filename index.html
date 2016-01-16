@@ -54,14 +54,14 @@
                   class="form-control input-lg" 
                   name="loYear" 
                   id="loYear" 
-                  data-bind="textInput: loBound, event: {keyup: changeReporter}"/>
+                  data-bind="textInput: loBound, event: {keyup: changeRange}"/>
               <label for="hiYear" class="input-lg">and</label>
               <input
                   type="search"
                   class="form-control input-lg"
                   name="hiYear"
                   id="hiYear"
-                  data-bind="textInput: hiBound, event: {keyup: changeReporter}"/>
+                  data-bind="textInput: hiBound, event: {keyup: changeRange}"/>
 
               <!-- This label is for debugging purposes only.
               <label
@@ -83,7 +83,7 @@
             <div class="btn-group-vertical btn-group-lg">
               <div id="origins" data-bind="foreach: exemplars">
                 <button type="button" class="btn btn-info btn-lg btn-block"
-                  data-bind="text: label, visible: visible"></button>
+                  data-bind="text: label, click: buttonResponder, visible: visible"></button>
               </div><!-- #origins -->
             </div><!-- btn-group-vertical btn-group-lg -->
           </div><!-- col-sm-3 -->
