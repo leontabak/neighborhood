@@ -20,6 +20,7 @@
     @property {String} that.exemplars.state where person was born
     @property {Array} that.exemplars.schools where person studied
     @property {google.maps.Marker} that.exemplars.marker a pin on a map
+    @property {Function} that.exemplars.markerResponder what to do when clicked
     @return {Object}
 */
 var model = function() {
@@ -64,6 +65,7 @@ var model = function() {
         result.birthday = birthday;
         result.schools = [];
         result.marker = null;
+        result.markerResponder = null;
 
         return result;
     }; // makeExemplar()
@@ -150,6 +152,8 @@ var model = function() {
     @version 14 January 2016
     @param {Object} model contains names, dates and places of birth
     @property {Object} that is the object that this function returns to its caller
+    @property {google.maps.Map} that.neighborhoodMap is a road map
+    @property {google.maps.InfoWindow} that.infoWindow contains a name, birthday, and schools
     @property {Object} that.ee is an &ldquo;exemplar explorer&rdquo;
     @property {Function} that.ee.getNumberOfExemplars()
     @property {Function} that.ee.getFirstName(index)
@@ -170,8 +174,10 @@ var model = function() {
     @property {Function} that.ee.getLabel(index)
     @property {Function} that.ee.getInfo(index)
     @property {Function} that.ee.getMarker(index)
+    @property {Function} that.ee.getMarkerResponder(index)
     @property {Function} that.ee.addSchool(index,school)
     @property {Function} that.ee.setMarker(index,marker)
+    @property {Function} that.ee.setMarkerResponder(index,markerResponder)
     @return {Object}
 */
 var viewModel = function( model ) {
@@ -326,7 +332,7 @@ var viewModel = function( model ) {
             else {
                 var result = "";
                 for( var i = 0; i < lengthOfList; i++ ) {
-                    result += listOfSchools[i] + "\n";
+                    result += listOfSchools[i] + "<br>";
                 } // for
                 return result;
             } // else
@@ -336,13 +342,17 @@ var viewModel = function( model ) {
             return exemplars[index].marker;
         }; // getMarker()
 
+        that.getMarkerResponder = function(index) {
+            return exemplars[index].markerResponder;
+        }; // getMarkerResponder()
+
         that.getLabel = function( index ) {
             return that.getLastName(index).toUpperCase();
         }; // getLabel()
 
         that.getInfo = function( index ) {
             var result = "";
-            result += that.getFullName(index) + "\n";
+            result += that.getFullName(index) + "<br>";
 
             var verbPhrase = "was born on ";
             if( moment().isBefore( that.getBirthday(index) ) ) {
@@ -350,7 +360,7 @@ var viewModel = function( model ) {
             } // if
 
             result += verbPhrase + that.getBirthdayString(index) + 
-                      " in " + that.getCityState(index) + ".\n";
+                      " in " + that.getCityState(index) + ".<br>";
             result += that.getSchoolsString(index);
             return result;
         }; // getInfo()
@@ -362,6 +372,10 @@ var viewModel = function( model ) {
         that.setMarker = function( index, marker ) {
             exemplars[index].marker = marker;
         }; // setMarker()
+
+        that.setMarkerResponder = function( index, markerResponder ) {
+            exemplars[index].markerResponder = markerResponder;
+        }; // setMarkerResponder()
 
         return that;
     }; // exemplarExplorer()
@@ -457,11 +471,33 @@ var viewModel = function( model ) {
         lookUpSchools( i, that.ee );
     } // for
 
-    var markerResponderMaker = function( index ) {
+    var markerResponderMaker = function( index, marker ) {
         var i = index;
+        var m = marker;
+        var windowOpen = false;
 
         return function() {
             console.log( "marker #" + i );
+
+
+            if( m.getAnimation() !== null ) {
+                console.log( "stop animation and close window" );
+                m.setAnimation( null );
+                that.infoWindow.close();
+                windowOpen = false;
+            } // if
+            else if( m.getAnimation() === null && windowOpen === true ) {
+                console.log( "close info window" );
+                that.infoWindow.close();
+                windowOpen = false;
+            } // if
+            else {
+                m.setAnimation( google.maps.Animation.BOUNCE );
+                setTimeout( function() { m.setAnimation( null ); }, 2000 );
+                that.infoWindow.setContent( that.ee.getInfo( i ) );
+                that.infoWindow.open( that.neighborhoodMap, m );
+                windowOpen = true;
+            } // else
         };
     }; // markerResponderMaker()
 
@@ -477,8 +513,11 @@ var viewModel = function( model ) {
 		    title: name,
 		    id: i
 		});
-            marker.addListener( 'click', markerResponderMaker(i) );
+            var markerResponder = markerResponderMaker(i,marker);
+            marker.addListener( 'click', markerResponder );
+            marker.setAnimation( null );
             that.ee.setMarker(i, marker);
+            that.ee.setMarkerResponder( i, markerResponder );
         } // for
     }; // decorateMap()
 
@@ -498,10 +537,10 @@ var viewModel = function( model ) {
 
             // Create the map.
             that.neighborhoodMap=new google.maps.Map(document.getElementById("bigMap"),mapSpecification);
+	    that.infoWindow = new google.maps.InfoWindow( {content: "Guten Tag!"} );
             decorateMap();
         } // else
     }; // mapInitializer()
-
 
     return that;
 }; // viewModel()
@@ -554,6 +593,7 @@ var koModel = function( vm ) {
 
         return function() {
             console.log( "button #" + i );
+            vm.ee.getMarkerResponder(i)();
         }; 
     }; // buttonResponderMaker()
 
@@ -614,7 +654,6 @@ var koModel = function( vm ) {
         } // for
 
     }; // changeRange()
-
 }; // koModel()
 
 var m;
