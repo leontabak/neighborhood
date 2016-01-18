@@ -8,7 +8,10 @@ Author: Leon Tabak
 Date: 18 January 2016
 ----------------------
 
-See [jsdoc description] (./docs/index.html) of this application.
+See [an outline of the design of this application] (http://www.eonsahead.com/iowans/docs/index.html)
+and then [try out the application] (http://www.eonsahead.com/iowans).
+The outline (written with jsdoc) is also in the *docs* folder of the application's 
+[repository on GitHub] (https://github.com/leontabak/neighborhood).
 
 To use this application:  
   * Open index.html in a browser.  
@@ -113,6 +116,6 @@ receive functions as arguments) of JavaScript to construct listeners
 and attach those functions to the buttons and markers.  
 
 The program validates inputs and uses the alert class of the 
-Bootstrap framework for error reporting. It uses the grid layout 
+Bootstrap framework for reporting errors. It uses the grid layout 
 features of that framework.  
 

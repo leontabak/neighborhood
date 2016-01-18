@@ -102,7 +102,7 @@ bear the names of accomplished Iowans.
 }
 
 /*
-Specify the dimensions of a map that fills 
+Specify the dimensions of a map that fills
 the window's width and has a height sufficient
 to encompass the buttons and search fields of
 the application.
@@ -110,7 +110,7 @@ the application.
 #bigMap {
   position: absolute;
 
-  /* 
+  /*
     give the map a height that exceeds combined
     heights of buttons and search field
   */

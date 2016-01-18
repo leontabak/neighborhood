@@ -1,12 +1,14 @@
-
+// neighborhood.js
+// Leon Tabak
+// 17 January 2016
 
 /**
-    @member {Object} m is reference to the model
+    @member {Object} m is reference to the model.
 */
 var m;
 
 /**
-    @member {Object} vm is a reference to the view model
+    @member {Object} vm is a reference to the view model.
 */
 var vm;
 
@@ -32,20 +34,20 @@ var YEAR_OF_CAPT_KIRKS_BIRTH = 2228;
     @public
     @function model
     @author Leon Tabak [<l.tabak@ieee.org>]
-    @version 14 January 2016
-    @property {Object} that is the object that this function returns to its caller
-    @property {Array} that.exemplars contains descriptions of people
-    @property {String} that.exemplars.name identifies a person
-    @property {String} that.exemplars.name.firstName
-    @property {String} that.exemplars.name.middleName
-    @property {String} that.exemplars.name.lastName
-    @property {number} that.exemplars.latitude place of birth
-    @property {number} that.exemplars.longitude place of birth
-    @property {String} that.exemplars.city where person was born
-    @property {String} that.exemplars.state where person was born
-    @property {Array} that.exemplars.schools where person studied
-    @property {google.maps.Marker} that.exemplars.marker a pin on a map
-    @property {Function} that.exemplars.markerResponder what to do when clicked
+    @version 17 January 2016
+    @property {Object} that is the object that this function returns to its caller.
+    @property {Array} that.exemplars contains descriptions of people.
+    @property {String} that.exemplars.name identifies a person.
+    @property {String} that.exemplars.name.firstName.
+    @property {String} that.exemplars.name.middleName.
+    @property {String} that.exemplars.name.lastName.
+    @property {number} that.exemplars.latitude place of birth.
+    @property {number} that.exemplars.longitude place of birth.
+    @property {String} that.exemplars.city where person was born.
+    @property {String} that.exemplars.state where person was born.
+    @property {Array} that.exemplars.schools where person studied.
+    @property {google.maps.Marker} that.exemplars.marker a pin on a map.
+    @property {Function} that.exemplars.markerResponder what to do when clicked.
     @return {Object}
 */
 var model = function() {
@@ -77,7 +79,7 @@ var model = function() {
     // date of birth and place of birth.
     var makeExemplar = function( firstName, middleName, lastName,
             latitude, longitude,
-            city, state, 
+            city, state,
             birthday ) {
 
         var result = {};
@@ -96,67 +98,67 @@ var model = function() {
     }; // makeExemplar()
 
     // Create the objects and store them in the array.
-    exemplars.push( makeExemplar( 
+    exemplars.push( makeExemplar(
                         "Marc", "", "Andreessen",
                         42.534, -92.445,
                         "Cedar Falls", "Iowa",
                         moment( {year: 1971, month: 6, day: 9} ) ));
 
-    exemplars.push( makeExemplar( 
+    exemplars.push( makeExemplar(
                         "Leo", "", "Beranek",
                         41.807, -91.494,
                         "Solon", "Iowa",
                         moment( {year: 1914, month: 8, day: 15} ) ));
 
-    exemplars.push( makeExemplar( 
+    exemplars.push( makeExemplar(
                         "Clifford", "", "Berry",
                         42.187, -92.715,
                         "Gladbrook", "Iowa",
                         moment( {year: 1918, month: 3, day: 19} ) ));
 
-    exemplars.push( makeExemplar( 
+    exemplars.push( makeExemplar(
                         "Norman", "", "Borlaug",
                         43.381, -92.114,
                         "Cresco", "Iowa",
                         moment( {year: 1914, month: 2, day: 25} ) ));
 
-    exemplars.push( makeExemplar( 
+    exemplars.push( makeExemplar(
                         "Donald", "", "Campbell",
                         41.844, -90.188,
                         "Clinton", "Iowa",
                         moment( {year: 1904, month: 7, day: 5} ) ));
 
-    exemplars.push( makeExemplar( 
+    exemplars.push( makeExemplar(
                         "Wallace", "", "Carothers",
                         40.808, -91.115,
                         "Burlington", "Iowa",
                         moment( {year: 1896, month: 3, day: 27} ) ));
 
-    exemplars.push( makeExemplar( 
+    exemplars.push( makeExemplar(
                         "Herbert", "",  "Hoover",
                         41.671, -91.346,
                         "West Branch", "Iowa",
                         moment( {year: 1874, month: 7, day: 10} ) ));
 
-    exemplars.push( makeExemplar( 
+    exemplars.push( makeExemplar(
                         "James", "Tiberius", "Kirk",
                         41.479, -91.581,
                         "Riverside", "Iowa",
                         moment( {year: YEAR_OF_CAPT_KIRKS_BIRTH, month: 2, day: 28} ) ));
 
-    exemplars.push( makeExemplar( 
+    exemplars.push( makeExemplar(
                         "Robert", "", "Noyce",
                         40.808, -91.115,
                         "Burlington", "Iowa",
                         moment( {year: 1927, month: 11, day: 12} ) ));
 
-    exemplars.push( makeExemplar( 
+    exemplars.push( makeExemplar(
                         "James", "", "Van Allen",
                         40.971, -91.548,
                         "Mount Pleasant", "Iowa",
                         moment( {year: 1914, month: 8, day: 7} ) ));
 
-    exemplars.push( makeExemplar( 
+    exemplars.push( makeExemplar(
                         "Oswald", "", "Veblen",
                         43.303, -91.785,
                         "Decorah", "Iowa",
@@ -174,35 +176,35 @@ var model = function() {
     accessing the database and map.
 
     @author Leon Tabak l.tabak@ieee.org
-    @version 14 January 2016
-    @param {Object} model contains names, dates and places of birth (viewModel adds schools and markers)
-    @property {Object} that is the object that this function returns to its caller
-    @property {google.maps.Map} that.neighborhoodMap is a road map
-    @property {google.maps.InfoWindow} that.infoWindow contains a name, birthday, and schools
-    @property {Object} that.ee is an &ldquo;exemplar explorer&rdquo;
-    @property {Function} that.ee.getNumberOfExemplars() returns a number
-    @property {Function} that.ee.getFirstName(index) returns a string
-    @property {Function} that.ee.getMiddlename(index) returns a string
-    @property {Function} that.ee.getLastName(index) returns a string
-    @property {Function} that.ee.getFullName(index) returns a string
-    @property {Function} that.ee.getCity(index) returns a string
-    @property {Function} that.ee.getState(index) returns a string
-    @property {Function} that.ee.getCityState(index) returns a formatted string
-    @property {Function} that.ee.getLatitude(index) returns a number
-    @property {Function} that.ee.getLongitude(index) returns a number
-    @property {Function} that.ee.isInRange(index,startDate,endDate) returns a boolean
-    @property {Function} that.ee.getExtremaAndMeans() returns an object
-    @property {Function} that.ee.getBirthday(index) returns a moment
-    @property {Function} that.ee.getBirthdayString(index) returns a formatted date
-    @property {Function} that.ee.getSchools(index) returns an array
-    @property {Function} that.ee.getSchoolsString(index) returns HTML
-    @property {Function} that.ee.getLabel(index) returns a string
-    @property {Function} that.ee.getInfo(index) returns HTML
-    @property {Function} that.ee.getMarker(index) returns a marker
-    @property {Function} that.ee.getMarkerResponder(index) returns a function
-    @property {Function} that.ee.addSchool(index,school) returns void
-    @property {Function} that.ee.setMarker(index,marker) returns void
-    @property {Function} that.ee.setMarkerResponder(index,markerResponder) returns void
+    @version 17 January 2016
+    @param {Object} model contains names, dates and places of birth (viewModel adds schools and markers later).
+    @property {Object} that is the object that this function returns to its caller.
+    @property {google.maps.Map} that.neighborhoodMap is a road map.
+    @property {google.maps.InfoWindow} that.infoWindow contains a name, birthday, and schools.
+    @property {Object} that.ee is an &ldquo;exemplar explorer&rdquo; (my name for this bunch of functions).
+    @property {Function} that.ee.getNumberOfExemplars() returns a number.
+    @property {Function} that.ee.getFirstName(index) returns a string.
+    @property {Function} that.ee.getMiddlename(index) returns a string.
+    @property {Function} that.ee.getLastName(index) returns a string.
+    @property {Function} that.ee.getFullName(index) returns a string.
+    @property {Function} that.ee.getCity(index) returns a string.
+    @property {Function} that.ee.getState(index) returns a string.
+    @property {Function} that.ee.getCityState(index) returns a formatted string.
+    @property {Function} that.ee.getLatitude(index) returns a number.
+    @property {Function} that.ee.getLongitude(index) returns a number.
+    @property {Function} that.ee.isInRange(index,startDate,endDate) returns a boolean.
+    @property {Function} that.ee.getExtremaAndMeans() returns an object.
+    @property {Function} that.ee.getBirthday(index) returns a moment.
+    @property {Function} that.ee.getBirthdayString(index) returns a formatted date.
+    @property {Function} that.ee.getSchools(index) returns an array.
+    @property {Function} that.ee.getSchoolsString(index) returns HTML.
+    @property {Function} that.ee.getLabel(index) returns a string.
+    @property {Function} that.ee.getInfo(index) returns HTML.
+    @property {Function} that.ee.getMarker(index) returns a marker.
+    @property {Function} that.ee.getMarkerResponder(index) returns a function.
+    @property {Function} that.ee.addSchool(index,school) returns void.
+    @property {Function} that.ee.setMarker(index,marker) returns void.
+    @property {Function} that.ee.setMarkerResponder(index,markerResponder) returns void.
     @return {Object}
 */
 var viewModel = function( model ) {
@@ -212,6 +214,10 @@ var viewModel = function( model ) {
     // will add a property to the object later.
     var that = {};
 
+    // Define a set of functions for reading and
+    // setting values in the model (our database
+    // of names, dates of birth, places of birth,
+    // and schools attended).
     var exemplarExplorer = function( model ) {
         var exemplars = model.exemplars;
 
@@ -225,6 +231,9 @@ var viewModel = function( model ) {
             return exemplars.length;
         }; // getNumberOfExemplars()
 
+        // For this method and the methods that
+        // follow, 'index' is an integer that
+        // identifies one of our illustrious Iowans.
         that.getFirstName = function( index ) {
             return exemplars[index].name.firstName;
         }; // getFirstName()
@@ -237,9 +246,13 @@ var viewModel = function( model ) {
             return exemplars[index].name.lastName;
         }; // getLastName()
 
+        // Construct a piece of the formatted
+        // text that will appear in the information
+        // window on the marker on the map at the
+        // location of a person's birth.
         that.getFullName = function( index ) {
-            return that.getFirstName(index) + " " + 
-                   that.getMiddleName(index) + " " + 
+            return that.getFirstName(index) + " " +
+                   that.getMiddleName(index) + " " +
                    that.getLastName(index);
         }; // getFullName()
 
@@ -251,6 +264,10 @@ var viewModel = function( model ) {
             return exemplars[index].state;
         }; // getState()
 
+        // Construct a piece of the formatted
+        // text that will appear in the information
+        // window on the marker on the map at the
+        // location of a person's birth.
         that.getCityState = function( index ) {
             return that.getCity(index) + ", " + that.getState(index);
         }; // getCityState()
@@ -263,6 +280,8 @@ var viewModel = function( model ) {
             return exemplars[index].longitude;
         }; // getLongitude()
 
+        // true or false: was a particular person born
+        // between two given dates?
         that.isInRange = function( index, startDate, endDate ) {
             var dob = exemplars[index].birthday;
             return startDate.isSameOrBefore(dob) && dob.isSameOrBefore(endDate);
@@ -272,6 +291,8 @@ var viewModel = function( model ) {
         // Define a method that computes the bounds and center of
         // of region that contains all of the places that are
         // described in the model.
+        // (Count only places of birth of persons born between
+        // the two given dates).
         that.getExtremaAndMeans = function( startDate, endDate ) {
             var result = {};
 
@@ -316,6 +337,9 @@ var viewModel = function( model ) {
             else {
                 // Define the center and bounds of
                 // eastern Iowa.
+                // (This is the default value in case
+                // no persons were found who were born
+                // between the given dates).
                 meanLatitude = +42.0;
                 meanLongitude = -92.0;
                 minimumLatitude = +40.0;
@@ -324,6 +348,8 @@ var viewModel = function( model ) {
                 maximumLongitude = -90.0;
             } // else
 
+            // Construct object that this function
+            // returns to its caller.
             result.meanLatitude = meanLatitude;
             result.meanLongitude = meanLongitude;
 
@@ -339,6 +365,10 @@ var viewModel = function( model ) {
             return exemplars[index].birthday;
         }; // getBirthday()
 
+        // Construct a piece of the formatted
+        // text that will appear in the information
+        // window on the marker on the map at the
+        // location of a person's birth.
         that.getBirthdayString = function( index ) {
             return that.getBirthday(index).format( "MMM DD, YYYY" );
         }; // getBirthdayString()
@@ -347,6 +377,10 @@ var viewModel = function( model ) {
             return exemplars[index].schools;
         }; // getSchools()
 
+        // Construct a piece of the formatted
+        // text that will appear in the information
+        // window on the marker on the map at the
+        // location of a person's birth.
         that.getSchoolsString = function( index ) {
             var listOfSchools = that.getSchools(index);
             var lengthOfList = listOfSchools.length;
@@ -367,14 +401,20 @@ var viewModel = function( model ) {
             return exemplars[index].marker;
         }; // getMarker()
 
+        // Return the function that will be called
+        // when a user clicks on a marker on the map.
         that.getMarkerResponder = function(index) {
             return exemplars[index].markerResponder;
         }; // getMarkerResponder()
 
+        // Return the name that will appear on a button.
         that.getLabel = function( index ) {
             return that.getLastName(index).toUpperCase();
         }; // getLabel()
 
+        // Return the text that will appear in an
+        // information window (on a marker, at the
+        // place of a person's birth).
         that.getInfo = function( index ) {
             var result = "";
             result += that.getFullName(index) + "<br>";
@@ -384,7 +424,7 @@ var viewModel = function( model ) {
                 verbPhrase = "will be born on ";
             } // if
 
-            result += verbPhrase + that.getBirthdayString(index) + 
+            result += verbPhrase + that.getBirthdayString(index) +
                       " in " + that.getCityState(index) + ".<br>";
             result += that.getSchoolsString(index);
             return result;
@@ -406,6 +446,13 @@ var viewModel = function( model ) {
     }; // exemplarExplorer()
 
 
+    // Program tries to read from Wikipedia more
+    // than once. If one attempt fails, the program
+    // will publish a warning. There will be just one
+    // warning (not many identical warning).
+    var wikipediaDidNotRespond = false;
+    var countNoResponses = 0;
+
     // Define a function that will attempt to find on Wikipedia the names
     // of the colleges and universities that a person attended and append
     // that data to the text in the information windows that is linked to
@@ -414,13 +461,13 @@ var viewModel = function( model ) {
         //console.log( "looking up schools for " + ee.getFirstName(index) + " " + ee.getLastName(index) );
 
         var parse = function( wikiResponse ) {
-            console.log( "parsing..." ) ;
+            //console.log( "parsing..." ) ;
 
             // Find all of the text that lies between the
             // word "alma_mater" and the character "|".
             var str = JSON.stringify( wikiResponse.query.pages );
 
-            // Here I am following a suggestion that came from 
+            // Here I am following a suggestion that came from
             // the last reviewer of my code.
             // I will use a regular expression to find that
             // part of the record that contains a list of schools.
@@ -432,7 +479,7 @@ var viewModel = function( model ) {
             //var j = str.indexOf( "|", i + 9 );
             //var almaMater = str.slice( i, j );
             var almaMater = re.exec( str );
-            if( (almaMater !== null) && 
+            if( (almaMater !== null) &&
                 (Object.prototype.toString.call( almaMater) === '[object Array]') &&
                 (almaMater.length > 0) ) {
                 //console.log( "0: " + almaMater[0] );
@@ -460,10 +507,28 @@ var viewModel = function( model ) {
             } // while
         }; // parse()
 
+        // Program tries to read from Wikipedia more
+        // than once. If one attempt fails, the program
+        // will publish a warning. There will be just one
+        // warning (not many identical warning).
+        //var wikipediaDidNotRespond = false;
         var ifWikipediaDoesNotRespond = function() {
-            alert( "Wikipedia is not responding." );
+            if( !wikipediaDidNotRespond ) {
+                countNoResponses++;
+                alert( "Wikipedia is not responding." );
+                //console.log( "Wikipedia did not respond: " + wikipediaDidNotRespond + countNoResponses);
+                wikipediaDidNotRespond = true;
+            } // if
+            else {
+                countNoResponses++;
+                //console.log( "Wikipedia did not respond: " + wikipediaDidNotRespond + countNoResponses );
+            } // else
         };
 
+        // Schedule a warning message for the future in case
+        // Wikipedia does not respond.
+        // (Program will cancel this scheduled message if
+        // Wikipedia does respond within the allotted time).
         var alarmClock = setTimeout( ifWikipediaDoesNotRespond, 2000 );
 
         // Specify the kind of access to the on-line service and
@@ -496,23 +561,26 @@ var viewModel = function( model ) {
         lookUpSchools( i, that.ee );
     } // for
 
+    // Specify what should be done when user selects a person
+    // by clicking on a marker.
+    // This method is also called when a user clicks on a name button.
     var markerResponderMaker = function( index, marker ) {
         var i = index;
         var m = marker;
         var windowOpen = false;
 
         return function() {
-            console.log( "marker #" + i );
+            //console.log( "marker #" + i );
 
 
             if( m.getAnimation() !== null ) {
-                console.log( "stop animation and close window" );
+                //console.log( "stop animation and close window" );
                 m.setAnimation( null );
                 that.infoWindow.close();
                 windowOpen = false;
             } // if
             else if( m.getAnimation() === null && windowOpen === true ) {
-                console.log( "close info window" );
+                //console.log( "close info window" );
                 that.infoWindow.close();
                 windowOpen = false;
             } // if
@@ -526,18 +594,21 @@ var viewModel = function( model ) {
         };
     }; // markerResponderMaker()
 
+    // Create the markers and methods that will respond
+    // to clicks on markers.
+    // Store references to these in the model (our database).
     var decorateMap = function() {
         var numberOfExemplars = that.ee.getNumberOfExemplars();
         for( var i = 0; i < numberOfExemplars; i++ ) {
             var latitude = that.ee.getLatitude(i);
-	    var longitude = that.ee.getLongitude(i);
-	    var name = that.ee.getFullName(i);
+            var longitude = that.ee.getLongitude(i);
+            var name = that.ee.getFullName(i);
             var marker = new google.maps.Marker({
-		    map: that.neighborhoodMap,
-		    position: {lat: latitude, lng: longitude },
-		    title: name,
-		    id: i
-		});
+                    map: that.neighborhoodMap,
+                    position: {lat: latitude, lng: longitude },
+                    title: name,
+                    id: i
+                });
             var markerResponder = markerResponderMaker(i,marker);
             marker.addListener( 'click', markerResponder );
             marker.setAnimation( null );
@@ -550,6 +621,7 @@ var viewModel = function( model ) {
         if( typeof google === "undefined" ) {
             var warningMessage = "No response from Google Maps. Check network connection.";
             alert( warningMessage );
+            //console.log( warningMessage );
         } // if
         else {
             // Find the mean latitude of all places of birth.
@@ -557,11 +629,14 @@ var viewModel = function( model ) {
             // Center the map at the mean latitude and longitude.
             var startDate = moment({ year: YEAR_OF_IOWA_STATEHOOD, month: 0, day: 1});
             var endDate = moment({ year: YEAR_OF_CAPT_KIRKS_BIRTH, month: 11, day: 31});
-	    var em = that.ee.getExtremaAndMeans( startDate, endDate );
+            var em = that.ee.getExtremaAndMeans( startDate, endDate );
             var swLatitude = em.minimumLatitude;
             var swLongitude = em.minimumLongitude;
             var neLatitude = em.maximumLatitude;
             var neLongitude = em.maximumLongitude;
+
+            // Specify how much extra room to leave around
+            // the places of birth.
             var margin = 0.1;
             var lat = ((swLatitude - margin) + (neLatitude + margin))/2;
             var lng = ((swLongitude - margin) + (neLongitude + margin))/2;
@@ -575,7 +650,7 @@ var viewModel = function( model ) {
 
             // Create the map.
             that.neighborhoodMap=new google.maps.Map(document.getElementById("bigMap"),mapSpecification);
-	    that.infoWindow = new google.maps.InfoWindow( {content: "Placeholder Value"} );
+            that.infoWindow = new google.maps.InfoWindow( {content: "Placeholder Value"} );
             decorateMap();
         } // else
     }; // mapInitializer()
@@ -588,7 +663,7 @@ var viewModel = function( model ) {
     text seen on the screen with variables in the code).
 
     @author Leon Tabak <l.tabak@ieee.org>
-    @version 14 January 2016
+    @version 17 January 2016
     @param {Object} vm is the collection of methods for accessing the database and map
     @property {Function} this.show buttons and search bar visible?
     @property {Function} this.hideShowLabel label (HIDE or SHOW) on button
@@ -597,7 +672,7 @@ var viewModel = function( model ) {
     @property {Function} this.toggleVisibility how to respond to click on HIDE/SHOW button
     @property {Function} this.exemplars array of records of people
     @property {Function} this.warn show warning message?
-    @property {Function} this.warning show this message
+    @property {Function} this.warning this is the message to show
     @property {Function} this.changeRange what to do in response to changed range
 */
 var koModel = function( vm ) {
@@ -611,11 +686,17 @@ var koModel = function( vm ) {
             return "SHOW CONTROLS";
         } // else
         }); // hideShowLabel()
-    
-    
+
+
+    // loBound and hiBound define a range of years.
+    // Initial values set to define a period that
+    // includes the dates of birth of all persons
+    // in the model.
     self.loBound = ko.observable(YEAR_OF_IOWA_STATEHOOD);
     self.hiBound = ko.observable(YEAR_OF_CAPT_KIRKS_BIRTH);
 
+    // make search box and array of name buttons
+    // visibile or invisible (hide or show).
     self.toggleVisibility = function() {
         if( self.show() === false ) {
             self.show(true);
@@ -630,17 +711,21 @@ var koModel = function( vm ) {
         var i = index;
 
         return function() {
-            console.log( "button #" + i );
+            //console.log( "button #" + i );
             vm.ee.getMarkerResponder(i)();
 
             // hide controls to make more of
-            // the map visible on small devices
-            if( screen.width < 600 ) {
+            // the map visible on small devices.
+            // (here small means a screen with
+            // a width of less than 800 pixels.)
+            if( screen.width < 800 ) {
                 self.show(false);
             } // if
-        }; 
+        };
     }; // buttonResponderMaker()
 
+    // Define a function that will help create
+    // buttons that show names of illustrious Iowans.
     self.exemplars = ko.observableArray();
     var numberOfExemplars = vm.ee.getNumberOfExemplars();
     for( var i = 0; i < numberOfExemplars; i++ ) {
@@ -652,6 +737,7 @@ var koModel = function( vm ) {
         self.exemplars.push( oneExemplar );
     } // for
 
+    // Define functions that validate inputs.
     self.warn = ko.observable(false);
     self.warning = ko.observable("Valid input.");
     self.changeRange = function() {
@@ -726,7 +812,7 @@ var koModel = function( vm ) {
     that describes the organization of a Web page) is ready.
 
     @author Leon Tabak <l.tabak@ieee.org>
-    @version 14 January 2016
+    @version 17 January 2016
 */
 var go = function() {
     m = model();
@@ -735,6 +821,3 @@ var go = function() {
 }; // go()
 
 $(document).ready(go);
-
-
-

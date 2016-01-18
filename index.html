@@ -2,7 +2,7 @@
 <!--
   Leon Tabak
   Project 5: Neighborhood Map
-  08 January 2016
+  18 January 2016
 -->
 <html>
   <head>
@@ -24,6 +24,7 @@
 
   <body>
 
+    <!-- A map of eastern Iowa. -->
     <div id="bigMap">
     </div><!-- #bigMap -->
 
@@ -34,26 +35,28 @@
 
     <div class="container-fluid">
 
+      <!-- HIDE CONTROLS/SHOW CONTROLS toggle button. -->
       <div class="row">
         <div class="col-sm-3" id="toggle">
-          <button type="button" 
-                  id="toggleButton" 
-                  class="btn btn-info btn-lg" 
+          <button type="button"
+                  id="toggleButton"
+                  class="btn btn-info btn-lg"
                   data-bind="text: hideShowLabel, click: toggleVisibility">
           </button>
         </div><!-- .col-sm-3 -->
       </div> <!-- .row -->
 
+      <!-- Search fields: enter 2 years that define a range. -->
       <div class="row" data-bind="visible: show">
         <div class="col-sm-12" id="searchBox">
           <!--<form data-bind="submit: filter" class="form-inline">-->
             <div class="form-inline form-group">
               <label for="loYear" class="input-lg">People born between: </label>
               <input
-                  type="search" 
-                  class="form-control input-lg" 
-                  name="loYear" 
-                  id="loYear" 
+                  type="search"
+                  class="form-control input-lg"
+                  name="loYear"
+                  id="loYear"
                   data-bind="textInput: loBound, event: {keyup: changeRange}"/>
               <label for="hiYear" class="input-lg">and</label>
               <input
@@ -76,6 +79,7 @@
         </div><!-- .col-sm-12 -->
       </div><!-- .row -->
 
+      <!-- A vertical array of buttons, each with a name of a famous Iowan. -->
       <div class="row" data-bind="visible: show">
         <div id="listAndMap">
           <div class="col-sm-3" id="listOfBirthplaces">
