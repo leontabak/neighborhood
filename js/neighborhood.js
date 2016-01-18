@@ -1,4 +1,29 @@
 
+
+/**
+    @member {Object} m is reference to the model
+*/
+var m;
+
+/**
+    @member {Object} vm is a reference to the view model
+*/
+var vm;
+
+/**
+    The initial range of years is 1846 to 2228.
+
+    @member {number} YEAR_OF_IOWA_STATEHOOD is the lower bound.
+*/
+var YEAR_OF_IOWA_STATEHOOD = 1846;
+
+/**
+    The initial range of years is 1846 to 2228.
+
+    @member {number} YEAR_OF_CAPT_KIRKS_BIRTH is the upper bound.
+*/
+var YEAR_OF_CAPT_KIRKS_BIRTH = 2228;
+
 /**
     Define a function that will create an object
     that describes Iowans who have contributed to
@@ -117,7 +142,7 @@ var model = function() {
                         "James", "Tiberius", "Kirk",
                         41.479, -91.581,
                         "Riverside", "Iowa",
-                        moment( {year: 2228, month: 2, day: 28} ) ));
+                        moment( {year: YEAR_OF_CAPT_KIRKS_BIRTH, month: 2, day: 28} ) ));
 
     exemplars.push( makeExemplar( 
                         "Robert", "", "Noyce",
@@ -150,34 +175,34 @@ var model = function() {
 
     @author Leon Tabak l.tabak@ieee.org
     @version 14 January 2016
-    @param {Object} model contains names, dates and places of birth
+    @param {Object} model contains names, dates and places of birth (viewModel adds schools and markers)
     @property {Object} that is the object that this function returns to its caller
     @property {google.maps.Map} that.neighborhoodMap is a road map
     @property {google.maps.InfoWindow} that.infoWindow contains a name, birthday, and schools
     @property {Object} that.ee is an &ldquo;exemplar explorer&rdquo;
-    @property {Function} that.ee.getNumberOfExemplars()
-    @property {Function} that.ee.getFirstName(index)
-    @property {Function} that.ee.getMiddlename(index)
-    @property {Function} that.ee.getLastName(index)
-    @property {Function} that.ee.getFullName(index)
-    @property {Function} that.ee.getCity(index)
-    @property {Function} that.ee.getState(index)
-    @property {Function} that.ee.getCityState(index)
-    @property {Function} that.ee.getLatitude(index)
-    @property {Function} that.ee.getLongitude(index)
-    @property {Function} that.ee.isInRange(index,startDate,endDate)
-    @property {Function} that.ee.getExtremaAndMeans()
-    @property {Function} that.ee.getBirthday(index)
-    @property {Function} that.ee.getBirthdayString(index)
-    @property {Function} that.ee.getSchools(index)
-    @property {Function} that.ee.getSchoolsString(index)
-    @property {Function} that.ee.getLabel(index)
-    @property {Function} that.ee.getInfo(index)
-    @property {Function} that.ee.getMarker(index)
-    @property {Function} that.ee.getMarkerResponder(index)
-    @property {Function} that.ee.addSchool(index,school)
-    @property {Function} that.ee.setMarker(index,marker)
-    @property {Function} that.ee.setMarkerResponder(index,markerResponder)
+    @property {Function} that.ee.getNumberOfExemplars() returns a number
+    @property {Function} that.ee.getFirstName(index) returns a string
+    @property {Function} that.ee.getMiddlename(index) returns a string
+    @property {Function} that.ee.getLastName(index) returns a string
+    @property {Function} that.ee.getFullName(index) returns a string
+    @property {Function} that.ee.getCity(index) returns a string
+    @property {Function} that.ee.getState(index) returns a string
+    @property {Function} that.ee.getCityState(index) returns a formatted string
+    @property {Function} that.ee.getLatitude(index) returns a number
+    @property {Function} that.ee.getLongitude(index) returns a number
+    @property {Function} that.ee.isInRange(index,startDate,endDate) returns a boolean
+    @property {Function} that.ee.getExtremaAndMeans() returns an object
+    @property {Function} that.ee.getBirthday(index) returns a moment
+    @property {Function} that.ee.getBirthdayString(index) returns a formatted date
+    @property {Function} that.ee.getSchools(index) returns an array
+    @property {Function} that.ee.getSchoolsString(index) returns HTML
+    @property {Function} that.ee.getLabel(index) returns a string
+    @property {Function} that.ee.getInfo(index) returns HTML
+    @property {Function} that.ee.getMarker(index) returns a marker
+    @property {Function} that.ee.getMarkerResponder(index) returns a function
+    @property {Function} that.ee.addSchool(index,school) returns void
+    @property {Function} that.ee.setMarker(index,marker) returns void
+    @property {Function} that.ee.setMarkerResponder(index,markerResponder) returns void
     @return {Object}
 */
 var viewModel = function( model ) {
@@ -527,8 +552,21 @@ var viewModel = function( model ) {
             alert( warningMessage );
         } // if
         else {
+            // Find the mean latitude of all places of birth.
+            // Find the mean longitude of all places of birth.
+            // Center the map at the mean latitude and longitude.
+            var startDate = moment({ year: YEAR_OF_IOWA_STATEHOOD, month: 0, day: 1});
+            var endDate = moment({ year: YEAR_OF_CAPT_KIRKS_BIRTH, month: 11, day: 31});
+	    var em = that.ee.getExtremaAndMeans( startDate, endDate );
+            var swLatitude = em.minimumLatitude;
+            var swLongitude = em.minimumLongitude;
+            var neLatitude = em.maximumLatitude;
+            var neLongitude = em.maximumLongitude;
+            var margin = 0.1;
+            var lat = ((swLatitude - margin) + (neLatitude + margin))/2;
+            var lng = ((swLongitude - margin) + (neLongitude + margin))/2;
             var mapSpecification = {
-                center:new google.maps.LatLng(42.0, -90.0),
+                center:new google.maps.LatLng(lat, lng),
                 zoom: 8,
                 draggable: false,
                 scrollwheel: false,
@@ -537,7 +575,7 @@ var viewModel = function( model ) {
 
             // Create the map.
             that.neighborhoodMap=new google.maps.Map(document.getElementById("bigMap"),mapSpecification);
-	    that.infoWindow = new google.maps.InfoWindow( {content: "Guten Tag!"} );
+	    that.infoWindow = new google.maps.InfoWindow( {content: "Placeholder Value"} );
             decorateMap();
         } // else
     }; // mapInitializer()
@@ -575,8 +613,8 @@ var koModel = function( vm ) {
         }); // hideShowLabel()
     
     
-    self.loBound = ko.observable(1846);
-    self.hiBound = ko.observable(2228);
+    self.loBound = ko.observable(YEAR_OF_IOWA_STATEHOOD);
+    self.hiBound = ko.observable(YEAR_OF_CAPT_KIRKS_BIRTH);
 
     self.toggleVisibility = function() {
         if( self.show() === false ) {
@@ -594,6 +632,12 @@ var koModel = function( vm ) {
         return function() {
             console.log( "button #" + i );
             vm.ee.getMarkerResponder(i)();
+
+            // hide controls to make more of
+            // the map visible on small devices
+            if( screen.width < 600 ) {
+                self.show(false);
+            } // if
         }; 
     }; // buttonResponderMaker()
 
@@ -653,11 +697,27 @@ var koModel = function( vm ) {
             } // else
         } // for
 
+        // Draw a region that is a little larger than the
+        // smallest region that encloses all of the places
+        // of birth of all of the people born during the
+        // specified range of years.
+
+        var em = vm.ee.getExtremaAndMeans( startDate, endDate );
+        // Find the mean latitude of all places of birth.
+        // Find the mean longitude of all places of birth.
+        // Center the map at the mean latitude and longitude.
+        var swLatitude = em.minimumLatitude;
+        var swLongitude = em.minimumLongitude;
+        var neLatitude = em.maximumLatitude;
+        var neLongitude = em.maximumLongitude;
+        var margin = 0.1;
+        var lat = ((swLatitude - margin) + (neLatitude + margin))/2;
+        var lng = ((swLongitude - margin) + (neLongitude + margin))/2;
+
+        google.maps.event.trigger( vm.neighborhoodMap, 'resize' );
+        vm.neighborhoodMap.setCenter( {lat: lat, lng: lng} );
     }; // changeRange()
 }; // koModel()
-
-var m;
-var vm;
 
 /**
     Create the model and the view model and bind

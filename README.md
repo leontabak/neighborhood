@@ -1,10 +1,14 @@
 
-Neighborhood Map: Illustrious Iowans  
-====================================  
+Neighborhood Map
+================
+Illustrious Iowans
+==================
 Author: Leon Tabak  
 ------------------
-Date: 08 January 2016
+Date: 18 January 2016
 ----------------------
+
+See [jsdoc description] (./docs/index.html) of this application.
 
 To use this application:  
   * Open index.html in a browser.  
@@ -37,7 +41,7 @@ It uses String methods and a regular expression to search
 through the text that Wikipedia returns to find the names 
 of the colleges and universities that a person attended.  
 
-The program makes use of the Bootstrap, JQuery, and 
+The program makes use of the Bootstrap, JQuery, Moment, and 
 Knockout libraries.  
 
 The application is responsive.
@@ -68,21 +72,47 @@ Readers can:
 The program builds:
 1. An array of objects that each identify a person together
    with that person's place and date of birth.
-   This is the model.  
-2. An array of Google Maps InfoWindows. Each InfoWindow is
-   linked to a Marker and holds text that includes a name
-   and date of birth.  
-3. An array of Google Maps Markers. Each Marker identifies
-   a birthplace.  
+   This is the model.
 
-The program uses the Knockout framework to construct an
-array of buttons automatically from the model.  
+   Each element of the model contains an array of 
+   schools, and references to a Google Maps Marker
+   and a function for responding to clicks on the 
+   marker.
+   When the program first creates the model,
+   it makes each array of schools empty and
+   the references to the marker and its listener
+   null.
+2. An object that contains methods for retrieving
+   values from the model and assigning values to the
+   initially null fields of the model.
+   This is the view model.
+
+   The view model also creates a Google Maps InfoWindow
+   and a Google Maps Map.
+   The InfoWindow is
+   linked to a Marker and assigned text that includes a name
+   date of birth, and list of schools attended when it
+   is opened.
+3. A function that creates Knockout Observables.
+   An observable is a function that connects text
+   displayed on the Web page with variables whose
+   values the application may read and write.
+   This is the Knockout model.
+
+The application includes an HTML page whose elements 
+include data-bind attributes that connect text displayed 
+on the Web page with variables whose values the JavaScript
+code may read and write.
+
+The program uses the Knockout framework to construct an array of
+buttons automatically from the model.
 
 The program uses the functional features (functions that return
 functions, objects that contain functions, and functions that 
 receive functions as arguments) of JavaScript to construct listeners 
 and attach those functions to the buttons and markers.  
 
-The program uses the alert class of the Bootstrap framework for
-error reporting. It uses the grid layout features of that framework.  
+The program validates inputs and uses the alert class of the 
+Bootstrap framework for error reporting. It uses the grid layout 
+features of that framework.  
 
