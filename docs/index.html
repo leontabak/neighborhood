@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Home</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Home</h1>
+
+    
+
+
+
+    
+
+
+    <h3> </h3>
+
+
+
+
+
+
+
+
+
+
+    
+
+
+
+
+    <section>
+        <article><h1>Neighborhood Map</h1><h1>Illustrious Iowans</h1><h2>Author: Leon Tabak  </h2><h2>Date: 18 January 2016</h2><p>See [jsdoc description] (./docs/index.html) of this application.</p>
+<p>To use this application:  </p>
+<ul>
+<li>Open index.html in a browser.  </li>
+<li>Do one or more of the following:  <ul>
+<li>Click on one of the names in the array of buttons.   </li>
+<li>Click on one of the markers (push pins) on the map.  </li>
+<li>Change (edit) the range of years in the search boxes.
+A year must be a positive four digit decimal integer.
+The first year must be less than or equal to the second year.  </li>
+<li>Click on the HIDE CONTROLS/SHOW CONTROLS button.
+Hiding the controls (the buttons and search fields)
+makes more of the map visible.</li>
+</ul>
+</li>
+</ul>
+<p>This application draws a map and marks on the map
+the places of birth of several Iowans who contributed
+to engineering, mathematics, or science.  </p>
+<p>Just for fun, the list includes James Tiberius Kirk.
+The authors of the Star Trek stories identified Iowa
+as Captain Kirk's first home port. The town of Riverside,
+Iowa claims to be the place where he will be born on 
+March 28, 2228 and has long sponsored an annual celebration
+of the life of its future hometown hero. Many actors who
+played in the television programs and motion pictures have
+appeared at this festival. My own daughters received an award
+for best costumes from the hand of Walter Koenig (Mr. Chekov).  </p>
+<p>The program makes use of the Google Maps and Wikipedia APIs.
+It uses String methods and a regular expression to search 
+through the text that Wikipedia returns to find the names 
+of the colleges and universities that a person attended.  </p>
+<p>The program makes use of the Bootstrap, JQuery, Moment, and 
+Knockout libraries.  </p>
+<p>The application is responsive.
+Readers see a search bar at the top of the page
+and a vertical array of buttons on the left side of
+the page over a map.  </p>
+<p>Readers can:  </p>
+<ol>
+<li>click on a marker on the map. One click causes
+the marker to begin bouncing and causes an information
+window to appear. A second click stops the bouncing
+and closes the information window.  </li>
+<li>click on a button that bears the name of an
+illustrious Iowan. One click causes the corresponding
+marker on the map (at the site of the person's place
+of birth) to begin bouncing and causes an information
+window to appear. A second click stops the marker's 
+bouncing and closes the information window.  </li>
+<li>enter two positive four digit numbers to indicate 
+a closed interval of time. The program responds by showing
+only the buttons and markers for people who were
+born between the two specified years. If one or both
+of the inputs is not a four digit positive integer
+or if the first is greater than the second, then the
+program displays a warning message that describes the
+error.  </li>
+</ol>
+<p>The program builds:</p>
+<ol>
+<li><p>An array of objects that each identify a person together
+with that person's place and date of birth.
+This is the model.</p>
+<p>Each element of the model contains an array of 
+schools, and references to a Google Maps Marker
+and a function for responding to clicks on the 
+marker.
+When the program first creates the model,
+it makes each array of schools empty and
+the references to the marker and its listener
+null.</p>
+</li>
+<li><p>An object that contains methods for retrieving
+values from the model and assigning values to the
+initially null fields of the model.
+This is the view model.</p>
+<p>The view model also creates a Google Maps InfoWindow
+and a Google Maps Map.
+The InfoWindow is
+linked to a Marker and assigned text that includes a name
+date of birth, and list of schools attended when it
+is opened.</p>
+</li>
+<li>A function that creates Knockout Observables.
+An observable is a function that connects text
+displayed on the Web page with variables whose
+values the application may read and write.
+This is the Knockout model.</li>
+</ol>
+<p>The application includes an HTML page whose elements 
+include data-bind attributes that connect text displayed 
+on the Web page with variables whose values the JavaScript
+code may read and write.</p>
+<p>The program uses the Knockout framework to construct an array of
+buttons automatically from the model.</p>
+<p>The program uses the functional features (functions that return
+functions, objects that contain functions, and functions that 
+receive functions as arguments) of JavaScript to construct listeners 
+and attach those functions to the buttons and markers.  </p>
+<p>The program validates inputs and uses the alert class of the 
+Bootstrap framework for error reporting. It uses the grid layout 
+features of that framework.  </p></article>
+    </section>
+
+
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#go">go</a></li><li><a href="global.html#koModel">koModel</a></li><li><a href="global.html#m">m</a></li><li><a href="global.html#model">model</a></li><li><a href="global.html#viewModel">viewModel</a></li><li><a href="global.html#vm">vm</a></li><li><a href="global.html#YEAR_OF_CAPT_KIRKS_BIRTH">YEAR_OF_CAPT_KIRKS_BIRTH</a></li><li><a href="global.html#YEAR_OF_IOWA_STATEHOOD">YEAR_OF_IOWA_STATEHOOD</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Sun Jan 17 2016 18:28:29 GMT-0600 (CST)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
