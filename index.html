@@ -29,7 +29,7 @@
     </div><!-- #bigMap -->
 
     <script async defer
-        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA8SOav5FiGfVdAjvL_2kvC-urwW2RvjP0&amp;signed_in=true&amp;callback=vm.mapInitializer"
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA8SOav5FiGfVdAjvL_2kvC-urwW2RvjP0&amp;callback=vm.mapInitializer"
         onerror="vm.mapInitializer()">
     </script>
 
@@ -51,7 +51,7 @@
         <div class="col-sm-12" id="searchBox">
           <!--<form data-bind="submit: filter" class="form-inline">-->
             <div class="form-inline form-group">
-              <label for="loYear" class="input-lg">People born between: </label>
+              <label for="loYear" class="input-lg">Select people born between: </label>
               <input
                   type="search"
                   class="form-control input-lg"
@@ -75,7 +75,20 @@
               -->
             </div><!-- .form-group -->
           <!--</form>-->
-          <div class="alert alert-warning" data-bind="text: warning, visible: warn"></div>
+        </div><!-- .col-sm-12 -->
+        <div class="col-sm-12" id="searchBox" data-bind="visible: warn">
+            <div class="alert alert-warning" data-bind="text: warning"></div>
+        </div><!-- .col-sm-12 -->
+        <div class="col-sm-12" id="searchBox">
+            <div class="form-inline form-group">
+            <label class="input-lg">Or select a person by name:</label>
+            <input
+                type="search"
+                class="form-control input-lg"
+                name="surname"
+                id="surname"
+                data-bind="textInput: surname, event: {keyup: matchPrefix}"/>
+            </div><!-- .form-group -->
         </div><!-- .col-sm-12 -->
       </div><!-- .row -->
 
@@ -83,7 +96,7 @@
       <div class="row" data-bind="visible: show">
         <div id="listAndMap">
           <div class="col-sm-3" id="listOfBirthplaces">
-            <h2>People</h2>
+            <label class="input-lg">Select a person</label>
             <div class="btn-group-vertical btn-group-lg">
               <div id="origins" data-bind="foreach: exemplars">
                 <button type="button" class="btn btn-info btn-lg btn-block"

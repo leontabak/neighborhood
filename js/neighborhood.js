@@ -572,26 +572,31 @@ var viewModel = function( model ) {
         return function() {
             //console.log( "marker #" + i );
 
-
-            if( m.getAnimation() !== null ) {
-                //console.log( "stop animation and close window" );
-                m.setAnimation( null );
-                that.infoWindow.close();
-                windowOpen = false;
-            } // if
-            else if( m.getAnimation() === null && windowOpen === true ) {
+            if( windowOpen ) {
                 //console.log( "close info window" );
                 that.infoWindow.close();
                 windowOpen = false;
             } // if
+
+            if( m.getAnimation() !== null ) {
+                //console.log( "stop animation" );
+                m.setAnimation( null );
+            } // if
             else {
+                //console.log( "start animation and open window" ):
                 m.setAnimation( google.maps.Animation.BOUNCE );
                 setTimeout( function() { m.setAnimation( null ); }, 2000 );
                 that.infoWindow.setContent( that.ee.getInfo( i ) );
                 that.infoWindow.open( that.neighborhoodMap, m );
                 windowOpen = true;
             } // else
-        };
+
+            // recenter window to put selected marker at the center
+	    var lat = that.ee.getLatitude(i);
+            var lng  = that.ee.getLongitude(i);
+            google.maps.event.trigger( vm.neighborhoodMap, 'resize' );
+            vm.neighborhoodMap.setCenter( {lat: lat, lng: lng} );
+        }; // function()
     }; // markerResponderMaker()
 
     // Create the markers and methods that will respond
@@ -695,6 +700,8 @@ var koModel = function( vm ) {
     self.loBound = ko.observable(YEAR_OF_IOWA_STATEHOOD);
     self.hiBound = ko.observable(YEAR_OF_CAPT_KIRKS_BIRTH);
 
+    self.surname = ko.observable("");
+
     // make search box and array of name buttons
     // visibile or invisible (hide or show).
     self.toggleVisibility = function() {
@@ -723,6 +730,29 @@ var koModel = function( vm ) {
             } // if
         };
     }; // buttonResponderMaker()
+
+    var recenterMap = function( startDate, endDate ) {
+        console.log( "recenter map" );
+        // Draw a region that is a little larger than the
+        // smallest region that encloses all of the places
+        // of birth of all of the people born during the
+        // specified range of years.
+
+        var em = vm.ee.getExtremaAndMeans( startDate, endDate );
+        // Find the mean latitude of all places of birth.
+        // Find the mean longitude of all places of birth.
+        // Center the map at the mean latitude and longitude.
+        var swLatitude = em.minimumLatitude;
+        var swLongitude = em.minimumLongitude;
+        var neLatitude = em.maximumLatitude;
+        var neLongitude = em.maximumLongitude;
+        var margin = 0.1;
+        var lat = ((swLatitude - margin) + (neLatitude + margin))/2;
+        var lng = ((swLongitude - margin) + (neLongitude + margin))/2;
+
+        google.maps.event.trigger( vm.neighborhoodMap, 'resize' );
+        vm.neighborhoodMap.setCenter( {lat: lat, lng: lng} );
+    }; // recenterMap()
 
     // Define a function that will help create
     // buttons that show names of illustrious Iowans.
@@ -783,26 +813,33 @@ var koModel = function( vm ) {
             } // else
         } // for
 
-        // Draw a region that is a little larger than the
-        // smallest region that encloses all of the places
-        // of birth of all of the people born during the
-        // specified range of years.
-
-        var em = vm.ee.getExtremaAndMeans( startDate, endDate );
-        // Find the mean latitude of all places of birth.
-        // Find the mean longitude of all places of birth.
-        // Center the map at the mean latitude and longitude.
-        var swLatitude = em.minimumLatitude;
-        var swLongitude = em.minimumLongitude;
-        var neLatitude = em.maximumLatitude;
-        var neLongitude = em.maximumLongitude;
-        var margin = 0.1;
-        var lat = ((swLatitude - margin) + (neLatitude + margin))/2;
-        var lng = ((swLongitude - margin) + (neLongitude + margin))/2;
-
-        google.maps.event.trigger( vm.neighborhoodMap, 'resize' );
-        vm.neighborhoodMap.setCenter( {lat: lat, lng: lng} );
+        recenterMap( startDate, endDate );
     }; // changeRange()
+
+
+    self.matchPrefix = function() {
+        self.surname( self.surname().toUpperCase() );
+        //console.log( "match prefix" );
+
+        var numberOfMatches = 0;
+        var indicesOfMatches = [];
+        var numberOfExemplars = vm.ee.getNumberOfExemplars();
+        for( var i = 0; i < numberOfExemplars; i++ ) {
+            upperCaseLastName = vm.ee.getLabel(i);
+            if( upperCaseLastName.indexOf( self.surname() ) === 0 ) {
+                numberOfMatches++;
+                indicesOfMatches.push(i);
+                self.exemplars()[i].visible(true);
+                vm.ee.getMarker(i).setMap( vm.neighborhoodMap );
+            } // if
+            else {
+                self.exemplars()[i].visible(false);
+                vm.ee.getMarker(i).setMap( null );
+            } // else
+        } // for
+
+        console.log( "# of matches = " + numberOfMatches + indicesOfMatches );
+    }; // matchPrefix()
 }; // koModel()
 
 /**
