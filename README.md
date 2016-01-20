@@ -18,9 +18,10 @@ To use this application:
   * Do one or more of the following:  
     * Click on one of the names in the array of buttons.   
     * Click on one of the markers (push pins) on the map.  
-    * Change (edit) the range of years in the search boxes.
+    * Change (edit) the range of years in the two search boxes.
       A year must be a positive four digit decimal integer.
       The first year must be less than or equal to the second year.  
+    * Enter the first letters of name in the search box.
     * Click on the HIDE CONTROLS/SHOW CONTROLS button.
       Hiding the controls (the buttons and search fields)
       makes more of the map visible.
@@ -70,7 +71,14 @@ Readers can:
    of the inputs is not a four digit positive integer
    or if the first is greater than the second, then the
    program displays a warning message that describes the
-   error.  
+   error.
+4. enter the first letters of a name in a search box.
+   The program responds by removing from the map all
+   of the markers for names that do not have a matching
+   prefix and by similarly removing name buttons.
+   When the program receives a prefix that matches a name
+   uniquely, it makes the corresponding marker to bounce
+   and opens the information window.
 
 The program builds:
 1. An array of objects that each identify a person together

@@ -27,6 +27,14 @@ var YEAR_OF_IOWA_STATEHOOD = 1846;
 var YEAR_OF_CAPT_KIRKS_BIRTH = 2228;
 
 /**
+    The program hides controls after users select
+    a person/location on a device with a small screen.
+
+    @member {number} WIDTH_OF_SMALL_SCREEN is the threshold for this action.
+*/
+var WIDTH_OF_SMALL_SCREEN = 800;
+
+/**
     Define a function that will create an object
     that describes Iowans who have contributed to
     the development of science and technology.
@@ -299,15 +307,16 @@ var viewModel = function( model ) {
             // Find extrema and means of latitude and longitude.
             var meanLatitude = 0.0;
             var meanLongitude = 0.0;
-            var minimumLatitude = -90.0;
-            var maximumLatitude = +90.0;
-            var minimumLongitude = -180.0;
+            var minimumLatitude = +90.0;
+            var maximumLatitude = -90.0;
+            var minimumLongitude = +180.0;
             var maximumLongitude = -180.0;
 
             var numberInRange = 0;
             var numberOfExemplars = that.getNumberOfExemplars();
             for( var i = 0; i < numberOfExemplars; i++ ) {
                 if( that.isInRange( i, startDate, endDate ) ) {
+                    numberInRange = numberInRange + 1;
                     var latitude = that.getLatitude(i);
                     var longitude = that.getLongitude(i);
 
@@ -324,7 +333,7 @@ var viewModel = function( model ) {
                     if( longitude < minimumLongitude ) {
                         minimumLongitude = longitude;
                     } // if
-                    if( longitude < maximumLongitude ) {
+                    if( longitude > maximumLongitude ) {
                         maximumLongitude = longitude;
                     } // if
                 } // if
@@ -347,6 +356,8 @@ var viewModel = function( model ) {
                 minimumLongitude = -94.0;
                 maximumLongitude = -90.0;
             } // else
+
+            //console.log( "meanLatitude = " + meanLatitude + " meanLongitude = " + meanLongitude );
 
             // Construct object that this function
             // returns to its caller.
@@ -594,7 +605,7 @@ var viewModel = function( model ) {
             // recenter window to put selected marker at the center
 	    var lat = that.ee.getLatitude(i);
             var lng  = that.ee.getLongitude(i);
-            google.maps.event.trigger( vm.neighborhoodMap, 'resize' );
+            //google.maps.event.trigger( vm.neighborhoodMap, 'resize' );
             vm.neighborhoodMap.setCenter( {lat: lat, lng: lng} );
         }; // function()
     }; // markerResponderMaker()
@@ -679,6 +690,7 @@ var viewModel = function( model ) {
     @property {Function} this.warn show warning message?
     @property {Function} this.warning this is the message to show
     @property {Function} this.changeRange what to do in response to changed range
+    @property {Function} this.matchPrefix what to do in response to typed entry
 */
 var koModel = function( vm ) {
     var self = this;
@@ -724,15 +736,16 @@ var koModel = function( vm ) {
             // hide controls to make more of
             // the map visible on small devices.
             // (here small means a screen with
-            // a width of less than 800 pixels.)
-            if( screen.width < 800 ) {
+            // a width of less than WIDTH_OF_SMALL_SCREEN pixels.)
+            if( screen.width < WIDTH_OF_SMALL_SCREEN ) {
                 self.show(false);
             } // if
         };
     }; // buttonResponderMaker()
 
     var recenterMap = function( startDate, endDate ) {
-        console.log( "recenter map" );
+        //console.log( "recenter map" );
+
         // Draw a region that is a little larger than the
         // smallest region that encloses all of the places
         // of birth of all of the people born during the
@@ -750,7 +763,10 @@ var koModel = function( vm ) {
         var lat = ((swLatitude - margin) + (neLatitude + margin))/2;
         var lng = ((swLongitude - margin) + (neLongitude + margin))/2;
 
-        google.maps.event.trigger( vm.neighborhoodMap, 'resize' );
+        //console.log( em );
+        //console.log( "lat = " + lat + " lng = " + lng );
+
+        //google.maps.event.trigger( vm.neighborhoodMap, 'resize' );
         vm.neighborhoodMap.setCenter( {lat: lat, lng: lng} );
     }; // recenterMap()
 
@@ -816,29 +832,125 @@ var koModel = function( vm ) {
         recenterMap( startDate, endDate );
     }; // changeRange()
 
-
+    var previousPrefixLength = 0;
     self.matchPrefix = function() {
         self.surname( self.surname().toUpperCase() );
         //console.log( "match prefix" );
 
-        var numberOfMatches = 0;
+        var minimumYear = undefined;
+        var maximumYear = undefined;
+
+        var minimumLat = undefined;
+        var maximumLat = undefined;
+        var minimumLng = undefined;
+        var maximumLng = undefined;
+        
         var indicesOfMatches = [];
         var numberOfExemplars = vm.ee.getNumberOfExemplars();
         for( var i = 0; i < numberOfExemplars; i++ ) {
-            upperCaseLastName = vm.ee.getLabel(i);
+            var upperCaseLastName = vm.ee.getLabel(i);
             if( upperCaseLastName.indexOf( self.surname() ) === 0 ) {
-                numberOfMatches++;
                 indicesOfMatches.push(i);
+
+                // show markers and name buttons with matching prefixes
                 self.exemplars()[i].visible(true);
                 vm.ee.getMarker(i).setMap( vm.neighborhoodMap );
+
+                // between which two years were the people whose
+                // names begin with these letters born?
+                var yearOfBirth = vm.ee.getBirthday(i).year();
+                if( (minimumYear === undefined) || (yearOfBirth < minimumYear) ) {
+                    minimumYear = yearOfBirth;
+                } // if
+                if( (maximumYear === undefined) || (yearOfBirth > maximumYear) ) {
+                    maximumYear = yearOfBirth;
+                } // if
+
+                // where were people whose names begin
+                // with these letters born?
+                // (min, max of latitude, longitude define a region)
+                var latitude = vm.ee.getLatitude(i);
+                if( (minimumLat === undefined) || (latitude <= minimumLat) ) {
+                    minimumLat = latitude;
+                } // if
+                if( (maximumLat === undefined) || (latitude >= maximumLat) ) {
+                    maximumLat = latitude;
+                } // if
+
+                var longitude = vm.ee.getLongitude(i);
+                if( (minimumLng === undefined) || (longitude <= minimumLng) ) {
+                    minimumLng = longitude;
+                } // if
+                if( (maximumLng === undefined) || (longitude >= maximumLng) ) {
+                    maximumLng = longitude;
+                } // if
+
             } // if
             else {
+                // hide markers and name buttons with non-matching prefixes
                 self.exemplars()[i].visible(false);
                 vm.ee.getMarker(i).setMap( null );
             } // else
         } // for
 
-        console.log( "# of matches = " + numberOfMatches + indicesOfMatches );
+        // display the years between which people with these
+        // names were born (if this function found such people)
+        if( (minimumYear !== undefined) && (maximumYear !== undefined) ) {
+            self.loBound( minimumYear );
+            self.hiBound( maximumYear );
+        } // if
+        else {
+            self.loBound(YEAR_OF_IOWA_STATEHOOD);
+            self.hiBound(YEAR_OF_CAPT_KIRKS_BIRTH);
+        } // else
+
+        // recenter map over selected locations
+        if( (minimumLat !== undefined) && (maximumLat !== undefined) &&
+            (minimumLng !== undefined) && (maximumLng !== undefined) ) {
+
+            var lat = (minimumLat + maximumLat)/2;
+            var lng = (minimumLng + maximumLng)/2;
+            //google.maps.event.trigger( vm.neighborhoodMap, 'resize' );
+            vm.neighborhoodMap.setCenter( {lat: lat, lng: lng} );
+        } // if
+ 
+        // If the prefix matches only one name, complete
+        // the spelling.
+        // Make sure that this prefix is longer than the
+        // previous prefix before completing the name.
+        // This part of the check gives a user the option
+        // of using the delete key to back up and try a
+        // different spelling.
+        var currentPrefixLength = self.surname().length;
+        //console.log( "prefix lengths:" + previousPrefixLength + ", " + currentPrefixLength );
+        if( (indicesOfMatches.length === 1) && (currentPrefixLength > previousPrefixLength) ) {
+            // only found one match, so it is first (and only) entry in array
+            var index = indicesOfMatches[0];
+
+            // complete the spelling of the name
+            self.surname( vm.ee.getLabel(index) );
+
+            // remember how long this name so that
+            // user can backspace (delete characters)
+            // and enter a different name
+            currentPrefixLength = self.surname().length;
+
+            // do whatever we are supposed to do when
+            // single person/location is selection
+            // (the definition of the marker responder
+            // contains the sequence of actions)
+            vm.ee.getMarkerResponder(index)();
+
+            // if user has a small device, hide the
+            // controls so that user can see more of
+            // the map
+            if( screen.width < WIDTH_OF_SMALL_SCREEN ) {
+                self.show(false);
+            } // if
+        } // if
+        previousPrefixLength = currentPrefixLength;
+
+        //console.log( "# of matches = " + indicesOfMatches.length + " " + indicesOfMatches );
     }; // matchPrefix()
 }; // koModel()
 
