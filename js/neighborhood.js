@@ -871,10 +871,12 @@ var koModel = function( vm ) {
                 // between which two years were the people whose
                 // names begin with these letters born?
                 var yearOfBirth = vm.ee.getBirthday(i).year();
-                if( (minimumYear === undefined) || (yearOfBirth < minimumYear) ) {
+                if( (typeof minimumYear === "undefined") ||
+                    (yearOfBirth < minimumYear) ) {
                     minimumYear = yearOfBirth;
                 } // if
-                if( (maximumYear === undefined) || (yearOfBirth > maximumYear) ) {
+                if( (typeof maximumYear === "undefined") ||
+                    (yearOfBirth > maximumYear) ) {
                     maximumYear = yearOfBirth;
                 } // if
 
@@ -882,18 +884,22 @@ var koModel = function( vm ) {
                 // with these letters born?
                 // (min, max of latitude, longitude define a region)
                 var latitude = vm.ee.getLatitude(i);
-                if( (minimumLat === undefined) || (latitude <= minimumLat) ) {
+                if( (typeof minimumLat === "undefined") ||
+                    (latitude <= minimumLat) ) {
                     minimumLat = latitude;
                 } // if
-                if( (maximumLat === undefined) || (latitude >= maximumLat) ) {
+                if( (typeof maximumLat === "undefined") ||
+                    (latitude >= maximumLat) ) {
                     maximumLat = latitude;
                 } // if
 
                 var longitude = vm.ee.getLongitude(i);
-                if( (minimumLng === undefined) || (longitude <= minimumLng) ) {
+                if( (typeof minimumLng === "undefined") ||
+                    (longitude <= minimumLng) ) {
                     minimumLng = longitude;
                 } // if
-                if( (maximumLng === undefined) || (longitude >= maximumLng) ) {
+                if( (typeof maximumLng === "undefined") ||
+                    (longitude >= maximumLng) ) {
                     maximumLng = longitude;
                 } // if
 
@@ -912,13 +918,16 @@ var koModel = function( vm ) {
             self.warning( "No names begin with the letters " + self.surname() );
         } // if
         else {
+            // This warning should not be displayed.
+            // "Valid input" is just a placeholder value.
             self.warning( "Valid input." );
             self.warn(false);
         } // else
 
         // display the years between which people with these
         // names were born (if this function found such people)
-        if( (minimumYear !== undefined) && (maximumYear !== undefined) ) {
+        if( (typeof minimumYear !== "undefined") &&
+            (typeof maximumYear !== "undefined") ) {
             self.loBound( minimumYear );
             self.hiBound( maximumYear );
         } // if
@@ -928,8 +937,10 @@ var koModel = function( vm ) {
         } // else
 
         // recenter map over selected locations
-        if( (minimumLat !== undefined) && (maximumLat !== undefined) &&
-            (minimumLng !== undefined) && (maximumLng !== undefined) ) {
+        if( (typeof minimumLat !== "undefined") &&
+            (typeof maximumLat !== "undefined") &&
+            (typeof minimumLng !== "undefined") &&
+            (typeof maximumLng !== "undefined") ) {
 
             var lat = (minimumLat + maximumLat)/2;
             var lng = (minimumLng + maximumLng)/2;
