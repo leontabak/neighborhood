@@ -598,6 +598,14 @@ var viewModel = function( model ) {
                 m.setAnimation( google.maps.Animation.BOUNCE );
                 setTimeout( function() { m.setAnimation( null ); }, 2000 );
                 that.infoWindow.setContent( that.ee.getInfo( i ) );
+
+                // just to be sure, make sure that info window
+                // is closed before trying to open it.
+                // maybe consecutive calls to open() without
+                // an intervening call to close() was causing
+                // the problem that the reviewer was seeing?
+                that.infoWindow.close();
+
                 that.infoWindow.open( that.neighborhoodMap, m );
                 windowOpen = true;
             } // else
@@ -787,6 +795,10 @@ var koModel = function( vm ) {
     self.warn = ko.observable(false);
     self.warning = ko.observable("Valid input.");
     self.changeRange = function() {
+        // Clear name field.
+        // We are searching by dates now, not by name.
+        self.surname( "" );
+
         var ly = self.loBound();
         var hy = self.hiBound();
 
@@ -892,6 +904,17 @@ var koModel = function( vm ) {
                 vm.ee.getMarker(i).setMap( null );
             } // else
         } // for
+
+        // Inform user if prefix that user has entered
+        // does not match any name in the database.
+        if( indicesOfMatches.length === 0 ) {
+            self.warn(true);
+            self.warning( "No names begin with the letters " + self.surname() );
+        } // if
+        else {
+            self.warning( "Valid input." );
+            self.warn(false);
+        } // else
 
         // display the years between which people with these
         // names were born (if this function found such people)
