@@ -623,7 +623,7 @@ var viewModel = function( model ) {
             } // else
 
             // recenter window to put selected marker at the center
-	    var lat = that.ee.getLatitude(i);
+            var lat = that.ee.getLatitude(i);
             var lng  = that.ee.getLongitude(i);
             //google.maps.event.trigger( vm.neighborhoodMap, 'resize' );
             vm.neighborhoodMap.setCenter( {lat: lat, lng: lng} );
@@ -868,7 +868,7 @@ var koModel = function( vm ) {
         var maximumLat; // initially undefined
         var minimumLng; // initially undefined
         var maximumLng; // initially undefined
-        
+
         var indicesOfMatches = [];
         var numberOfExemplars = vm.ee.getNumberOfExemplars();
         for( var i = 0; i < numberOfExemplars; i++ ) {
@@ -937,7 +937,7 @@ var koModel = function( vm ) {
         } // else
 
         // display the years between which people with these
-        // names were born 
+        // names were born
         // (if prefix length > 0 and this function found such people)
         if( (typeof minimumYear !== "undefined") &&
             (typeof maximumYear !== "undefined") &&
@@ -961,7 +961,7 @@ var koModel = function( vm ) {
             //google.maps.event.trigger( vm.neighborhoodMap, 'resize' );
             vm.neighborhoodMap.setCenter( {lat: lat, lng: lng} );
         } // if
- 
+
         // If the prefix matches only one name, complete
         // the spelling.
         // Make sure that this prefix is longer than the
