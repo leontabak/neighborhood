@@ -5,7 +5,7 @@ Illustrious Iowans
 ==================
 Author: Leon Tabak  
 ------------------
-Date: 18 January 2016
+Date: 22 January 2016
 ----------------------
 
 See [an outline of the design of this application] (http://www.eonsahead.com/iowans/docs/index.html)
@@ -43,7 +43,10 @@ for best costumes from the hand of Walter Koenig (Mr. Chekov).
 The program makes use of the Google Maps and Wikipedia APIs.
 It uses String methods and a regular expression to search 
 through the text that Wikipedia returns to find the names 
-of the colleges and universities that a person attended.  
+of the colleges and universities that a person attended and
+other facts related to the person's career. These other details
+may include the names of institutions for which the person
+worked, awards won, and the person's field of endeavor.  
 
 The program makes use of the Bootstrap, JQuery, Moment, and 
 Knockout libraries.  
