@@ -53,7 +53,7 @@ var WIDTH_OF_SMALL_SCREEN = 800;
     @property {number} that.exemplars.longitude place of birth.
     @property {String} that.exemplars.city where person was born.
     @property {String} that.exemplars.state where person was born.
-    @property {Array} that.exemplars.schools where person studied.
+    @property {Array} that.exemplars.careerFacts where person studied, worked, and so on..
     @property {google.maps.Marker} that.exemplars.marker a pin on a map.
     @property {Function} that.exemplars.markerResponder what to do when clicked.
     @return {Object}
@@ -98,7 +98,7 @@ var model = function() {
         result.city = city;
         result.state = state;
         result.birthday = birthday;
-        result.schools = [];
+        result.careerFacts = [];
         result.marker = null;
         result.markerResponder = null;
 
@@ -131,7 +131,7 @@ var model = function() {
                         moment( {year: 1914, month: 2, day: 25} ) ));
 
     exemplars.push( makeExemplar(
-                        "Donald", "", "Campbell",
+                        "Donald", "L.", "Campbell",
                         41.844, -90.188,
                         "Clinton", "Iowa",
                         moment( {year: 1904, month: 7, day: 5} ) ));
@@ -185,10 +185,10 @@ var model = function() {
 
     @author Leon Tabak l.tabak@ieee.org
     @version 17 January 2016
-    @param {Object} model contains names, dates and places of birth (viewModel adds schools and markers later).
+    @param {Object} model contains names, dates and places of birth (viewModel adds careerFacts and markers later).
     @property {Object} that is the object that this function returns to its caller.
     @property {google.maps.Map} that.neighborhoodMap is a road map.
-    @property {google.maps.InfoWindow} that.infoWindow contains a name, birthday, and schools.
+    @property {google.maps.InfoWindow} that.infoWindow contains a name, birthday, and careerFacts.
     @property {Object} that.ee is an &ldquo;exemplar explorer&rdquo; (my name for this bunch of functions).
     @property {Function} that.ee.getNumberOfExemplars() returns a number.
     @property {Function} that.ee.getFirstName(index) returns a string.
@@ -204,13 +204,13 @@ var model = function() {
     @property {Function} that.ee.getExtremaAndMeans() returns an object.
     @property {Function} that.ee.getBirthday(index) returns a moment.
     @property {Function} that.ee.getBirthdayString(index) returns a formatted date.
-    @property {Function} that.ee.getSchools(index) returns an array.
-    @property {Function} that.ee.getSchoolsString(index) returns HTML.
+    @property {Function} that.ee.getCareerFacts(index) returns an array.
+    @property {Function} that.ee.getCareerFactsString(index) returns HTML.
     @property {Function} that.ee.getLabel(index) returns a string.
     @property {Function} that.ee.getInfo(index) returns HTML.
     @property {Function} that.ee.getMarker(index) returns a marker.
     @property {Function} that.ee.getMarkerResponder(index) returns a function.
-    @property {Function} that.ee.addSchool(index,school) returns void.
+    @property {Function} that.ee.addCareerFact(index,school) returns void.
     @property {Function} that.ee.setMarker(index,marker) returns void.
     @property {Function} that.ee.setMarkerResponder(index,markerResponder) returns void.
     @return {Object}
@@ -225,7 +225,7 @@ var viewModel = function( model ) {
     // Define a set of functions for reading and
     // setting values in the model (our database
     // of names, dates of birth, places of birth,
-    // and schools attended).
+    // and careerFacts attended).
     var exemplarExplorer = function( model ) {
         var exemplars = model.exemplars;
 
@@ -384,29 +384,29 @@ var viewModel = function( model ) {
             return that.getBirthday(index).format( "MMM DD, YYYY" );
         }; // getBirthdayString()
 
-        that.getSchools = function( index ) {
-            return exemplars[index].schools;
-        }; // getSchools()
+        that.getCareerFacts = function( index ) {
+            return exemplars[index].careerFacts;
+        }; // getCareerFacts()
 
         // Construct a piece of the formatted
         // text that will appear in the information
         // window on the marker on the map at the
         // location of a person's birth.
-        that.getSchoolsString = function( index ) {
-            var listOfSchools = that.getSchools(index);
-            var lengthOfList = listOfSchools.length;
+        that.getCareerFactsString = function( index ) {
+            var listOfCareerFacts = that.getCareerFacts(index);
+            var lengthOfList = listOfCareerFacts.length;
 
             if( lengthOfList === 0 ) {
-                return "No schools found.";
+                return "No careerFacts found.";
             } // if
             else {
                 var result = "";
                 for( var i = 0; i < lengthOfList; i++ ) {
-                    result += listOfSchools[i] + "<br>";
+                    result += listOfCareerFacts[i] + "<br>";
                 } // for
                 return result;
             } // else
-        }; // getSchoolsString()
+        }; // getCareerFactsString()
 
         that.getMarker = function( index ) {
             return exemplars[index].marker;
@@ -415,6 +415,7 @@ var viewModel = function( model ) {
         // Return the function that will be called
         // when a user clicks on a marker on the map.
         that.getMarkerResponder = function(index) {
+            //console.log( "get marker responder " + index );
             return exemplars[index].markerResponder;
         }; // getMarkerResponder()
 
@@ -437,13 +438,13 @@ var viewModel = function( model ) {
 
             result += verbPhrase + that.getBirthdayString(index) +
                       " in " + that.getCityState(index) + ".<br>";
-            result += that.getSchoolsString(index);
+            result += that.getCareerFactsString(index);
             return result;
         }; // getInfo()
 
-        that.addSchool = function( index, school ) {
-            exemplars[index].schools.push( school );
-        }; // addSchool()
+        that.addCareerFact = function( index, school ) {
+            exemplars[index].careerFacts.push( school );
+        }; // addCareerFact()
 
         that.setMarker = function( index, marker ) {
             exemplars[index].marker = marker;
@@ -464,58 +465,67 @@ var viewModel = function( model ) {
     var wikipediaDidNotRespond = false;
     var countNoResponses = 0;
 
+    var responseReceived = false;
+
     // Define a function that will attempt to find on Wikipedia the names
     // of the colleges and universities that a person attended and append
     // that data to the text in the information windows that is linked to
     // the marker on the map at the place of that person's birth.
-    var lookUpSchools = function( index, ee ) {
-        //console.log( "looking up schools for " + ee.getFirstName(index) + " " + ee.getLastName(index) );
+    var lookUpCareerFacts = function( index, ee ) {
 
-        var parse = function( wikiResponse ) {
-            //console.log( "parsing..." ) ;
-
-            // Find all of the text that lies between the
-            // word "alma_mater" and the character "|".
-            var str = JSON.stringify( wikiResponse.query.pages );
-
-            // Here I am following a suggestion that came from
-            // the last reviewer of my code.
+        var parseHelper = function( wikiText, keyword ) {
             // I will use a regular expression to find that
-            // part of the record that contains a list of schools.
-            // I previously searched for the indices of
-            // prefix and suffix and then extracted a substring.
+            // part of the record that contains a list of items
+            // in a category named by the keyword.
+            // For example, if the keyword is "alma_mater",
+            // this function will add to a person's record
+            // a list of schools at which the person studied.
 
-            var re = /alma_mater([^\|]*)\|/;
-            //var i = str.indexOf( "alma_mater" );
-            //var j = str.indexOf( "|", i + 9 );
-            //var almaMater = str.slice( i, j );
-            var almaMater = re.exec( str );
-            if( (almaMater !== null) &&
-                (Object.prototype.toString.call( almaMater) === '[object Array]') &&
-                (almaMater.length > 0) ) {
-                //console.log( "0: " + almaMater[0] );
-                //console.log( "1: " + almaMater[1] );
-                almaMater = almaMater[1];
+            var uptoPipe = "([^\\|]*)\\|";
+            var re = new RegExp( keyword + uptoPipe );
+            var category = re.exec( wikiText );
+            if( (category !== null) &&
+                (Object.prototype.toString.call( category) === '[object Array]') &&
+                (category.length > 0) ) {
+                category = category[1];
             } // if
             else {
-                //console.log( "no alma mater" );
-                almaMater = "";
+                category = "";
             } // else
 
-            // Find names of schools enclosed in paired
+            // Find names of career factss enclosed in paired
             // square brackets. For example, [[Worcester Polytechnic Institute]].
-            // Concatenate the names of the schools, placing an HTML <br> tag
-            // before each name.
+            // Concatenate the career facts, placing an HTML <br> tag
+            // before each fact.
             re = /\[\[[a-zA-Z ]*\]\]/g;
-            var schools = re.exec( almaMater );
-            while( schools !== null ) {
-               var oneSchool = schools[0];
-               oneSchool = oneSchool.replace( "[[", "" );
-               oneSchool = oneSchool.replace( "]]", "" );
-               //console.log( oneSchool );
-               ee.addSchool( index, oneSchool );
-               schools = re.exec( almaMater );
+            var careerFacts = re.exec( category );
+            while( careerFacts !== null ) {
+               var oneFact = careerFacts[0];
+
+               // get rid of enclosing brackets
+               oneFact = oneFact.replace( "[[", "" );
+               oneFact = oneFact.replace( "]]", "" );
+
+               ee.addCareerFact( index, oneFact );
+               careerFacts = re.exec( category );
             } // while
+        }; // parseHelper()
+
+        var parse = function( wikiResponse ) {
+            var wikiText = JSON.stringify( wikiResponse.query.pages );
+
+            // Find all of the text that lies between the
+            // word a keyword, (e.g., "alma_mater") and "|".
+            parseHelper( wikiText, "alma_mater" );
+            parseHelper( wikiText, "known_for" );
+            parseHelper( wikiText, "field" );
+            parseHelper( wikiText, "work" );
+            parseHelper( wikiText, "award" );
+
+            if( !responseReceived ) {
+                //console.log( wikiText );
+                responseReceived = true;
+            } // if
         }; // parse()
 
         // Program tries to read from Wikipedia more
@@ -552,24 +562,26 @@ var viewModel = function( model ) {
         }; // ajaxSettings
 
         var firstName = ee.getFirstName(index);
+        var middleName = ee.getMiddleName(index);
         var lastName = ee.getLastName(index);
 
         // Construct a URL that contains a query.
         // This query searches for a page about a person
         // that it identifies by first and last name.
         var wikipediaURL = "http://en.wikipedia.org/w/api.php?action=query&format=json" +
-          "&prop=revisions&rvprop=content&titles=" + firstName + "%20" + lastName;
+          "&prop=revisions&rvprop=content&titles=" +
+           firstName + "%20" + middleName + "%20" + lastName;
 
         // Use a JQuery function to read data from an on-line service.
         $.ajax( wikipediaURL, ajaxSettings );
-    }; // lookUpSchools()
+    }; // lookUpCareerFacts()
 
     // Build the database.
     that.ee = exemplarExplorer( model );
     var n = that.ee.getNumberOfExemplars();
     for( var i = 0; i < n; i++ ) {
         // Go to Wikipedia to find school(s) that person #i attended.
-        lookUpSchools( i, that.ee );
+        lookUpCareerFacts( i, that.ee );
     } // for
 
     // Specify what should be done when user selects a person
@@ -849,13 +861,13 @@ var koModel = function( vm ) {
         self.surname( self.surname().toUpperCase() );
         //console.log( "match prefix" );
 
-        var minimumYear = undefined;
-        var maximumYear = undefined;
+        var minimumYear; // initially undefined
+        var maximumYear; // initially undefined
 
-        var minimumLat = undefined;
-        var maximumLat = undefined;
-        var minimumLng = undefined;
-        var maximumLng = undefined;
+        var minimumLat; // initially undefined
+        var maximumLat; // initially undefined
+        var minimumLng; // initially undefined
+        var maximumLng; // initially undefined
         
         var indicesOfMatches = [];
         var numberOfExemplars = vm.ee.getNumberOfExemplars();
@@ -925,9 +937,11 @@ var koModel = function( vm ) {
         } // else
 
         // display the years between which people with these
-        // names were born (if this function found such people)
+        // names were born 
+        // (if prefix length > 0 and this function found such people)
         if( (typeof minimumYear !== "undefined") &&
-            (typeof maximumYear !== "undefined") ) {
+            (typeof maximumYear !== "undefined") &&
+            (self.surname().length > 0) ) {
             self.loBound( minimumYear );
             self.hiBound( maximumYear );
         } // if
