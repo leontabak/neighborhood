@@ -34,6 +34,41 @@ var YEAR_OF_CAPT_KIRKS_BIRTH = 2228;
 */
 var WIDTH_OF_SMALL_SCREEN = 800;
 
+var serverErrorHasBeenReported = false;
+var reportServerIsNotResponding = function() {
+
+    var markup = "<div id='serverError'>";
+    markup += "<p>";
+    markup += "This application requires communication with";
+    markup += "the Google Maps server and the Wikipedia server.";
+    markup += "</p>";
+    markup += "<p id='mapsError'>The Google Maps server is not responding.</p>";
+    markup += "<p id='wikiError'>The Wikipedia server is not responding.</p>";
+    markup += "<p>Check your network connection.</p>";
+    markup += "</div>";
+
+    $("body").html(markup);
+}; // reportServerIsNotResponding()
+
+var reportGoogleMapsIsNotResponding = function() {
+    if( !serverErrorHasBeenReported ) {
+        reportServerIsNotResponding();
+        serverErrorHasBeenReported = true;
+    } // if
+
+    $("#mapsError").css( "display", "block" );
+}; // reportGoogleMapsIsNotResponding()
+
+var reportWikipediaIsNotResponding = function() {
+    if( !serverErrorHasBeenReported ) {
+        reportServerIsNotResponding();
+        serverErrorHasBeenReported = true;
+    } // if
+
+    $("#wikiError").css( "display", "block" );
+}; // reportWikipediaIsNotResponding()
+
+
 /**
     Define a function that will create an object
     that describes Iowans who have contributed to
@@ -222,6 +257,9 @@ var viewModel = function( model ) {
     // will add a property to the object later.
     var that = {};
 
+    that.wikipediaIsResponding = true;
+    that.googleMapsIsResponding = true;
+
     // Define a set of functions for reading and
     // setting values in the model (our database
     // of names, dates of birth, places of birth,
@@ -357,8 +395,6 @@ var viewModel = function( model ) {
                 maximumLongitude = -90.0;
             } // else
 
-            //console.log( "meanLatitude = " + meanLatitude + " meanLongitude = " + meanLongitude );
-
             // Construct object that this function
             // returns to its caller.
             result.meanLatitude = meanLatitude;
@@ -397,7 +433,7 @@ var viewModel = function( model ) {
             var lengthOfList = listOfCareerFacts.length;
 
             if( lengthOfList === 0 ) {
-                return "No careerFacts found.";
+                return "No career facts found.";
             } // if
             else {
                 var result = "";
@@ -415,7 +451,6 @@ var viewModel = function( model ) {
         // Return the function that will be called
         // when a user clicks on a marker on the map.
         that.getMarkerResponder = function(index) {
-            //console.log( "get marker responder " + index );
             return exemplars[index].markerResponder;
         }; // getMarkerResponder()
 
@@ -462,10 +497,8 @@ var viewModel = function( model ) {
     // than once. If one attempt fails, the program
     // will publish a warning. There will be just one
     // warning (not many identical warning).
-    var wikipediaDidNotRespond = false;
+    that.wikipediaDidNotRespond = false;
     var countNoResponses = 0;
-
-    var responseReceived = false;
 
     // Define a function that will attempt to find on Wikipedia the names
     // of the colleges and universities that a person attended and append
@@ -521,28 +554,20 @@ var viewModel = function( model ) {
             parseHelper( wikiText, "field" );
             parseHelper( wikiText, "work" );
             parseHelper( wikiText, "award" );
-
-            if( !responseReceived ) {
-                //console.log( wikiText );
-                responseReceived = true;
-            } // if
         }; // parse()
 
         // Program tries to read from Wikipedia more
         // than once. If one attempt fails, the program
         // will publish a warning. There will be just one
         // warning (not many identical warning).
-        //var wikipediaDidNotRespond = false;
-        var ifWikipediaDoesNotRespond = function() {
-            if( !wikipediaDidNotRespond ) {
+        var reportNoResponseFromWiki = function() {
+            if( !that.wikipediaDidNotRespond ) {
                 countNoResponses++;
-                alert( "Wikipedia is not responding." );
-                //console.log( "Wikipedia did not respond: " + wikipediaDidNotRespond + countNoResponses);
-                wikipediaDidNotRespond = true;
+                that.wikipediaDidNotRespond = true;
+                reportWikipediaIsNotResponding();
             } // if
             else {
                 countNoResponses++;
-                //console.log( "Wikipedia did not respond: " + wikipediaDidNotRespond + countNoResponses );
             } // else
         };
 
@@ -550,7 +575,7 @@ var viewModel = function( model ) {
         // Wikipedia does not respond.
         // (Program will cancel this scheduled message if
         // Wikipedia does respond within the allotted time).
-        var alarmClock = setTimeout( ifWikipediaDoesNotRespond, 2000 );
+        var alarmClock = setTimeout( reportNoResponseFromWiki, 2000 );
 
         // Specify the kind of access to the on-line service and
         // the function that will do something with the data that
@@ -558,7 +583,7 @@ var viewModel = function( model ) {
         var ajaxSettings = {
             dataType: "jsonp",
             crossDomain: true,
-            success: function(response) { clearTimeout(alarmClock); parse(response); }
+            success: function(response) { clearTimeout(alarmClock); parse(response); },
         }; // ajaxSettings
 
         var firstName = ee.getFirstName(index);
@@ -593,20 +618,17 @@ var viewModel = function( model ) {
         var windowOpen = false;
 
         return function() {
-            //console.log( "marker #" + i );
-
             if( windowOpen ) {
-                //console.log( "close info window" );
                 that.infoWindow.close();
                 windowOpen = false;
             } // if
 
             if( m.getAnimation() !== null ) {
-                //console.log( "stop animation" );
+                // stop animation
                 m.setAnimation( null );
             } // if
             else {
-                //console.log( "start animation and open window" ):
+                // start animation and open window
                 m.setAnimation( google.maps.Animation.BOUNCE );
                 setTimeout( function() { m.setAnimation( null ); }, 2000 );
                 that.infoWindow.setContent( that.ee.getInfo( i ) );
@@ -625,7 +647,6 @@ var viewModel = function( model ) {
             // recenter window to put selected marker at the center
             var lat = that.ee.getLatitude(i);
             var lng  = that.ee.getLongitude(i);
-            //google.maps.event.trigger( vm.neighborhoodMap, 'resize' );
             vm.neighborhoodMap.setCenter( {lat: lat, lng: lng} );
         }; // function()
     }; // markerResponderMaker()
@@ -655,9 +676,8 @@ var viewModel = function( model ) {
 
     that.mapInitializer = function() {
         if( typeof google === "undefined" ) {
-            var warningMessage = "No response from Google Maps. Check network connection.";
-            alert( warningMessage );
-            //console.log( warningMessage );
+            // No response from Google Maps.
+            that.googleMapsIsResponding = false;
         } // if
         else {
             // Find the mean latitude of all places of birth.
@@ -806,6 +826,7 @@ var koModel = function( vm ) {
     // Define functions that validate inputs.
     self.warn = ko.observable(false);
     self.warning = ko.observable("Valid input.");
+
     self.changeRange = function() {
         // Clear name field.
         // We are searching by dates now, not by name.
