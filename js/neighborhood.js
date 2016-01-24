@@ -34,7 +34,27 @@ var YEAR_OF_CAPT_KIRKS_BIRTH = 2228;
 */
 var WIDTH_OF_SMALL_SCREEN = 800;
 
+/**
+    This application requires communication with both the
+    Google Maps server and the Wikipedia server. If either
+    or both of these servers fails to respond to the application's
+    effort to connect, the application will publish a notice, but
+    will publish the advice (e.g., "check your network connection") that
+    is common to both sources of error just once.
+
+    @member {boolean} serverErrorHasBeenReported prevents the application from publishing a message twice.
+*/
 var serverErrorHasBeenReported = false;
+
+/**
+    This function publishes a notice when the
+    application's efforts to communicate with
+    a server are unsuccessful.
+
+    @function reportServerIsNotResponding
+    @author Leon Tabak [<l.tabak@ieee.org>]
+    @version 24 January 2016
+*/
 var reportServerIsNotResponding = function() {
 
     var markup = "<div id='serverError'>";
@@ -50,6 +70,15 @@ var reportServerIsNotResponding = function() {
     $("body").html(markup);
 }; // reportServerIsNotResponding()
 
+/**
+    This function publishes a notice that
+    the application is unable to communicate
+    with the Google Map server.
+
+    @function reportGoogleMapsIsNotResponding
+    @author Leon Tabak [<l.tabak@ieee.org>]
+    @version 24 January 2016
+*/
 var reportGoogleMapsIsNotResponding = function() {
     if( !serverErrorHasBeenReported ) {
         reportServerIsNotResponding();
@@ -59,6 +88,15 @@ var reportGoogleMapsIsNotResponding = function() {
     $("#mapsError").css( "display", "block" );
 }; // reportGoogleMapsIsNotResponding()
 
+/**
+    This function publishes a notice that
+    the application is unable to communicate
+    with the Wikipedia server.
+
+    @function reportWikipediaIsNotResponding
+    @author Leon Tabak [<l.tabak@ieee.org>]
+    @version 24 January 2016
+*/
 var reportWikipediaIsNotResponding = function() {
     if( !serverErrorHasBeenReported ) {
         reportServerIsNotResponding();
