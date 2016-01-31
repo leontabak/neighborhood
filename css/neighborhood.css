@@ -24,18 +24,14 @@ label {
   color: #6622AA;
 }
 
-#serverError {
+.serverError {
     width: 80%;
     background: #EE4422;
     color: #FFEEAA;
-    margin-left: 12px;
-    margin-right: 12px;
-    margin-top: 36px;
-    margin-bottom: 36px;
-    padding-left: 20px;
-    padding-right: 20px;
-    padding-top: 20px;
-    padding-bottom: 20px;
+    margin: 36px 12px 36px 12px;
+
+    padding: 20px;
+
     font-size: large;
     font-weight: 600;
     border: solid;
@@ -44,19 +40,13 @@ label {
     display: block;
 }
 
-#mapsError {
-  margin-left: 24px;
-  margin-right: 48px;
-  margin-top: 18px;
-  margin-bottom: 18px;
+.mapsError {
+  margin: 18px 48px 18px 24px;
   display: none;
 }
 
-#wikiError {
-  margin-left: 24px;
-  margin-right: 48px;
-  margin-top: 18px;
-  margin-bottom: 18px;
+.wikiError {
+  margin: 18px 48px 18px 24px; 
   display: none;
 }
 
@@ -69,12 +59,21 @@ Specify the styling of the button
 that makes the search box and the array
 of buttons visible or invisible.
 */
-#toggle {
+.toggle {
+  position: fixed;
+  left: 112px;
+  top: 24px;
+  z-index: 100;
+}
+
+/*
+Specify the styling of that part of the application
+that displays a warning in case of invalid input
+*/
+.warningSearchBox {
   background: rgba( 248, 222, 255, 0.8 );
-  margin-left: 12px;
-  margin-right: 12px;
-  margin-bottom: 6px;
-  margin-top: 32px;
+  width: 80%;
+  margin: 6px 12px 6px 12px;
   padding: 12px;
   border: solid;
   border-color: #AA44EE;
@@ -85,13 +84,24 @@ of buttons visible or invisible.
 Specify the styling of that part of the application
 in which user enters an interval (a range of years).
 */
-#searchBox {
+.dateSearchBox {
   background: rgba( 248, 222, 255, 0.8 );
   width: 80%;
-  margin-left: 12px;
-  margin-right: 12px;
-  margin-top: 6px;
-  margin-bottom: 6px;
+  margin: 96px 12px 6px 12px;
+  padding: 12px;
+  border: solid;
+  border-color: #AA44EE;
+  border-radius: 20px;
+}
+
+/*
+Specify the styling of that part of the application
+in which user enters a name
+*/
+.nameSearchBox {
+  background: rgba( 248, 222, 255, 0.8 );
+  width: 80%;
+  margin: 6px 12px 6px 12px;
   padding: 12px;
   border: solid;
   border-color: #AA44EE;
@@ -104,9 +114,8 @@ Specify the separation of the list of names of
 accomplished Iowans and the map that shows their
 places of birth from other elements of the application.
 */
-#listAndMap {
-  margin-top: 6px;
-  margin-bottom: 40px;
+.listAndMap {
+  margin: 6px 0px 40px 0px;
 }
 
 /*
@@ -114,27 +123,18 @@ Specify colors and dimensions of the element of
 the application that contains buttons with the
 names of accomplished Iowans.
 */
-#listOfBirthplaces {
+.listOfBirthplaces {
   background: rgba( 248, 222, 255, 0.8 );
-  margin-left: 12px;
-  margin-right: 12px;
+  margin: 0px 12px 0px 12px;
+
   padding-bottom: 24px;
   border: solid;
   border-color: #AA44EE;
   border-radius: 20px;
 }
 
-#listOfBirthplaces h2 {
+.listOfBirthplaces h2 {
   padding: 8px;
-}
-
-/*
-Specify spacing and typeface for buttons that
-bear the names of accomplished Iowans.
-*/
-#origins {
-  margin-bottom: 0px;
-  /*padding: -8px;*/
 }
 
 /*
@@ -143,9 +143,8 @@ the window's width and has a height sufficient
 to encompass the buttons and search fields of
 the application.
 */
-#bigMap {
+.bigMap {
   position: absolute;
-
   /*
     give the map a height that exceeds combined
     heights of buttons and search field

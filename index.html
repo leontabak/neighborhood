@@ -18,6 +18,7 @@
     <script src="js/jquery-1.11.3.min.js"></script>
     <script src="js/knockout-3.3.0.js"></script>
     <script src="js/bootstrap.min.js"></script>
+    <script src="js/jquery.scrollTo.min.js"></script>
     <script src="js/moment.min.js"></script>
     <script src="js/neighborhood.js"></script>
   </head>
@@ -25,7 +26,7 @@
   <body>
 
     <!-- A map of eastern Iowa. -->
-    <div id="bigMap">
+    <div class="bigMap">
     </div><!-- #bigMap -->
 
     <script async defer
@@ -33,23 +34,17 @@
         onerror="reportGoogleMapsIsNotResponding()">
     </script>
 
+    <!-- HIDE CONTROLS/SHOW CONTROLS toggle button. -->
+    <button type="button"
+            class="btn btn-info btn-lg toggle"
+            data-bind="text: hideShowLabel, click: toggleVisibility">
+    </button>
 
     <div class="container-fluid">
 
-      <!-- HIDE CONTROLS/SHOW CONTROLS toggle button. -->
-      <div class="row">
-        <div class="col-sm-3" id="toggle">
-          <button type="button"
-                  id="toggleButton"
-                  class="btn btn-info btn-lg"
-                  data-bind="text: hideShowLabel, click: toggleVisibility">
-          </button>
-        </div><!-- .col-sm-3 -->
-      </div> <!-- .row -->
-
       <!-- Search fields: enter 2 years that define a range. -->
       <div class="row" data-bind="visible: show">
-        <div class="col-sm-12" id="searchBox">
+        <div class="col-sm-10 dateSearchBox">
           <!--<form data-bind="submit: filter" class="form-inline">-->
             <div class="form-inline form-group">
               <label for="loYear" class="input-lg">Select people born between: </label>
@@ -77,10 +72,10 @@
             </div><!-- .form-group -->
           <!--</form>-->
         </div><!-- .col-sm-12 -->
-        <div class="col-sm-12" id="searchBox" data-bind="visible: warn">
+        <div class="col-sm-10 warningSearchBox" data-bind="visible: warn">
             <div class="alert alert-warning" data-bind="text: warning"></div>
         </div><!-- .col-sm-12 -->
-        <div class="col-sm-12" id="searchBox">
+        <div class="col-sm-10 nameSearchBox">
             <div class="form-inline form-group">
             <label class="input-lg">Or select person(s) by entering first letters of a name:</label>
             <input
@@ -95,11 +90,11 @@
 
       <!-- A vertical array of buttons, each with a name of a famous Iowan. -->
       <div class="row" data-bind="visible: show">
-        <div id="listAndMap">
-          <div class="col-sm-3" id="listOfBirthplaces">
+        <div class="listAndMap">
+          <div class="listOfBirthplaces col-sm-3">
             <label class="input-lg">Select a person</label>
             <div class="btn-group-vertical btn-group-lg">
-              <div id="origins" data-bind="foreach: exemplars">
+              <div data-bind="foreach: exemplars">
                 <button type="button" class="btn btn-info btn-lg btn-block"
                   data-bind="text: label, click: buttonResponder, visible: visible"></button>
               </div><!-- #origins -->

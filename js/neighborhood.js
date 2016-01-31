@@ -57,7 +57,7 @@ var serverErrorHasBeenReported = false;
 */
 var reportServerIsNotResponding = function() {
 
-    var markup = "<div id='serverError'>";
+    var markup = "<div class='serverError'>";
     markup += "<p>";
     markup += "This application requires communication with";
     markup += "the Google Maps server and the Wikipedia server.";
@@ -85,7 +85,7 @@ var reportGoogleMapsIsNotResponding = function() {
         serverErrorHasBeenReported = true;
     } // if
 
-    $("#mapsError").css( "display", "block" );
+    $(".mapsError").css( "display", "block" );
 }; // reportGoogleMapsIsNotResponding()
 
 /**
@@ -103,7 +103,7 @@ var reportWikipediaIsNotResponding = function() {
         serverErrorHasBeenReported = true;
     } // if
 
-    $("#wikiError").css( "display", "block" );
+    $(".wikiError").css( "display", "block" );
 }; // reportWikipediaIsNotResponding()
 
 
@@ -655,7 +655,11 @@ var viewModel = function( model ) {
         var m = marker;
         var windowOpen = false;
 
+        console.log( "making a marker responder" );
+
         return function() {
+            console.log( "responding to marker" );
+
             if( windowOpen ) {
                 that.infoWindow.close();
                 windowOpen = false;
@@ -682,10 +686,12 @@ var viewModel = function( model ) {
                 windowOpen = true;
             } // else
 
-            // recenter window to put selected marker at the center
+            // recenter map to put selected marker at the center
             var lat = that.ee.getLatitude(i);
             var lng  = that.ee.getLongitude(i);
             vm.neighborhoodMap.setCenter( {lat: lat, lng: lng} );
+            // scroll to put marker near the middle of the window
+            $(window).scrollTo( "40%" );
         }; // function()
     }; // markerResponderMaker()
 
@@ -698,6 +704,9 @@ var viewModel = function( model ) {
             var latitude = that.ee.getLatitude(i);
             var longitude = that.ee.getLongitude(i);
             var name = that.ee.getFullName(i);
+
+            console.log( "make marker for " + name );
+
             var marker = new google.maps.Marker({
                     map: that.neighborhoodMap,
                     position: {lat: latitude, lng: longitude },
@@ -743,7 +752,7 @@ var viewModel = function( model ) {
             }; // mapSpecification
 
             // Create the map.
-            that.neighborhoodMap=new google.maps.Map(document.getElementById("bigMap"),mapSpecification);
+            that.neighborhoodMap=new google.maps.Map(document.getElementsByClassName("bigMap")[0],mapSpecification);
             that.infoWindow = new google.maps.InfoWindow( {content: "Placeholder Value"} );
             decorateMap();
         } // else
