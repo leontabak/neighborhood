@@ -28,7 +28,7 @@
         <article>
             <pre class="prettyprint source linenums"><code>// neighborhood.js
 // Leon Tabak
-// 17 January 2016
+// 01 February 2016
 
 /**
     @member {Object} m is reference to the model.
@@ -81,17 +81,17 @@ var serverErrorHasBeenReported = false;
 
     @function reportServerIsNotResponding
     @author Leon Tabak [&lt;l.tabak@ieee.org>]
-    @version 24 January 2016
+    @version 01 February 2016
 */
 var reportServerIsNotResponding = function() {
 
-    var markup = "&lt;div id='serverError'>";
+    var markup = "&lt;div class='serverError'>";
     markup += "&lt;p>";
     markup += "This application requires communication with";
     markup += "the Google Maps server and the Wikipedia server.";
     markup += "&lt;/p>";
-    markup += "&lt;p id='mapsError'>The Google Maps server is not responding.&lt;/p>";
-    markup += "&lt;p id='wikiError'>The Wikipedia server is not responding.&lt;/p>";
+    markup += "&lt;p class='mapsError'>The Google Maps server is not responding.&lt;/p>";
+    markup += "&lt;p class='wikiError'>The Wikipedia server is not responding.&lt;/p>";
     markup += "&lt;p>Check your network connection.&lt;/p>";
     markup += "&lt;/div>";
 
@@ -105,7 +105,7 @@ var reportServerIsNotResponding = function() {
 
     @function reportGoogleMapsIsNotResponding
     @author Leon Tabak [&lt;l.tabak@ieee.org>]
-    @version 24 January 2016
+    @version 01 February 2016
 */
 var reportGoogleMapsIsNotResponding = function() {
     if( !serverErrorHasBeenReported ) {
@@ -113,7 +113,7 @@ var reportGoogleMapsIsNotResponding = function() {
         serverErrorHasBeenReported = true;
     } // if
 
-    $("#mapsError").css( "display", "block" );
+    $(".mapsError").css( "display", "block" );
 }; // reportGoogleMapsIsNotResponding()
 
 /**
@@ -123,7 +123,7 @@ var reportGoogleMapsIsNotResponding = function() {
 
     @function reportWikipediaIsNotResponding
     @author Leon Tabak [&lt;l.tabak@ieee.org>]
-    @version 24 January 2016
+    @version 01 February 2016
 */
 var reportWikipediaIsNotResponding = function() {
     if( !serverErrorHasBeenReported ) {
@@ -131,7 +131,7 @@ var reportWikipediaIsNotResponding = function() {
         serverErrorHasBeenReported = true;
     } // if
 
-    $("#wikiError").css( "display", "block" );
+    $(".wikiError").css( "display", "block" );
 }; // reportWikipediaIsNotResponding()
 
 
@@ -143,7 +143,7 @@ var reportWikipediaIsNotResponding = function() {
     @public
     @function model
     @author Leon Tabak [&lt;l.tabak@ieee.org>]
-    @version 17 January 2016
+    @version 01 February 2016
     @property {Object} that is the object that this function returns to its caller.
     @property {Array} that.exemplars contains descriptions of people.
     @property {String} that.exemplars.name identifies a person.
@@ -285,7 +285,7 @@ var model = function() {
     accessing the database and map.
 
     @author Leon Tabak l.tabak@ieee.org
-    @version 17 January 2016
+    @version 01 February 2016
     @param {Object} model contains names, dates and places of birth (viewModel adds careerFacts and markers later).
     @property {Object} that is the object that this function returns to its caller.
     @property {google.maps.Map} that.neighborhoodMap is a road map.
@@ -323,7 +323,6 @@ var viewModel = function( model ) {
     // will add a property to the object later.
     var that = {};
 
-    that.wikipediaIsResponding = true;
     that.googleMapsIsResponding = true;
 
     // Define a set of functions for reading and
@@ -648,8 +647,7 @@ var viewModel = function( model ) {
         // is received.
         var ajaxSettings = {
             dataType: "jsonp",
-            crossDomain: true,
-            success: function(response) { clearTimeout(alarmClock); parse(response); },
+            crossDomain: true
         }; // ajaxSettings
 
         var firstName = ee.getFirstName(index);
@@ -664,7 +662,8 @@ var viewModel = function( model ) {
            firstName + "%20" + middleName + "%20" + lastName;
 
         // Use a JQuery function to read data from an on-line service.
-        $.ajax( wikipediaURL, ajaxSettings );
+        var successFunction = function(response) {clearTimeout(alarmClock); parse(response);};
+        $.ajax( wikipediaURL, ajaxSettings ).done( successFunction );
     }; // lookUpCareerFacts()
 
     // Build the database.
@@ -684,6 +683,7 @@ var viewModel = function( model ) {
         var windowOpen = false;
 
         return function() {
+
             if( windowOpen ) {
                 that.infoWindow.close();
                 windowOpen = false;
@@ -710,10 +710,12 @@ var viewModel = function( model ) {
                 windowOpen = true;
             } // else
 
-            // recenter window to put selected marker at the center
+            // recenter map to put selected marker at the center
             var lat = that.ee.getLatitude(i);
             var lng  = that.ee.getLongitude(i);
             vm.neighborhoodMap.setCenter( {lat: lat, lng: lng} );
+            // scroll to put marker near the middle of the window
+            $(window).scrollTo( "40%" );
         }; // function()
     }; // markerResponderMaker()
 
@@ -726,6 +728,7 @@ var viewModel = function( model ) {
             var latitude = that.ee.getLatitude(i);
             var longitude = that.ee.getLongitude(i);
             var name = that.ee.getFullName(i);
+
             var marker = new google.maps.Marker({
                     map: that.neighborhoodMap,
                     position: {lat: latitude, lng: longitude },
@@ -771,7 +774,7 @@ var viewModel = function( model ) {
             }; // mapSpecification
 
             // Create the map.
-            that.neighborhoodMap=new google.maps.Map(document.getElementById("bigMap"),mapSpecification);
+            that.neighborhoodMap=new google.maps.Map(document.getElementsByClassName("bigMap")[0],mapSpecification);
             that.infoWindow = new google.maps.InfoWindow( {content: "Placeholder Value"} );
             decorateMap();
         } // else
@@ -785,7 +788,7 @@ var viewModel = function( model ) {
     text seen on the screen with variables in the code).
 
     @author Leon Tabak &lt;l.tabak@ieee.org>
-    @version 17 January 2016
+    @version 01 February 2016
     @param {Object} vm is the collection of methods for accessing the database and map
     @property {Function} this.show buttons and search bar visible?
     @property {Function} this.hideShowLabel label (HIDE or SHOW) on button
@@ -836,7 +839,6 @@ var koModel = function( vm ) {
         var i = index;
 
         return function() {
-            //console.log( "button #" + i );
             vm.ee.getMarkerResponder(i)();
 
             // hide controls to make more of
@@ -850,8 +852,6 @@ var koModel = function( vm ) {
     }; // buttonResponderMaker()
 
     var recenterMap = function( startDate, endDate ) {
-        //console.log( "recenter map" );
-
         // Draw a region that is a little larger than the
         // smallest region that encloses all of the places
         // of birth of all of the people born during the
@@ -865,15 +865,26 @@ var koModel = function( vm ) {
         var swLongitude = em.minimumLongitude;
         var neLatitude = em.maximumLatitude;
         var neLongitude = em.maximumLongitude;
-        var margin = 0.1;
-        var lat = ((swLatitude - margin) + (neLatitude + margin))/2;
-        var lng = ((swLongitude - margin) + (neLongitude + margin))/2;
+        var lat = (swLatitude + neLatitude)/2;
+        var lng = (swLongitude + neLongitude)/2;
 
-        //console.log( em );
-        //console.log( "lat = " + lat + " lng = " + lng );
-
-        //google.maps.event.trigger( vm.neighborhoodMap, 'resize' );
         vm.neighborhoodMap.setCenter( {lat: lat, lng: lng} );
+
+        // make map cover a region that is
+        // a little larger than the region
+        // that includes just the selected
+        // persons
+        var margin = 0.25;
+        var bounds = new google.maps.LatLngBounds();
+	var swLat = swLatitude - margin;
+        var swLng = swLongitude - margin;
+        var swCorner = new google.maps.LatLng( swLat, swLng );
+        bounds.extend( swCorner );
+        var neLat = neLatitude + margin;
+        var neLng = neLongitude + margin;
+        var neCorner = new google.maps.LatLng( neLat, neLng );
+        bounds.extend( neCorner );
+        vm.neighborhoodMap.fitBounds( bounds );
     }; // recenterMap()
 
     // Define a function that will help create
@@ -946,7 +957,6 @@ var koModel = function( vm ) {
     var previousPrefixLength = 0;
     self.matchPrefix = function() {
         self.surname( self.surname().toUpperCase() );
-        //console.log( "match prefix" );
 
         var minimumYear; // initially undefined
         var maximumYear; // initially undefined
@@ -1045,8 +1055,24 @@ var koModel = function( vm ) {
 
             var lat = (minimumLat + maximumLat)/2;
             var lng = (minimumLng + maximumLng)/2;
-            //google.maps.event.trigger( vm.neighborhoodMap, 'resize' );
+
             vm.neighborhoodMap.setCenter( {lat: lat, lng: lng} );
+
+            // make map cover a region that is
+            // a little larger than the region
+            // that includes just the selected
+            // persons
+            var margin = 0.25;
+            var bounds = new google.maps.LatLngBounds();
+            var swLat = minimumLat - margin;
+            var swLng = minimumLng - margin;
+            var swCorner = new google.maps.LatLng( swLat, swLng );
+            bounds.extend( swCorner );
+            var neLat = maximumLat + margin;
+            var neLng = maximumLng + margin;
+            var neCorner = new google.maps.LatLng( neLat, neLng );
+            bounds.extend( neCorner );
+            vm.neighborhoodMap.fitBounds( bounds );
         } // if
 
         // If the prefix matches only one name, complete
@@ -1057,7 +1083,7 @@ var koModel = function( vm ) {
         // of using the delete key to back up and try a
         // different spelling.
         var currentPrefixLength = self.surname().length;
-        //console.log( "prefix lengths:" + previousPrefixLength + ", " + currentPrefixLength );
+
         if( (indicesOfMatches.length === 1) &amp;&amp; (currentPrefixLength > previousPrefixLength) ) {
             // only found one match, so it is first (and only) entry in array
             var index = indicesOfMatches[0];
@@ -1085,7 +1111,6 @@ var koModel = function( vm ) {
         } // if
         previousPrefixLength = currentPrefixLength;
 
-        //console.log( "# of matches = " + indicesOfMatches.length + " " + indicesOfMatches );
     }; // matchPrefix()
 }; // koModel()
 
@@ -1096,7 +1121,7 @@ var koModel = function( vm ) {
     that describes the organization of a Web page) is ready.
 
     @author Leon Tabak &lt;l.tabak@ieee.org>
-    @version 17 January 2016
+    @version 01 February 2016
 */
 var go = function() {
     m = model();
@@ -1121,7 +1146,7 @@ $(document).ready(go);
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Sun Jan 24 2016 13:04:43 GMT-0600 (CST)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Mon Feb 01 2016 14:21:44 GMT-0600 (CST)
 </footer>
 
 <script> prettyPrint(); </script>
