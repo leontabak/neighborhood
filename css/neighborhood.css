@@ -5,23 +5,23 @@
 */
 
 html {
-  width: 100%;
-  height: 100%;
+    width: 100%;
+    height: 100%;
 }
 
 /*
 Specify the color between and around the elements of the application.
 */
 body {
-  opacity: 1.0;
-  background: #CCFFEE !important;
-  width: 100%;
-  height: 100%;
+    opacity: 1.0;
+    background: #CCFFEE !important;
+    width: 100%;
+    height: 100%;
 }
 
 /* Specify the color of text on the page. */
 label {
-  color: #6622AA;
+    color: #6622AA;
 }
 
 .serverError {
@@ -41,17 +41,17 @@ label {
 }
 
 .mapsError {
-  margin: 18px 48px 18px 24px;
-  display: none;
+    margin: 18px 48px 18px 24px;
+    display: none;
 }
 
 .wikiError {
-  margin: 18px 48px 18px 24px; 
-  display: none;
+    margin: 18px 48px 18px 24px; 
+    display: none;
 }
 
 .container-fluid h2 {
-  color: #6622AA;
+    color: #6622AA;
 }
 
 /*
@@ -60,10 +60,12 @@ that makes the search box and the array
 of buttons visible or invisible.
 */
 .toggle {
-  position: fixed;
-  left: 112px;
-  top: 24px;
-  z-index: 100;
+    position: fixed;
+    left: 112px;
+    top: 24px;
+    z-index: 100;
+    border-color: #FFDD44;
+    border-width: 4px;
 }
 
 /*
@@ -71,13 +73,13 @@ Specify the styling of that part of the application
 that displays a warning in case of invalid input
 */
 .warningSearchBox {
-  background: rgba( 248, 222, 255, 0.8 );
-  width: 80%;
-  margin: 6px 12px 6px 12px;
-  padding: 12px;
-  border: solid;
-  border-color: #AA44EE;
-  border-radius: 20px;
+    background: rgba( 248, 222, 255, 0.8 );
+    width: 80%;
+    margin: 6px 12px 6px 12px;
+    padding: 12px;
+    border: solid;
+    border-color: #AA44EE;
+    border-radius: 20px;
 }
 
 /*
@@ -85,13 +87,13 @@ Specify the styling of that part of the application
 in which user enters an interval (a range of years).
 */
 .dateSearchBox {
-  background: rgba( 248, 222, 255, 0.8 );
-  width: 80%;
-  margin: 96px 12px 6px 12px;
-  padding: 12px;
-  border: solid;
-  border-color: #AA44EE;
-  border-radius: 20px;
+    background: rgba( 248, 222, 255, 0.8 );
+    width: 80%;
+    margin: 96px 12px 6px 12px;
+    padding: 12px;
+    border: solid;
+    border-color: #AA44EE;
+    border-radius: 20px;
 }
 
 /*
@@ -99,13 +101,13 @@ Specify the styling of that part of the application
 in which user enters a name
 */
 .nameSearchBox {
-  background: rgba( 248, 222, 255, 0.8 );
-  width: 80%;
-  margin: 6px 12px 6px 12px;
-  padding: 12px;
-  border: solid;
-  border-color: #AA44EE;
-  border-radius: 20px;
+    background: rgba( 248, 222, 255, 0.8 );
+    width: 80%;
+    margin: 6px 12px 6px 12px;
+    padding: 12px;
+    border: solid;
+    border-color: #AA44EE;
+    border-radius: 20px;
 }
 
 
@@ -115,7 +117,7 @@ accomplished Iowans and the map that shows their
 places of birth from other elements of the application.
 */
 .listAndMap {
-  margin: 6px 0px 40px 0px;
+    margin: 6px 0px 40px 0px;
 }
 
 /*
@@ -124,17 +126,17 @@ the application that contains buttons with the
 names of accomplished Iowans.
 */
 .listOfBirthplaces {
-  background: rgba( 248, 222, 255, 0.8 );
-  margin: 0px 12px 0px 12px;
+    background: rgba( 248, 222, 255, 0.8 );
+    margin: 0px 12px 0px 12px;
 
-  padding-bottom: 24px;
-  border: solid;
-  border-color: #AA44EE;
-  border-radius: 20px;
+    padding-bottom: 24px;
+    border: solid;
+    border-color: #AA44EE;
+    border-radius: 20px;
 }
 
 .listOfBirthplaces h2 {
-  padding: 8px;
+    padding: 8px;
 }
 
 /*
@@ -144,19 +146,19 @@ to encompass the buttons and search fields of
 the application.
 */
 .bigMap {
-  position: absolute;
-  /*
-    give the map a height that exceeds combined
-    heights of buttons and search field
-  */
-  height: 1400px;
+    position: absolute;
+    /*
+      give the map a height that exceeds combined
+      heights of buttons and search field
+    */
+    height: 1400px;
 
-  width: 100%;
+    width: 100%;
 
-  left: 0;
-  right: 0;
-  top: 0;
-  bottom: 0;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
 }
 
 

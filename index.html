@@ -2,7 +2,7 @@
 <!--
   Leon Tabak
   Project 5: Neighborhood Map
-  18 January 2016
+  01 February 2016
 -->
 <html>
   <head>
@@ -15,6 +15,11 @@
     <link rel="stylesheet" href="css/neighborhood.css">
     <link rel="stylesheet" href="css/bootstrap.min.css">
 
+    <!-- The reviewer suggestioned that I load scripts -->
+    <!-- just before </body> to avoid delaying         -->
+    <!-- construction of the DOM, but I have code      -->
+    <!-- to report the error if Google Maps and/or     -->
+    <!-- Wikipedia fails to respond in these scripts.  -->
     <script src="js/jquery-1.11.3.min.js"></script>
     <script src="js/knockout-3.3.0.js"></script>
     <script src="js/bootstrap.min.js"></script>
@@ -36,7 +41,7 @@
 
     <!-- HIDE CONTROLS/SHOW CONTROLS toggle button. -->
     <button type="button"
-            class="btn btn-info btn-lg toggle"
+            class="btn btn-primary btn-lg toggle"
             data-bind="text: hideShowLabel, click: toggleVisibility">
     </button>
 
@@ -61,14 +66,6 @@
                   name="hiYear"
                   id="hiYear"
                   data-bind="textInput: hiBound, event: {keyup: changeRange}"/>
-
-              <!-- This label is for debugging purposes only.
-              <label
-                  type="text"
-                  class="form-control input-lg">
-                      ((<span data-bind="text: difference"></span>))
-              <label/>
-              -->
             </div><!-- .form-group -->
           <!--</form>-->
         </div><!-- .col-sm-12 -->
