@@ -848,7 +848,7 @@ var koModel = function( vm ) {
         // persons
         var margin = 0.25;
         var bounds = new google.maps.LatLngBounds();
-	var swLat = swLatitude - margin;
+        var swLat = swLatitude - margin;
         var swLng = swLongitude - margin;
         var swCorner = new google.maps.LatLng( swLat, swLng );
         bounds.extend( swCorner );
